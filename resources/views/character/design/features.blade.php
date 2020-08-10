@@ -33,7 +33,7 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('subtype_id_2', 'Species Subtype (Secondary)') !!} {!! add_help('Use in case of a hybrid. Otherwise, you can ignore this.') !!}
+            {!! Form::label('subtype_id_2', 'Species Subtype (Secondary)') !!}
             @if($request->character->is_myo_slot && $request->character->image->subtype_id_2) 
                 <div class="alert alert-secondary">{!! $request->character->image->subtypeTwo->displayName !!}</div>
             @else
