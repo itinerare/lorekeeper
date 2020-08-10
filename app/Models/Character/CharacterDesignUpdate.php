@@ -22,7 +22,7 @@ class CharacterDesignupdate extends Model
         'character_id', 'status', 'user_id', 'staff_id',
         'comments', 'staff_comments', 'data', 'extension',
         'use_cropper', 'x0', 'x1', 'y0', 'y1',
-        'hash', 'species_id', 'subtype_id', 'rarity_id', 
+        'hash', 'species_id', 'subtype_id', 'subtype_id_2', 'rarity_id', 
         'has_comments', 'has_image', 'has_addons', 'has_features',
         'submitted_at', 'update_type'
     ];
@@ -102,6 +102,14 @@ class CharacterDesignupdate extends Model
     public function subtype() 
     {
         return $this->belongsTo('App\Models\Species\Subtype', 'subtype_id');
+    }
+
+    /**
+     * Get the subtype of the design update.
+     */
+    public function subtypeTwo() 
+    {
+        return $this->belongsTo('App\Models\Species\Subtype', 'subtype_id_2');
     }
 
     /**

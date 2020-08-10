@@ -103,6 +103,13 @@ class CharacterManager extends Service
                 if(!$subtype || $subtype->species_id != $data['species_id']) throw new \Exception('Selected subtype invalid or does not match species.');
             }
             else $data['subtype_id'] = null;
+            if(isset($data['subtype_id_2']) && $data['subtype_id_2'])
+            {
+                $subtypeTwo = Subtype::find($data['subtype_id_2']);
+                if(!(isset($data['species_id']) && $data['species_id'])) throw new \Exception('Species must be selected to select a subtype.');
+                if(!$subtypeTwo || $subtype->species_id != $data['species_id']) throw new \Exception('Selected secondary subtype invalid or does not match species.');
+            }
+            else $data['subtype_id_2'] = null;
 
             // Get owner info
             $recipient = null;
@@ -183,6 +190,7 @@ class CharacterManager extends Service
                 $data['slug'] = null;
                 $data['species_id'] = isset($data['species_id']) && $data['species_id'] ? $data['species_id'] : null;
                 $data['subtype_id'] = isset($data['subtype_id']) && $data['subtype_id'] ? $data['subtype_id'] : null;
+                $data['subtype_id_2'] = isset($data['subtype_id_2']) && $data['subtype_id_2'] ? $data['subtype_id_2'] : null;
                 $data['rarity_id'] = isset($data['rarity_id']) && $data['rarity_id'] ? $data['rarity_id'] : null;
             }
 
@@ -231,6 +239,7 @@ class CharacterManager extends Service
             {
                 $data['species_id'] = (isset($data['species_id']) && $data['species_id']) ? $data['species_id'] : null;
                 $data['subtype_id'] = isset($data['subtype_id']) && $data['subtype_id'] ? $data['subtype_id'] : null;
+                $data['subtype_id_2'] = isset($data['subtype_id_2']) && $data['subtype_id_2'] ? $data['subtype_id_2'] : null;
                 $data['rarity_id'] = (isset($data['rarity_id']) && $data['rarity_id']) ? $data['rarity_id'] : null;
                 
 
@@ -245,7 +254,7 @@ class CharacterManager extends Service
                 }
             }
             $imageData = array_only($data, [
-                'species_id', 'subtype_id', 'rarity_id', 'use_cropper', 
+                'species_id', 'subtype_id', 'subtype_id_2', 'rarity_id', 'use_cropper', 
                 'x0', 'x1', 'y0', 'y1',
             ]);
             $imageData['use_cropper'] = isset($data['use_cropper']) ;
@@ -389,6 +398,13 @@ class CharacterManager extends Service
                 if(!$subtype || $subtype->species_id != $data['species_id']) throw new \Exception('Selected subtype invalid or does not match species.');
             }
             else $data['subtype_id'] = null;
+            if(isset($data['subtype_id_2']) && $data['subtype_id_2'])
+            {
+                $subtypeTwo = Subtype::find($data['subtype_id_2']);
+                if(!(isset($data['species_id']) && $data['species_id'])) throw new \Exception('Species must be selected to select a subtype.');
+                if(!$subtypeTwo || $subtypeTwo->species_id != $data['species_id']) throw new \Exception('Selected secondary subtype invalid or does not match species.');
+            }
+            else $data['subtype_id_2'] = null;
 
             $data['is_visible'] = 1;
 
@@ -445,12 +461,19 @@ class CharacterManager extends Service
                 if(!(isset($data['species_id']) && $data['species_id'])) throw new \Exception('Species must be selected to select a subtype.');
                 if(!$subtype || $subtype->species_id != $data['species_id']) throw new \Exception('Selected subtype invalid or does not match species.');
             }
+            if(isset($data['subtype_id_2']) && $data['subtype_id_2'])
+            {
+                $subtypeTwo = Subtype::find($data['subtype_id_2']);
+                if(!(isset($data['species_id']) && $data['species_id'])) throw new \Exception('Species must be selected to select a subtype.');
+                if(!$subtypeTwo || $subtypeTwo->species_id != $data['species_id']) throw new \Exception('Selected secondary subtype invalid or does not match species.');
+            }
 
             // Log old features
             $old = [];
             $old['features'] = $this->generateFeatureList($image);
             $old['species'] = $image->species_id ? $image->species->displayName : null;
             $old['subtype'] = $image->subtype_id ? $image->subtype->displayName : null;
+            $old['subtype_2'] = $image->subtype_id_2 ? $image->subtypeTwo->displayName : null;
             $old['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
 
             // Clear old features
@@ -466,6 +489,7 @@ class CharacterManager extends Service
             // Update other stats
             $image->species_id = $data['species_id'];
             $image->subtype_id = $data['subtype_id'] ?: null;
+            $image->subtype_id_2 = $data['subtype_id_2'] ?: null;
             $image->rarity_id = $data['rarity_id'];
             $image->save();
 
@@ -473,6 +497,7 @@ class CharacterManager extends Service
             $new['features'] = $this->generateFeatureList($image);
             $new['species'] = $image->species_id ? $image->species->displayName : null;
             $new['subtype'] = $image->subtype_id ? $image->subtype->displayName : null;
+            $new['subtype_2'] = $image->subtype_id_2 ? $image->subtypeTwo->displayName : null;
             $new['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
 
             // Character also keeps track of these features
@@ -1432,7 +1457,8 @@ class CharacterManager extends Service
                 // Set some data based on the character's existing stats
                 'rarity_id' => $character->image->rarity_id,
                 'species_id' => $character->image->species_id,
-                'subtype_id' => $character->image->subtype_id
+                'subtype_id' => $character->image->subtype_id,
+                'subtype_id_2' => $character->image->subtype_id_2,
             ];
 
             $request = CharacterDesignUpdate::create($data);
@@ -1676,9 +1702,13 @@ class CharacterManager extends Service
             if(isset($data['subtype_id']) && $data['subtype_id'])
                 $subtype = ($request->character->is_myo_slot && $request->character->image->subtype_id) ? $request->character->image->subtype : Subtype::find($data['subtype_id']);
             else $subtype = null;
+            if(isset($data['subtype_id_2']) && $data['subtype_id_2'])
+                $subtypeTwo = ($request->character->is_myo_slot && $request->character->image->subtype_id_2) ? $request->character->image->subtypeTwo : Subtype::find($data['subtype_id_2']);
+            else $subtypeTwo = null;
             if(!$rarity) throw new \Exception("Invalid rarity selected.");
             if(!$species) throw new \Exception("Invalid species selected.");
             if($subtype && $subtype->species_id != $species->id) throw new \Exception("Subtype does not match the species.");
+            if($subtypeTwo && $subtypeTwo->species_id != $species->id) throw new \Exception("Secondary subtype does not match the species.");
 
             // Clear old features
             $request->features()->delete();
@@ -1705,6 +1735,7 @@ class CharacterManager extends Service
             $request->species_id = $species->id;
             $request->rarity_id = $rarity->id;
             $request->subtype_id = $subtype ? $subtype->id : null;
+            $request->subtype_id_2 = $subtypeTwo ? $subtypeTwo->id : null;
             $request->has_features = 1;
             $request->save();
 
@@ -1810,6 +1841,7 @@ class CharacterManager extends Service
                 'y1' => $request->y1,
                 'species_id' => $request->species_id,
                 'subtype_id' => ($request->character->is_myo_slot && isset($request->character->image->subtype_id)) ? $request->character->image->subtype_id : $request->subtype_id,
+                'subtype_id_2' => ($request->character->is_myo_slot && isset($request->character->image->subtype_id_2)) ? $request->character->image->subtype_id_2 : $request->subtype_id_2,
                 'rarity_id' => $request->rarity_id,
                 'sort' => 0,
             ]);

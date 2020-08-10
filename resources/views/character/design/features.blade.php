@@ -33,6 +33,15 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('subtype_id_2', 'Species Subtype (Secondary)') !!} {!! add_help('Use in case of a hybrid. Otherwise, you can ignore this.') !!}
+            @if($request->character->is_myo_slot && $request->character->image->subtype_id_2) 
+                <div class="alert alert-secondary">{!! $request->character->image->subtypeTwo->displayName !!}</div>
+            @else
+                {!! Form::select('subtype_id_2', $subtypes, $request->subtype_id_2, ['class' => 'form-control', 'id' => 'subtype_2']) !!}
+            @endif
+        </div>
+
+        <div class="form-group">
             {!! Form::label('rarity_id', 'Character Rarity') !!}
             @if($request->character->is_myo_slot && $request->character->image->rarity_id) 
                 <div class="alert alert-secondary">{!! $request->character->image->rarity->displayName !!}</div>
@@ -83,6 +92,16 @@
             <div class="col-md-2 col-4"><h5>Species</h5></div>
             <div class="col-md-10 col-8">{!! $request->species ? $request->species->displayName : 'None Selected' !!}</div>
         </div>
+        <div class="row">
+            <div class="col-md-2 col-4"><h5>Subtype</h5></div>
+            <div class="col-md-10 col-8">{!! $request->subtype ? $request->subtype->displayName : 'None Selected' !!}</div>
+        </div>
+        @if($request->subtype_id_2)
+        <div class="row">
+            <div class="col-md-2 col-4"><h5>Subtype</h5></div>
+            <div class="col-md-10 col-8">{!! $request->subtypeTwo ? $request->subtypeTwo->displayName : 'None Selected' !!}</div>
+        </div>
+        @endif
         <div class="row">
             <div class="col-md-2 col-4"><h5>Rarity</h5></div>
             <div class="col-md-10 col-8">{!! $request->rarity ? $request->rarity->displayName : 'None Selected' !!}</div>
