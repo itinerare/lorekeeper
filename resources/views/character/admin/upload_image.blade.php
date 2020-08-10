@@ -100,6 +100,11 @@ Traits
 </div>
 
 <div class="form-group">
+    {!! Form::label('Secondary Subtype (Optional)') !!} 
+    {!! Form::select('subtype_id_2', $subtypes, old('subtype_id_2') ? : $character->image->subtype_id_2, ['class' => 'form-control', 'id' => 'subtype']) !!}
+</div>
+
+<div class="form-group">
     {!! Form::label('Character Rarity') !!}
     {!! Form::select('rarity_id', $rarities, old('rarity_id') ? : $character->image->rarity_id, ['class' => 'form-control']) !!}
 </div>
