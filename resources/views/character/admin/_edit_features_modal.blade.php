@@ -9,7 +9,7 @@
         {!! Form::select('subtype_id', $subtypes, $image->subtype_id, ['class' => 'form-control', 'id' => 'subtype']) !!}
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="subtypes_2">
         {!! Form::label('Secondary Subtype (Optional)') !!}
         {!! Form::select('subtype_id_2', $subtypes, $image->subtype_id_2, ['class' => 'form-control', 'id' => 'subtype']) !!}
     </div>
@@ -76,7 +76,9 @@
       $.ajax({
         type: "GET", url: "{{ url('admin/character/image/traits/subtype') }}?species="+species+"&id="+id, dataType: "text"
       }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
-
+      $.ajax({
+        type: "GET", url: "{{ url('admin/character/image/traits/subtype') }}?species="+species+"&id="+id, dataType: "text"
+      }).done(function (res) { $("#subtypes_2").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
     });
 
 </script>

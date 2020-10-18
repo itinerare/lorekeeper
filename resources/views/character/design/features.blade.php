@@ -28,7 +28,7 @@
                 <div class="alert alert-secondary">{!! $request->character->image->subtype->displayName !!}</div>
             @else
                 <div id="subtypes">
-                  {!! Form::select('subtype_id', $subtypes, $request->subtype_id, ['class' => 'form-control', 'id' => 'subtype']) !!}
+                    {!! Form::select('subtype_id', $subtypes, $request->subtype_id, ['class' => 'form-control', 'id' => 'subtype']) !!}
                 </div>
             @endif
 
@@ -39,7 +39,9 @@
             @if($request->character->is_myo_slot && $request->character->image->subtype_id_2) 
                 <div class="alert alert-secondary">{!! $request->character->image->subtypeTwo->displayName !!}</div>
             @else
-                {!! Form::select('subtype_id_2', $subtypes, $request->subtype_id_2, ['class' => 'form-control', 'id' => 'subtype_2']) !!}
+                <div id="subtypes_2">
+                    {!! Form::select('subtype_id_2', $subtypes, $request->subtype_id_2, ['class' => 'form-control', 'id' => 'subtype_2']) !!}
+                </div>
             @endif
         </div>
 
@@ -148,7 +150,9 @@
     $.ajax({
       type: "GET", url: "{{ url('designs/traits/subtype') }}?species="+species+"&id="+id, dataType: "text"
     }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
-
+    $.ajax({
+      type: "GET", url: "{{ url('designs/traits/subtype') }}?species="+species+"&id="+id, dataType: "text"
+    }).done(function (res) { $("#subtypes_2").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
   });
 </script>
 
