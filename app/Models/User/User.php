@@ -12,6 +12,7 @@ use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
 use App\Models\Item\ItemLog;
 use App\Models\Shop\ShopLog;
+use App\Models\Adoption\AdoptionLog;
 use App\Models\User\UserCharacterLog;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
@@ -385,6 +386,21 @@ class User extends Authenticatable implements MustVerifyEmail
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
     }
+
+    /**
+     * Get the user's adopt purchase logs.
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getAdoptionLogs($limit = 10)
+    {
+        $user = $this;
+        $query = AdoptionLog::where('user_id', $this->id)->with('character')->with('adoption')->with('adopt')->with('currency')->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+    }
+
 
     /**
      * Get the user's character ownership logs.

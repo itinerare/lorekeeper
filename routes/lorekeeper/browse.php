@@ -96,6 +96,12 @@ Route::group(['prefix' => 'shops'], function() {
     Route::get('{id}/{stockId}', 'ShopController@getShopStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
 
+Route::group(['prefix' => 'adoptions'], function() {
+    Route::get('/', 'AdoptionController@getIndex');
+    Route::get('{id}', 'AdoptionController@getAdoption')->where(['id' => '[0-9]+']);
+    Route::get('{id}/{stockId}', 'AdoptionController@getAdoptionStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
+});
+
 /**************************************************************************************************
     Site Pages
 **************************************************************************************************/

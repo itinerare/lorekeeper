@@ -151,3 +151,12 @@ Route::group(['prefix' => 'shops'], function() {
     Route::post('buy', 'ShopController@postBuy');
     Route::get('history', 'ShopController@getPurchaseHistory');
 });
+
+/**************************************************************************************************
+    Adoptions
+**************************************************************************************************/
+
+Route::group(['prefix' => 'adoptions'], function() {
+    Route::post('buy', 'AdoptionController@postBuy');
+    Route::get('history', 'AdoptionController@getPurchaseHistory');
+});

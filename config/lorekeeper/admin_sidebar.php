@@ -111,6 +111,10 @@ return [
                 'url' => 'admin/data/shops'
             ],
             [
+                'name' => 'Adoption Center',
+                'url' => 'admin/data/adoptions'
+            ],
+            [
                 'name' => 'Prompt Categories',
                 'url' => 'admin/data/prompt-categories'
             ],
