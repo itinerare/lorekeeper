@@ -21,8 +21,6 @@ class AddAdoptionShop extends Migration
             $table->text('description')->nullable()->default(null);
             $table->text('parsed_description')->nullable()->default(null);
 
-            $table->integer('sort')->unsigned()->default(0);
-
             $table->boolean('is_active')->default(1);
         });
         Schema::create('adoption_stock', function (Blueprint $table) {

@@ -97,8 +97,7 @@ Route::group(['prefix' => 'shops'], function() {
 });
 
 Route::group(['prefix' => 'adoptions'], function() {
-    Route::get('/', 'AdoptionController@getIndex');
-    Route::get('{id}', 'AdoptionController@getAdoption')->where(['id' => '[0-9]+']);
+    Route::get('/', 'AdoptionController@getAdoption');
     Route::get('{id}/{stockId}', 'AdoptionController@getAdoptionStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
 

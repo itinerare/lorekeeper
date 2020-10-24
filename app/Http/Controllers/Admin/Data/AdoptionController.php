@@ -34,7 +34,7 @@ class AdoptionController extends Controller
     public function getIndex()
     {
         return view('admin.adoptions.adoptions', [
-            'adoptions' => Adoption::orderBy('sort', 'DESC')->get()
+            'adoptions' => Adoption::get()
         ]);
     }
     
@@ -104,56 +104,4 @@ class AdoptionController extends Controller
         }
         return redirect()->back();
     }
-    
-    /**
-     * Gets the adoption deletion modal.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getDeleteAdoption($id)
-    {
-        $adoption = Adoption::find($id);
-        return view('admin.adoptions._delete_adoption', [
-            'adoption' => $adoption,
-        ]);
-    }
-
-    /**
-     * Deletes a adoption.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\AdoptionService  $service
-     * @param  int                       $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postDeleteAdoption(Request $request, AdoptionService $service, $id)
-    {
-        if($id && $service->deleteAdoption(Adoption::find($id))) {
-            flash('Adoption deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->to('admin/data/adoptions');
-    }
-
-    /**
-     * Sorts adoptions.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\AdoptionService  $service
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postSortAdoption(Request $request, AdoptionService $service)
-    {
-        if($service->sortAdoption($request->get('sort'))) {
-            flash('Adoption order updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
-    }
-
 }

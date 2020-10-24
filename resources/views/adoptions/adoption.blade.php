@@ -3,7 +3,7 @@
 @section('adoptions-title') {{ $adoption->name }} @endsection
 
 @section('adoptions-content')
-{!! breadcrumbs(['Adoptions' => 'adoptions', $adoption->name => $adoption->url]) !!}
+{!! breadcrumbs([$adoption->name => $adoption->url]) !!}
 
 <h1>
     {{ $adoption->name }}

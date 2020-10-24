@@ -28,27 +28,3 @@
 @endif
 
 @endsection
-
-@section('scripts')
-@parent
-<script>
-
-$( document ).ready(function() {
-    $('.handle').on('click', function(e) {
-        e.preventDefault();
-    });
-    $( "#sortable" ).sortable({
-        items: '.sort-item',
-        handle: ".handle",
-        placeholder: "sortable-placeholder",
-        stop: function( event, ui ) {
-            $('#sortableOrder').val($(this).sortable("toArray", {attribute:"data-id"}));
-        },
-        create: function() {
-            $('#sortableOrder').val($(this).sortable("toArray", {attribute:"data-id"}));
-        }
-    });
-    $( "#sortable" ).disableSelection();
-});
-</script>
-@endsection

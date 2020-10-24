@@ -26,18 +26,6 @@ class AdoptionController extends Controller
     | Handles viewing the adoption index, adoptions and purchasing from adoptions.
     |
     */
-
-    /**
-     * Shows the adoption index.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getIndex()
-    {
-        return view('adoptions.index', [
-            'adoptions' => Adoption::where('is_active', 1)->orderBy('sort', 'DESC')->get()
-            ]);
-    }
     
     /**
      * Shows a adoption.
@@ -45,17 +33,17 @@ class AdoptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAdoption($id)
+    public function getAdoption()
     {
         $categories = CharacterCategory::orderBy('sort', 'DESC')->get();
-        $adoption = Adoption::where('id', $id)->where('is_active', 1)->first();
+        $adoption = Adoption::where('id', 1)->where('is_active', 1)->first();
         if(!$adoption) abort(404);
         $characters = count($categories) ? $adoption->displayStock()->orderByRaw('FIELD(character_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')->orderBy('name')->get()->groupBy('character_category_id') : $adoption->displayStock()->orderBy('name')->get()->groupBy('character_category_id');
         return view('adoptions.adoption', [
             'adoption' => $adoption,
             'characters' => $characters,
             'categories' => $categories->keyBy('id'),
-            'adoptions' => Adoption::where('is_active', 1)->orderBy('sort', 'DESC')->get(),
+            'adoptions' => Adoption::where('is_active', 1)->get(),
             'currencies' => Currency::whereIn('id', AdoptionStock::where('adoption_id', $adoption->id)->pluck('currency_id')->toArray())->get()->keyBy('id')
         ]);
     }

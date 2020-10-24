@@ -13,7 +13,7 @@ class Adoption extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'sort', 'has_image', 'description', 'parsed_description', 'is_active'
+        'name', 'has_image', 'description', 'parsed_description', 'is_active'
     ];
 
     /**
