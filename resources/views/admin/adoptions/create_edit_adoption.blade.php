@@ -45,13 +45,18 @@
 
 {!! Form::close() !!}
 
-<h3>Adoptable Characters</h3>
+<h3>Adoption Stock</h3>
 
+<div class="text-right mb-3">
+    <a href="#" class="stock-add btn btn-outline-primary">Add Stock</a>
+</div>
+
+@foreach($adoption->stock as $adopt)
 <div class="card mb-2">
     <div class="card-body row p-3">
         <div class="col col-form-label">
             <i class="fas fa-eye mr-2"></i>
-            <strong><a href="Adoptable Name">Adoptable Name</a> (<a href="Species">Species</a>)</strong>
+            <strong><a href="Adoptable Name">{{ $adopt->name }}</a> (<a href="Species">Species</a>)</strong>
         </div>
         <div class="col col-form-label">
             5 <a href="#">Dollars</a>, 8 <a href="#">Coins</a>
@@ -65,7 +70,8 @@
         </div>
     </div>
 </div>
-
+@endforeach
+<!---
 <div class="card mb-2">
     <div class="card-body row p-3">
         <div class="col col-form-label">
@@ -87,25 +93,8 @@
 
 <div class="text-right">
     <a href="#" class="add-stock-button btn btn-outline-primary">Add Adoptables (Opens Modal)</a>
-</div>
+</div>--->
 
-
-
-
-
-
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <br>
 <br>
 <br>
@@ -183,6 +172,11 @@ $( document ).ready(function() {
             });
         });
     }
+    $('.stock-add').on('click', function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            loadModal("{{ url('admin/data/adoptions/stock/edit/'.$adoption->id) }}", 'Add Stock');
+        });
 });
     
 </script>

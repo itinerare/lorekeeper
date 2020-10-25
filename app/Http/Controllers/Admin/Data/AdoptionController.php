@@ -104,4 +104,12 @@ class AdoptionController extends Controller
         }
         return redirect()->back();
     }
+
+    public function getEditStock($id) {
+        
+        return view('admin.adoptions.stock', [
+            'characters' => Character::orderBy('id')->where('user_id', 1)->pluck('slug', 'id'),
+            'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
+        ]);
+    }
 }
