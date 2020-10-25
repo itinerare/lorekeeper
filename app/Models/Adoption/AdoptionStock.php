@@ -50,6 +50,6 @@ class AdoptionStock extends Model
      */
     public function currency() 
     {
-        return $this->belongsToMany('App\Models\Adoption\AdoptionCurrency', 'adoption_currency')->withPivot('id');;
+        return $this->belongsToMany('App\Models\Currency\Currency', 'adoption_currency')->withPivot('id');
     }
 }

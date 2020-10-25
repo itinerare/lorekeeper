@@ -45,13 +45,83 @@
 
 {!! Form::close() !!}
 
+<h3>Adoptable Characters</h3>
+
+<div class="card mb-2">
+    <div class="card-body row p-3">
+        <div class="col col-form-label">
+            <i class="fas fa-eye mr-2"></i>
+            <strong><a href="Adoptable Name">Adoptable Name</a> (<a href="Species">Species</a>)</strong>
+        </div>
+        <div class="col col-form-label">
+            5 <a href="#">Dollars</a>, 8 <a href="#">Coins</a>
+        </div>
+        <div class="col col-form-label">
+            <i class="fas fa-paw" data-toggle="tooltip" title="Can be purchased using Character Bank"></i>
+            <i class="fas fa-user" data-toggle="tooltip" title="Can be purchased using User Bank"></i>
+        </div>
+        <div class="col text-right">
+            <a href="#" class="btn btn-dark">Edit Adoptable (Opens Modal)</a>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-2">
+    <div class="card-body row p-3">
+        <div class="col col-form-label">
+            <i class="fas fa-eye mr-2"></i>
+            <strong><a href="Adoptable Name">Adoptable Name</a> (<a href="Species">Species</a>)</strong>
+        </div>
+        <div class="col col-form-label">
+            5 <a href="#">Dollars</a>, 8 <a href="#">Coins</a>
+        </div>
+        <div class="col col-form-label">
+            <i class="fas fa-paw" data-toggle="tooltip" title="Can be purchased using Character Bank"></i>
+            <i class="fas fa-user" data-toggle="tooltip" title="Can be purchased using User Bank"></i>
+        </div>
+        <div class="col text-right">
+            <a href="#" class="btn btn-dark">Edit Adoptable (Opens Modal)</a>
+        </div>
+    </div>
+</div>
+
+<div class="text-right">
+    <a href="#" class="add-stock-button btn btn-outline-primary">Add Adoptables (Opens Modal)</a>
+</div>
+
+
+
+
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<hr>
+Old Stock way below
+<hr>
 @if($adoption->id)
     <h3>Adoption Stock</h3>
     {!! Form::open(['url' => 'admin/data/adoptions/stock/'.$adoption->id]) !!}
         <div class="text-right mb-3">
             <a href="#" class="add-stock-button btn btn-outline-primary">Add Stock</a>
         </div>
-        <div id="adoptionStock">
+        <div id="adoptionStock" class="row">
             @foreach($adoption->stock as $key=>$stock)
                 @include('admin.adoptions._stock', ['stock' => $stock, 'key' => $key])
             @endforeach
@@ -60,7 +130,7 @@
             {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
         </div>
     {!! Form::close() !!}
-    <div class="" id="adoptionStockData">
+    <div id="adoptionStockData">
         @include('admin.adoptions._stock', ['stock' => null, 'key' => 0])
     </div>
 @endif

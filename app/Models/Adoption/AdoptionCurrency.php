@@ -13,7 +13,7 @@ class AdoptionCurrency extends Model
      * @var array
      */
     protected $fillable = [
-        'stock_id', 'currency_id'
+        'stock_id', 'currency_id', 'cost'
     ];
 
     /**
