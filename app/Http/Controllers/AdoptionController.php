@@ -12,6 +12,7 @@ use App\Services\AdoptionManager;
 use App\Models\Adoption\Adoption;
 use App\Models\Adoption\AdoptionStock;
 use App\Models\Adoption\AdoptionLog;
+use App\Models\Adoption\AdoptionCurrency;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterCategory;
 use App\Models\Currency\Currency;
@@ -44,7 +45,7 @@ class AdoptionController extends Controller
             'characters' => $characters,
             'categories' => $categories->keyBy('id'),
             'adoptions' => Adoption::where('is_active', 1)->get(),
-            'currencies' => Currency::whereIn('id', AdoptionStock::where('adoption_id', $adoption->id)->pluck('currency_id')->toArray())->get()->keyBy('id')
+            'currencies' => Currency::whereIn('id', AdoptionCurrency::where('adoption_id', $adoption->id)->currency()->pluck('currency_id')->toArray())->get()->keyBy('id')
         ]);
     }
 

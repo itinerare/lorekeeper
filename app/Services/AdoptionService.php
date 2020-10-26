@@ -7,6 +7,7 @@ use Config;
 
 use App\Models\Adoption\Adoption;
 use App\Models\Adoption\AdoptionStock;
+use App\Models\Adoption\AdoptionCurrency;
 
 class AdoptionService extends Service
 {
@@ -24,40 +25,6 @@ class AdoptionService extends Service
         ADOPTIONS
 
     **********************************************************************************************/
-    
-    /**
-     * Creates a new adoption.
-     *
-     * @param  array                  $data 
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\Adoption\Adoption
-     */
-    public function createAdoption($data, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-
-            $data = $this->populateAdoptionData($data);
-
-            $image = null;
-            if(isset($data['image']) && $data['image']) {
-                $data['has_image'] = 1;
-                $image = $data['image'];
-                unset($data['image']);
-            }
-            else $data['has_image'] = 0;
-
-            $adoption = Adoption::create($data);
-
-            if ($image) $this->handleImage($image, $adoption->adoptionImagePath, $adoption->adoptionImageFileName);
-
-            return $this->commitReturn($adoption);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
     
     /**
      * Updates a adoption.
@@ -108,24 +75,18 @@ class AdoptionService extends Service
         DB::beginTransaction();
 
         try {
-            foreach($data['character_id'] as $key => $characterId)
-            {
-                if(!$data['cost'][$key]) throw new \Exception("One or more of the characters is missing a cost.");
-            }
+            if(!$data['cost']) throw new \Exception("The character is missing a cost.");
 
-            // Clear the existing adoption stock
-            $adoption->stock()->delete();
+            $stock_id = AdoptionStock::count() + 1;
 
-            foreach($data['character_id'] as $key => $characterId)
+            $this->populateCosts(array_only($data, ['currency_id', 'cost']), $stock_id);
+
             {
                 $adoption->stock()->create([
-                    'adoption_id'               => $adoption->id,
-                    'character_id'               => $data['character_id'][$key],
-                    'currency_id'           => $data['currency_id'][$key],
-                    'cost'                  => $data['cost'][$key],
-                    'use_user_bank'         => isset($data['use_user_bank'][$key]),
-                    'use_character_bank'    => isset($data['use_character_bank'][$key]),
-                    'purchase_limit'        => $data['purchase_limit'][$key],
+                    'adoption_id'           => $adoption->id,
+                    'character_id'          => $data['character_id'],
+                    'use_user_bank'         => isset($data['use_user_bank']),
+                    'use_character_bank'    => isset($data['use_character_bank']),
                 ]);
             }
 
@@ -160,53 +121,19 @@ class AdoptionService extends Service
 
         return $data;
     }
-    
-    /**
-     * Deletes a adoption.
-     *
-     * @param  \App\Models\Adoption\Adoption  $adoption
-     * @return bool
-     */
-    public function deleteAdoption($adoption)
-    {
-        DB::beginTransaction();
 
-        try {
-            // Delete adoption stock
-            $adoption->stock()->delete();
-
-            if($adoption->has_image) $this->deleteImage($adoption->adoptionImagePath, $adoption->adoptionImageFileName); 
-            $adoption->delete();
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-
-    /**
-     * Sorts adoption order.
-     *
-     * @param  array  $data
-     * @return bool
-     */
-    public function sortAdoption($data)
-    {
-        DB::beginTransaction();
-
-        try {
-            // explode the sort array and reverse it since the order is inverted
-            $sort = array_reverse(explode(',', $data));
-
-            foreach($sort as $key => $s) {
-                Adoption::where('id', $s)->update(['sort' => $key]);
+    private function populateCosts($data, $stock_id) {
+        
+        if(isset($data['currency_id'])) {
+            foreach($data['currency_id'] as $key => $type)
+            {
+                AdoptionCurrency::create([
+                    'stock_id'       => $stock_id,
+                    'currency_id' => $type,
+                    'cost'   => $data['cost'][$key],
+                ]);
             }
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
         }
-        return $this->rollbackReturn(false);
+
     }
 }

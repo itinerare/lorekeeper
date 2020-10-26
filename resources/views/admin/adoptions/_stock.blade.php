@@ -6,20 +6,33 @@
             {!! Form::select('character_id['.$key.']', $characters, $stock ? $stock->character_id : null, ['class' => 'form-control stock-field', 'data-name' => 'character_id']) !!}
         </div>
 
-        <div class="form-group currency-select">
+        <div><a href="#" class="btn btn-primary mb-3" id="add-feature">Add Currency</a></div>
+        
+        <div id="featureList" class="form-group">
+        </div>
+
+        <div class="feature-row hide">
+            {!! Form::label('cost', 'Cost', ['class' => 'col-form-label']) !!}
+                <div class="col-4">
+                    {!! Form::text('cost['.$key.']',  null, ['class' => 'form-control', 'placeholder' => 'Enter Cost']) !!}
+                </div>
+                <div class="col-4">
+                    {!! Form::select('currency_id['.$key.']', $currencies,  null, ['class' => 'form-control', 'placeholder' => 'Select Currency']) !!}
+                </div>
+                <a href="#" class="remove-feature btn btn-danger">Remove</a>
+        </div>
+        <!--<div class="form-group">
             {!! Form::label('cost['.$key.']', 'Cost') !!}
             <div class="row">
                 <div class="col-4">
-                    {!! Form::text('cost['.$key.']', $stock ? $stock->cost : null, ['class' => 'form-control stock-field', 'data-name' => 'cost']) !!}
+                    {!! Form::text('cost['.$key.']',  null, ['class' => 'form-control stock-field', 'data-name' => 'cost']) !!}
                 </div>
-                <div class="d-flex currencyList mb-2 col-4">
-                    {!! Form::select('currency_id['.$key.']', $currencies, $stock ? $stock->currency_id : null, ['class' => 'form-control stock-field', 'data-name' => 'currency_id']) !!}
-                    <a href="#" class="remove-currency btn ml-2 btn-danger mb-2">×</a>
+                <div class="col-8">
+                    {!! Form::select('currency_id['.$key.']', $currencies,null, ['class' => 'form-control stock-field', 'data-name' => 'currency_id']) !!}
                 </div>
             </div>
-            <div class="col-12 text-right"><a href="#" class="btn btn-primary" id="add-currency">Add Currency</a></div>
-        </div>
-
+        </div>-->
+        
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -40,50 +53,3 @@
         </div>
     </div>
 </div>
-
-<div class="currency-row hide mb-2 col-4">
-    {!! Form::label('cost['.$key.']', 'Cost') !!}
-    <div class="row">
-        <div class="col-4">
-            {!! Form::text('cost['.$key.']', $stock ? $stock->cost : null, ['class' => 'form-control stock-field', 'data-name' => 'cost']) !!}
-        </div>
-        <div class="d-flex mb-2 col-4">
-            {!! Form::select('currency_id['.$key.']', $currencies, $stock ? $stock->currency_id : null, ['class' => 'form-control stock-field', 'data-name' => 'currency_id']) !!}
-            <a href="#" class="remove-currency btn ml-2 btn-danger mb-2">×</a>
-        </div>
-    </div>
-</div>
-
-@section('scripts')
-@parent
-<script>
-$( document ).ready(function() {
-    $('.selectize').selectize();
-
-    $('.original.currency-select').selectize();
-    $('#add-currency').on('click', function(e) {
-        e.preventDefault();
-        addCurrencyRow();
-    });
-    $('.remove-currency').on('click', function(e) {
-        e.preventDefault();
-        removeCurrencyRow($(this));
-    })
-    function addCurrencyRow() {
-        var $clone = $('.currency-row').clone();
-        $('#currencyList').append($clone);
-        $clone.removeClass('hide currency-row');
-        $clone.addClass('d-flex');
-        $clone.find('.remove-currency').on('click', function(e) {
-            e.preventDefault();
-            removeCurrencyRow($(this));
-        })
-        $clone.find('.currency-select').selectize();
-    }
-    function removeCurrencyRow($trigger) {
-        $trigger.parent().remove();
-    }
-});
-    
-</script>
-@endsection

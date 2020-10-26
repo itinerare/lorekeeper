@@ -3,12 +3,13 @@
 @section('admin-title') Adoptions @endsection
 
 @section('admin-content')
-{!! breadcrumbs(['Admin Panel' => 'admin', 'Adoptions' => 'admin/data/adoptions', ($adoption->id ? 'Edit' : 'Create').' Adoption' => $adoption->id ? 'admin/data/adoptions/edit/'.$adoption->id : 'admin/data/adoptions/create']) !!}
+{!! breadcrumbs(['Admin Panel' => 'admin', 'Adoptions' => 'admin/data/adoptions',  'Edit Adoption' => 'admin/data/adoptions/edit/'.$adoption->id]) !!}
 
-<h1>{{ $adoption->id ? 'Edit' : 'Create' }} Adoption
+<h1>
+    Edit Adoption
 </h1>
 
-{!! Form::open(['url' => $adoption->id ? 'admin/data/adoptions/edit/'.$adoption->id : 'admin/data/adoptions/create', 'files' => true]) !!}
+{!! Form::open(['url' => 'admin/data/adoptions/edit/'.$adoption->id, 'files' => true]) !!}
 
 <h3>Basic Information</h3>
 
@@ -40,23 +41,18 @@
 </div>
 
 <div class="text-right">
-    {!! Form::submit($adoption->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+    {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
 </div>
 
 {!! Form::close() !!}
 
-<h3>Adoption Stock</h3>
-
-<div class="text-right mb-3">
-    <a href="#" class="stock-add btn btn-outline-primary">Add Stock</a>
-</div>
-
-@foreach($adoption->stock as $adopt)
+<h3>Current Adoption Stock</h3>
+@foreach($adoption->stock as $stock)
 <div class="card mb-2">
     <div class="card-body row p-3">
         <div class="col col-form-label">
             <i class="fas fa-eye mr-2"></i>
-            <strong><a href="Adoptable Name">{{ $adopt->name }}</a> (<a href="Species">Species</a>)</strong>
+            <strong><a href="Adoptable Name">{{ $stock->id }}</a> (<a href="Species">Species</a>)</strong>
         </div>
         <div class="col col-form-label">
             5 <a href="#">Dollars</a>, 8 <a href="#">Coins</a>
@@ -66,43 +62,13 @@
             <i class="fas fa-user" data-toggle="tooltip" title="Can be purchased using User Bank"></i>
         </div>
         <div class="col text-right">
-            <a href="#" class="btn btn-dark">Edit Adoptable (Opens Modal)</a>
+            <a href="#" class="stock-add btn btn-dark">Edit Adoptable (Opens Modal)</a>
         </div>
     </div>
 </div>
 @endforeach
-<!---
-<div class="card mb-2">
-    <div class="card-body row p-3">
-        <div class="col col-form-label">
-            <i class="fas fa-eye mr-2"></i>
-            <strong><a href="Adoptable Name">Adoptable Name</a> (<a href="Species">Species</a>)</strong>
-        </div>
-        <div class="col col-form-label">
-            5 <a href="#">Dollars</a>, 8 <a href="#">Coins</a>
-        </div>
-        <div class="col col-form-label">
-            <i class="fas fa-paw" data-toggle="tooltip" title="Can be purchased using Character Bank"></i>
-            <i class="fas fa-user" data-toggle="tooltip" title="Can be purchased using User Bank"></i>
-        </div>
-        <div class="col text-right">
-            <a href="#" class="btn btn-dark">Edit Adoptable (Opens Modal)</a>
-        </div>
-    </div>
-</div>
 
-<div class="text-right">
-    <a href="#" class="add-stock-button btn btn-outline-primary">Add Adoptables (Opens Modal)</a>
-</div>--->
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<hr>
-Old Stock way below
+<!--Old Stock way below
 <hr>
 @if($adoption->id)
     <h3>Adoption Stock</h3>
@@ -122,7 +88,7 @@ Old Stock way below
     <div id="adoptionStockData">
         @include('admin.adoptions._stock', ['stock' => null, 'key' => 0])
     </div>
-@endif
+@endif-->
 
 @endsection
 
@@ -162,6 +128,13 @@ $( document ).ready(function() {
         });
         stock.find('.card-body [data-toggle=tooltip]').tooltip({html: true});
     }
+
+    $('.stock-add').on('click', function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            loadModal("{{ url('admin/data/adoptions/stock/edit/'.$adoption->id) }}", 'Add Stock');
+        });
+
     function refreshStockFieldNames()
     {
         $('.stock').each(function(index) {
@@ -172,11 +145,6 @@ $( document ).ready(function() {
             });
         });
     }
-    $('.stock-add').on('click', function(e) {
-            e.preventDefault();
-            var $this = $(this);
-            loadModal("{{ url('admin/data/adoptions/stock/edit/'.$adoption->id) }}", 'Add Stock');
-        });
 });
     
 </script>

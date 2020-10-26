@@ -28,10 +28,6 @@ class AddAdoptionShop extends Migration
             $table->increments('id');
             $table->integer('adoption_id')->unsigned()->index();
             $table->integer('character_id')->unsigned();
-            
-            $table->integer('currency_id')->unsigned();
-            $table->integer('cost')->default(0);
-            $table->integer('purchase_limit')->unsigned()->default(0);
 
             // In addition to the currency type,
             // restrict the bank you can use to buy the item - 

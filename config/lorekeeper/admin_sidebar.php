@@ -115,6 +115,10 @@ return [
                 'url' => 'admin/data/adoptions'
             ],
             [
+                'name' => 'Adopt Stock',
+                'url' => 'admin/data/stock'
+            ],
+            [
                 'name' => 'Prompt Categories',
                 'url' => 'admin/data/prompt-categories'
             ],

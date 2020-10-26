@@ -131,6 +131,6 @@ class Adoption extends Model
      */
     public function getUrlAttribute()
     {
-        return url('adoptions/'.$this->id);
+        return url('adoptions');
     }
 }

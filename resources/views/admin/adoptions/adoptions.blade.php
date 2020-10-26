@@ -11,7 +11,7 @@
 <p>Only characters owned by ''Admin'' (user where id = 1) can be added to the center.</p>
 
 @if(!count($adoptions))
-    <p>No adoption centers found.</p>
+    <p>No adoption center found.</p>
 @else 
     <table class="table table-sm adoption-table">
         <tbody>
@@ -26,5 +26,7 @@
         </tbody>
     </table>
 @endif
+
+<a href="{{ url('admin/data/adoptions/stock/edit/'.$adoption->id) }}" class="btn btn-primary">Create Adopt Stock</a>
 
 @endsection
