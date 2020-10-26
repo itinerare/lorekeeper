@@ -6,7 +6,7 @@
 {!! breadcrumbs(['Admin Panel' => 'admin', 'Adoptions' => 'admin/data/adoptions', 'Adoption Stock' => 'admin/data/adoptions/edit']) !!}
 
 
-{!! Form::open(['url' => 'admin/data/adoptions/stock/'.$adoption->id]) !!}
+{!! Form::open(['url' => 'admin/data/adoptions/stock/1']) !!}
 <div class="card mb-3 stock">
     <div class="card-body">
         <div class="form-group">
