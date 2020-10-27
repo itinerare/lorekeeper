@@ -3,10 +3,10 @@
 @section('admin-title') Adoptions @endsection
 
 @section('admin-content')
-{!! breadcrumbs(['Admin Panel' => 'admin', 'Adoptions' => 'admin/data/adoptions', 'Adoption Stock' => 'admin/data/stock', 'Edit Stock' => 'admin/data/stock/edit']) !!}
+{!! breadcrumbs(['Admin Panel' => 'admin', 'Adoptions' => 'admin/data/adoptions', 'Adoption Stock' => 'admin/data/stock', 'Create Stock' => 'admin/data/stock/create']) !!}
 
-{!! Form::open(['url' => 'admin/data/stock/'.$id]) !!}
-<h1> Edit Stock - #{{ $id }} </h1>
+{!! Form::open(['url' => 'admin/data/adoptions/stock/create']) !!}
+<h1> Create Stock </h1>
 <div class="card mb-3 stock">
     <div class="card-body">
         <div class="form-group">

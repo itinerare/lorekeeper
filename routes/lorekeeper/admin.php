@@ -154,9 +154,11 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get('adoptions', 'AdoptionController@getIndex');
     Route::get('stock', 'AdoptionController@getStockIndex');
     Route::get('adoptions/edit/{id}', 'AdoptionController@getEditAdoption');
-    Route::get('adoptions/stock/edit/{id}', 'AdoptionController@getEditStock');
+    Route::get('stock/create', 'AdoptionController@getCreateStock');
+    Route::get('stock/edit/{id}', 'AdoptionController@getEditStock');
     Route::post('adoptions/edit/{id?}', 'AdoptionController@postCreateEditAdoption');
-    Route::post('adoptions/stock/{id}', 'AdoptionController@postEditAdoptionStock');
+    Route::post('stock/{id}', 'AdoptionController@postEditAdoptionStock');
+    Route::post('stock/create', 'AdoptionController@postCreateStock');
     
     # FEATURES (TRAITS)
     Route::get('trait-categories', 'FeatureController@getIndex');

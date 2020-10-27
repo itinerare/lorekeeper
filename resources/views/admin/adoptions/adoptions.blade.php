@@ -27,6 +27,6 @@
     </table>
 @endif
 
-<a href="{{ url('admin/data/adoptions/stock/edit/'.$adoption->id) }}" class="btn btn-primary">Create Adopt Stock</a>
+<a href="{{ url('admin/data/stock/create') }}" class="btn btn-primary">Create Adopt Stock</a>
 
 @endsection

@@ -64,7 +64,7 @@ class Adoption extends Model
      */
     public function displayStock()
     {
-        return $this->belongsToMany('App\Models\Character\Character', 'adoption_stock')->withPivot('character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'purchase_limit', 'id');
+        return $this->belongsToMany('App\Models\Character\Character', 'adoption_stock')->withPivot('character_id', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'purchase_limit', 'id');
     }
 
     /**********************************************************************************************

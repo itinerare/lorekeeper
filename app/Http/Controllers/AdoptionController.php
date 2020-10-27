@@ -45,7 +45,7 @@ class AdoptionController extends Controller
             'characters' => $characters,
             'categories' => $categories->keyBy('id'),
             'adoptions' => Adoption::where('is_active', 1)->get(),
-            'currencies' => Currency::whereIn('id', AdoptionCurrency::where('adoption_id', $adoption->id)->currency()->pluck('currency_id')->toArray())->get()->keyBy('id')
+            'currencies' => Currency::whereIn('id', AdoptionCurrency::pluck('currency_id')->toArray())->get()->keyBy('id')
         ]);
     }
 

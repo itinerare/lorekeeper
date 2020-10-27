@@ -54,10 +54,13 @@
             <strong><a href="{{ $stocks->character->url }}"> {!! $stocks->character->displayname !!}</a> (<a href="Species">{!! $stocks->character->image->species->name !!}</a>)</strong>
         </div>
         <div class="col col-form-label">
+            @if($stocks->currency == '[]') No cost added
+            @else
             @foreach($stocks->currency as $currency)
             {!! $currency->cost !!}
-            {!! $currency->currency->name !!}
+            {!! $currency->currency->name !!},
             @endforeach
+            @endif
         </div>
         <div class="col col-form-label">
             @if($stocks->use_character_bank == 1)

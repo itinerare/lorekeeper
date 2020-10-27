@@ -26,7 +26,7 @@ class AddAdoptionShop extends Migration
         Schema::create('adoption_stock', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->integer('adoption_id')->unsigned()->index();
+            $table->integer('adoption_id')->unsigned()->index()->default(1);
             $table->integer('character_id')->unsigned();
 
             // In addition to the currency type,

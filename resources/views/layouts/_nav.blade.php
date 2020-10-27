@@ -94,6 +94,9 @@
                         <a class="dropdown-item" href="{{ url('shops') }}">
                             Shops
                         </a>
+                        <a class="dropdown-item" href="{{ url('adoptions') }}">
+                            Adoption Center
+                        </a>
                     </div>
                 </li>
             </ul>

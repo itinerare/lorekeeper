@@ -61,25 +61,23 @@ class AdoptionService extends Service
         }
         return $this->rollbackReturn(false);
     }
-    
+
     /**
-     * Updates adoption stock.
+     * Creates adoption stock.
      *
      * @param  \App\Models\Adoption\Adoption  $adoption
      * @param  array                  $data 
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Adoption\Adoption
      */
-    public function updateAdoptionStock($adoption, $data, $user)
+    public function createAdoptionStock($adoption, $data, $id)
     {
         DB::beginTransaction();
 
         try {
             if(!$data['cost']) throw new \Exception("The character is missing a cost.");
 
-            $stock_id = AdoptionStock::count() + 1;
-
-            $this->populateCosts(array_only($data, ['currency_id', 'cost']), $stock_id);
+            $this->populateCosts(array_only($data, ['currency_id', 'cost']), $id);
 
             {
                 $adoption->stock()->create([
@@ -89,6 +87,40 @@ class AdoptionService extends Service
                     'use_character_bank'    => isset($data['use_character_bank']),
                 ]);
             }
+
+            return $this->commitReturn($adoption);
+        } catch(\Exception $e) { 
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+    
+    /**
+     * Updates adoption stock.
+     *
+     * @param  \App\Models\Adoption\Adoption  $adoption
+     * @param  array                  $data 
+     * @param  \App\Models\User\User  $user
+     * @return bool|\App\Models\Adoption\Adoption
+     */
+    public function updateAdoptionStock($adoption, $data, $id)
+    {
+
+        DB::beginTransaction();
+
+        try {
+            if(!$data['cost']) throw new \Exception("The character is missing a cost.");
+            if(!$data['currency_id']) throw new \Exception("The character is missing a currency type.");
+
+            $this->populateCosts(array_only($data, ['currency_id', 'cost']), $id);
+
+            $stock = AdoptionStock::find($id);
+
+            $stock->adoption_id = 1;
+            $stock->character_id = $data['character_id'];
+            $stock->use_user_bank = isset($data['use_user_bank']);
+            $stock->use_character_bank = isset($data['use_character_bank']);
+            $stock->save();
 
             return $this->commitReturn($adoption);
         } catch(\Exception $e) { 
@@ -122,13 +154,24 @@ class AdoptionService extends Service
         return $data;
     }
 
-    private function populateCosts($data, $stock_id) {
+    /**
+     * Processes currencies for use to buy
+     *
+     * @param  array                  $data 
+     * @param  \App\Models\Adoption\Adoption  $adoption
+     * @return array
+     */
+    private function populateCosts($data, $id) {
+
+        $stocks = AdoptionStock::find($id);
+        // Delete existing currencies to prevent overlaps etc
+        $stocks->currency()->delete();
         
         if(isset($data['currency_id'])) {
             foreach($data['currency_id'] as $key => $type)
             {
                 AdoptionCurrency::create([
-                    'stock_id'       => $stock_id,
+                    'stock_id'       => $id,
                     'currency_id' => $type,
                     'cost'   => $data['cost'][$key],
                 ]);

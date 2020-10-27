@@ -37,6 +37,53 @@ class AdoptionController extends Controller
             'adoptions' => Adoption::get()
         ]);
     }
+
+    /**
+     * Gets adopt stock index
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\AdoptionService  $service
+     * @param  int                       $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function getStockIndex() {
+        return view('admin.adoptions.stocks', [
+            'stock' => AdoptionStock::get()
+        ]);
+    }
+
+    /**
+     * Post adopt stock edits
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\AdoptionService  $service
+     * @param  int                       $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function getEditStock($id) {
+        
+        return view('admin.adoptions._edit_stock', [
+            'id' => $id,
+            'characters' => Character::orderBy('id')->where('user_id', 1)->pluck('slug', 'id'),
+            'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
+        ]);
+    }
+
+    /**
+     * Post adopt stock edits
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\AdoptionService  $service
+     * @param  int                       $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function getCreateStock() {
+        
+        return view('admin.adoptions._create_stock', [
+            'characters' => Character::orderBy('id')->where('user_id', 1)->pluck('slug', 'id'),
+            'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
+        ]);
+    }
     
     /**
      * Shows the edit adoption page.
@@ -79,21 +126,18 @@ class AdoptionController extends Controller
     }
 
     /**
-     * Edits a adoption's stock.
+     * Creates an adoption's stock.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  App\Services\AdoptionService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditAdoptionStock(Request $request, AdoptionService $service, $id)
+    public function postCreateStock(Request $request, AdoptionService $service, $id)
     {
         $data = $request->only([
             'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'purchase_limit'
         ]);
-        //dd($data['currency_id'], $data['cost']);
-        //if($data['currency_id'] === Null) throw new \Exception("Please select a currency");
-        //if($data['cost'] === Null) throw new \Exception("Please input a cost");
 
         if($service->updateAdoptionStock(Adoption::find($id), $data, Auth::user())) {
             flash('Adoption stock updated successfully.')->success();
@@ -106,33 +150,26 @@ class AdoptionController extends Controller
     }
 
     /**
-     * Post adopt stock edits
+     * Edits a adoption's stock.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  App\Services\AdoptionService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function getEditStock($id) {
-        
-        return view('admin.adoptions._edit_stock', [
-            'adoption' => Adoption::find($id),
-            'characters' => Character::orderBy('id')->where('user_id', 1)->pluck('slug', 'id'),
-            'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
+    public function postEditAdoptionStock(Request $request, AdoptionService $service, $id)
+    {
+        $data = $request->only([
+             'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'purchase_limit'
         ]);
-    }
 
-    /**
-     * Gets adopt stock index
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\AdoptionService  $service
-     * @param  int                       $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function getStockIndex() {
-        return view('admin.adoptions.stocks', [
-            'stock' => AdoptionStock::get()
-        ]);
+        if($service->updateAdoptionStock(Adoption::find(1), $data, $id)) {
+            flash('Adoption stock updated successfully.')->success();
+            return redirect()->back();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
     }
 }
