@@ -5,7 +5,7 @@
 @section('admin-content')
 {!! breadcrumbs(['Admin Panel' => 'admin', 'Adoptions' => 'admin/data/adoptions', 'Adoption Stock' => 'admin/data/stock', 'Create Stock' => 'admin/data/stock/create']) !!}
 
-{!! Form::open(['url' => 'admin/data/adoptions/stock/create']) !!}
+{!! Form::open(['url' => 'admin/data/stock/create/new']) !!}
 <h1> Create Stock </h1>
 <div class="card mb-3 stock">
     <div class="card-body">

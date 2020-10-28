@@ -15,7 +15,7 @@
         </div>
 
         <div><a href="#" class="btn btn-primary mb-3" id="add-feature">Add Currency</a></div>
-        
+        <div class="alert alert-warning">Remember you must re-enter all currency types, as the service deletes all old currency records to prevent overlap!</div>
         <div id="featureList" class="form-group">
         </div>
 

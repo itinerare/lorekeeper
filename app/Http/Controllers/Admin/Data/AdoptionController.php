@@ -133,13 +133,13 @@ class AdoptionController extends Controller
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateStock(Request $request, AdoptionService $service, $id)
+    public function postCreateStock(Request $request, AdoptionService $service)
     {
         $data = $request->only([
             'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'purchase_limit'
         ]);
 
-        if($service->updateAdoptionStock(Adoption::find($id), $data, Auth::user())) {
+        if($service->createAdoptionStock(Adoption::find(1), $data, Auth::user())) {
             flash('Adoption stock updated successfully.')->success();
             return redirect()->back();
         }

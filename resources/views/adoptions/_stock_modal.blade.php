@@ -4,28 +4,16 @@
     <div class="text-center mb-3">
         <div class="mb-1"><a href="{{ $stock->character->url }}"><img src="{{ $stock->character->image->thumbnailUrl }}" /></a></div>
         <div><a href="{{ $stock->character->url }}"><strong>{{ $stock->character->slug }}</strong></a></div>
-        <div><strong>Cost: </strong> {!! $stock->currency->display($stock->cost) !!}</div>
+        @foreach($stock->currency as $currency)
+        <div><strong>Cost: </strong>{!! $currency->cost !!} {!! $currency->currency->name !!}</div>
+        @endforeach
         @if($stock->is_limited_stock) <div>Stock: {{ $stock->quantity }}</div> @endif
-        @if($stock->purchase_limit) <div class="text-danger">Max {{ $stock->purchase_limit }} per user</div> @endif
     </div>
-
-    @if($stock->character->parsed_description)
-        <div class="mb-2">
-            <a data-toggle="collapse" href="#characterDescription" class="h5">Description <i class="fas fa-caret-down"></i></a>
-            <div class="card collapse show mt-1" id="characterDescription">
-                <div class="card-body">
-                    {!! $stock->character->parsed_description !!}
-                </div>
-            </div>
-        </div>
-    @endif
 
     @if(Auth::check())
         <h5>Purchase</h5>
         @if($stock->is_limited_stock && $stock->quantity == 0)
             <div class="alert alert-warning mb-0">This character is out of stock.</div>
-        @elseif($purchaseLimitReached)
-            <div class="alert alert-warning mb-0">You have already purchased the limit of {{ $stock->purchase_limit }} of this character.</div>
         @else 
             {!! Form::open(['url' => 'adoptions/buy']) !!}
                 {!! Form::hidden('adoption_id', $adoption->id) !!}
@@ -60,9 +48,13 @@
                         {!! Form::text('slug', null, ['class' => 'form-control']) !!}
                     </div>
                 @endif
-                <div class="text-right">
+                @foreach($stock->currency as $currency)
+                <div class="text-center">
+                    {!! Form::hidden('currency_id', $currency->currency_id) !!}
+                    <div class="text-uppercase text-muted">Purchase with {!! $currency->currency->name !!}</div>
                     {!! Form::submit('Purchase', ['class' => 'btn btn-primary']) !!}
                 </div>
+                @endforeach
             {!! Form::close() !!}
         @endif
     @else 

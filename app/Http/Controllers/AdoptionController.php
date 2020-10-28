@@ -45,7 +45,8 @@ class AdoptionController extends Controller
             'characters' => $characters,
             'categories' => $categories->keyBy('id'),
             'adoptions' => Adoption::where('is_active', 1)->get(),
-            'currencies' => Currency::whereIn('id', AdoptionCurrency::pluck('currency_id')->toArray())->get()->keyBy('id')
+            'currencies' => Currency::whereIn('id', AdoptionCurrency::pluck('currency_id')->toArray())->get()->keyBy('id'),
+            'stock' => AdoptionStock::get()
         ]);
     }
 
@@ -60,11 +61,11 @@ class AdoptionController extends Controller
     public function getAdoptionStock(AdoptionManager $service, $id, $stockId)
     {
         $adoption = Adoption::where('id', $id)->where('is_active', 1)->first();
+        $stock = AdoptionStock::with('character')->where('character_id', $stockId)->where('adoption_id', $id)->first();
         if(!$adoption) abort(404);
         return view('adoptions._stock_modal', [
             'adoption' => $adoption,
-            'stock' => $stock = AdoptionStock::with('character')->where('id', $stockId)->where('adoption_id', $id)->first(),
-            'purchaseLimitReached' => $service->checkPurchaseLimitReached($stock, Auth::user())
+            'stock' => $stock,
         ]);
     }
 
@@ -78,7 +79,7 @@ class AdoptionController extends Controller
     public function postBuy(Request $request, AdoptionManager $service)
     {
         $request->validate(AdoptionLog::$createRules);
-        if($service->buyStock($request->only(['stock_id', 'adoption_id', 'slug', 'bank']), Auth::user())) {
+        if($service->buyStock($request->only(['stock_id', 'adoption_id', 'slug', 'bank', 'currency_id']), Auth::user())) {
             flash('Successfully purchased character.')->success();
         }
         else {

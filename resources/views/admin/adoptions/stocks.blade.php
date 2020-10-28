@@ -25,10 +25,16 @@
                 <div class="col col-form-label">
                     @if($stocks->currency == '[]') No cost added
                     @else
-                    @foreach($stocks->currency as $currency)
-                    {!! $currency->cost !!}
-                    {!! $currency->currency->name !!},
-                    @endforeach
+                    <?php 
+                        $currencies = []; // Create an empty array
+                        foreach($stocks->currency as $currency)
+                        {
+                        $d1 = $currency->cost;
+                        $d2 = $currency->currency->name;
+                        $currencies[] = ' ' . $d1 . ' ' . $d2; // Add a new value to your array
+                        }
+                        echo implode(" or", $currencies); // implode the full array and separate the values with "or"
+                        ?>
                     @endif
                 </div>
                 <div class="col col-form-label">
@@ -42,17 +48,4 @@
         </div>
         @endforeach
     @endif
-@endsection
-
-@section('scripts')
-@parent
-<script>
-//$( document ).ready(function() {    
-    //$('.edit-button').on('click', function(e) {
-        //e.preventDefault();
-        //loadModal("{{ url('admin/data/adoptions/stock/edit/'.$stocks->id) }}", 'Edit Stock');
-    //});
-//});
-    
-</script>
 @endsection

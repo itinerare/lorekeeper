@@ -71,9 +71,10 @@
             @endif
         </div>
         <div class="col text-right">
-            <a href="{{ url('admin/data/adoptions/stock/edit/'.$stocks->id) }}" class="btn btn-dark">Edit Adoptable</a>
+            <a href="{{ url('admin/data/stock/edit/'.$stocks->id) }}" class="btn btn-dark">Edit Adoptable</a>
         </div>
     </div>
 </div>
 @endforeach
+<a href="{{ url('admin/data/stock/create') }}" class="btn btn-primary">Create Adopt Stock</a>
 @endsection

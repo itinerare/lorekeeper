@@ -1,8 +1,8 @@
-@extends('adoptions.layout')
+@extends('layouts.app')
 
-@section('adoptions-title') {{ $adoption->name }} @endsection
+@section('title') {{ $adoption->name }} @endsection
 
-@section('adoptions-content')
+@section('content')
 {!! breadcrumbs([$adoption->name => $adoption->url]) !!}
 
 <h1>
@@ -14,32 +14,53 @@
     <p>{!! $adoption->parsed_description !!}</p>
 </div>
 
-@foreach($characters as $categoryId=>$categoryCharacters)
-    <div class="card mb-3 inventory-category">
-        <h5 class="card-header inventory-header">
-            {!! isset($categories[$categoryId]) ? '<a href="'.$categories[$categoryId]->searchUrl.'">'.$categories[$categoryId]->name.'</a>' : 'Miscellaneous' !!}
-        </h5>
-        <div class="card-body inventory-body">
-            @foreach($categoryCharacters->chunk(4) as $chunk)
-                <div class="row mb-3">
-                    @foreach($chunk as $character) 
-                        <div class="col-sm-3 col-6 text-center inventory-character" data-id="{{ $character->pivot->id }}">
-                            <div class="mb-1">
-                                <a href="{{ $character->url }}"><img src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" /></a>
-                            </div>
-                            <div>
-                                <a href="#" class="inventory-stack inventory-stack-name"><strong>{{ $character->slug }}</strong></a>
-                                <div><strong>Cost: </strong> {!! $currencies[$character->pivot->currency_id]->display($character->pivot->cost) !!}</div>
-                                @if($character->pivot->is_limited_stock == 0) <div>Stock: {{ $character->pivot->quantity }}</div> @endif
-                                @if($character->pivot->purchase_limit) <div class="text-danger">Max {{ $character->pivot->purchase_limit }} per user</div> @endif
-                            </div>
-                        </div>
-                    @endforeach
+@if(!count($stock))
+    <p>No stock found.</p>
+@else 
+<div class="card mb-3 inventory-category">
+    @foreach($stock as $stocks)
+    <div class="card">
+        <h5 class="card-header">
+                    <strong><a href="{{ $stocks->character->url }}"> {!! $stocks->character->displayname !!}</a> (<a href="{{ $stocks->character->image->species->url }}">{!! $stocks->character->image->species->name !!}</a>)</strong>
                 </div>
-            @endforeach
+            </h5>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="text-center" data-id="{{ $stocks->character->id }}">
+                        <div class="mb-1">
+                            <img src="{{ $stocks->character->image->thumbnailUrl }}">
+                        </div>
+                            <a href="#" class="inventory-stack inventory-stack-name"><strong>{{ $stocks->character->slug }}</strong></a>
+                            <br>
+                            <strong>Cost:</strong>
+                    @if($stocks->currency->count() > 1)
+                        <?php 
+                            $currencies = []; // Create an empty array
+                            foreach($stocks->currency as $currency)
+                            {
+                            $d1 = $currency->cost;
+                            $d2 = $currency->currency->name;
+                            $currencies[] = ' ' . $d1 . ' ' . $d2; // Add a new value to your array
+                            }
+                            echo implode(" or", $currencies); // implode the full array and separate the values with "or"
+                        ?>
+                            <br>
+                        @else
+                            @foreach($stocks->currency as $currency)
+                            {!! $currency->cost !!}
+                            {!! $currency->currency->name !!}
+                            <br>
+                        @endforeach
+                    @endif
+                </div>
+                <div class="col col-form-label">
+                    @if($stocks->use_character_bank == 1) <i class="fas fa-paw" data-toggle="tooltip" title="Can be purchased using Character Bank"></i>@endif
+                    @if($stocks->use_user_bank == 1) <i class="fas fa-user" data-toggle="tooltip" title="Can be purchased using User Bank"></i> @endif
+                </div>
+            </div>
         </div>
-    </div>
-@endforeach
+    @endforeach
+@endif
 
 @endsection
 

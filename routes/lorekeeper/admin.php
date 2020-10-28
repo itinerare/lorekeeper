@@ -158,7 +158,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get('stock/edit/{id}', 'AdoptionController@getEditStock');
     Route::post('adoptions/edit/{id?}', 'AdoptionController@postCreateEditAdoption');
     Route::post('stock/{id}', 'AdoptionController@postEditAdoptionStock');
-    Route::post('stock/create', 'AdoptionController@postCreateStock');
+    Route::post('stock/create/new', 'AdoptionController@postCreateStock');
     
     # FEATURES (TRAITS)
     Route::get('trait-categories', 'FeatureController@getIndex');

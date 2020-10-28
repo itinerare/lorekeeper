@@ -77,16 +77,15 @@ class AdoptionService extends Service
         try {
             if(!$data['cost']) throw new \Exception("The character is missing a cost.");
 
-            $this->populateCosts(array_only($data, ['currency_id', 'cost']), $id);
+            // Validation
+            $data['adoption_id'] = 1;
+            if(!isset($data['use_user_bank'])) $data['use_user_bank'] = 0;
+            if(!isset($data['use_character_bank'])) $data['use_character_bank'] = 0;
 
-            {
-                $adoption->stock()->create([
-                    'adoption_id'           => $adoption->id,
-                    'character_id'          => $data['character_id'],
-                    'use_user_bank'         => isset($data['use_user_bank']),
-                    'use_character_bank'    => isset($data['use_character_bank']),
-                ]);
-            }
+            $stock = AdoptionStock::create(array_only($data, ['adoption_id', 'character_id', 'use_user_bank', 'use_character_bank']));
+            if(AdoptionStock::where('character_id', $data['character_id'])->where('id', '!=', $stock->id)->exists()) throw new \Exception("This character is already in another stock!");
+
+            $this->popCreationCosts(array_only($data, ['currency_id', 'cost']), $stock);
 
             return $this->commitReturn($adoption);
         } catch(\Exception $e) { 
@@ -111,6 +110,7 @@ class AdoptionService extends Service
         try {
             if(!$data['cost']) throw new \Exception("The character is missing a cost.");
             if(!$data['currency_id']) throw new \Exception("The character is missing a currency type.");
+            if(AdoptionStock::where('character_id', $data['character_id'])->where('id', '!=', $id)->exists()) throw new \Exception("This character is already in another stock!");
 
             $this->populateCosts(array_only($data, ['currency_id', 'cost']), $id);
 
@@ -166,9 +166,10 @@ class AdoptionService extends Service
         $stocks = AdoptionStock::find($id);
         // Delete existing currencies to prevent overlaps etc
         $stocks->currency()->delete();
-        
-        if(isset($data['currency_id'])) {
-            foreach($data['currency_id'] as $key => $type)
+
+        $currency = array_unique($data['currency_id']);
+        if(isset($currency)) {
+            foreach($currency as $key => $type)
             {
                 AdoptionCurrency::create([
                     'stock_id'       => $id,
@@ -179,4 +180,21 @@ class AdoptionService extends Service
         }
 
     }
+
+    /**
+     * Processes currencies for use to buy
+     *
+     * @param  array                  $data 
+     * @param  \App\Models\Adoption\Adoption  $adoption
+     * @return array
+     */
+    private function popCreationCosts($data, $id) {
+        $currency = array_unique($data['currency_id']);
+            foreach($currency as $key => $type)
+                AdoptionCurrency::create([
+                    'stock_id'       => $id->id,
+                    'currency_id' => $type,
+                    'cost'   => $data['cost'][$key],
+                ]);
+            }
 }
