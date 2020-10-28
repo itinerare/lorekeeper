@@ -17,20 +17,15 @@
 @if(!count($stock))
     <p>No stock found.</p>
 @else 
-<div class="card mb-3 inventory-category">
+<div class="row">
     @foreach($stock as $stocks)
-    <div class="card">
-        <h5 class="card-header">
-                    <strong><a href="{{ $stocks->character->url }}"> {!! $stocks->character->displayname !!}</a> (<a href="{{ $stocks->character->image->species->url }}">{!! $stocks->character->image->species->name !!}</a>)</strong>
-                </div>
-            </h5>
-            <div class="card-body">
-                <div class="row mb-3">
-                    <div class="text-center" data-id="{{ $stocks->character->id }}">
+    <div class="col-md-3 col-6 profile-inventory-item">
+        <div class="card p-3">
+                    <div class="text-center inventory-character" data-id="{{ $stocks->character->id }}">
+                        <h3><strong><a href="{{ $stocks->character->url }}"> {!! $stocks->character->displayname !!}</a> (<a href="{{ $stocks->character->image->species->url }}">{!! $stocks->character->image->species->name !!}</a>)</strong></h3>
                         <div class="mb-1">
                             <img src="{{ $stocks->character->image->thumbnailUrl }}">
                         </div>
-                            <a href="#" class="inventory-stack inventory-stack-name"><strong>{{ $stocks->character->slug }}</strong></a>
                             <br>
                             <strong>Cost:</strong>
                     @if($stocks->currency->count() > 1)
@@ -52,14 +47,13 @@
                             <br>
                         @endforeach
                     @endif
-                </div>
-                <div class="col col-form-label">
                     @if($stocks->use_character_bank == 1) <i class="fas fa-paw" data-toggle="tooltip" title="Can be purchased using Character Bank"></i>@endif
                     @if($stocks->use_user_bank == 1) <i class="fas fa-user" data-toggle="tooltip" title="Can be purchased using User Bank"></i> @endif
                 </div>
             </div>
         </div>
     @endforeach
+</div>
 @endif
 
 @endsection
