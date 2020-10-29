@@ -54,6 +54,7 @@
                     <div class="text-uppercase text-muted">Purchase with {!! $currency->currency->name !!}</div>
                     {!! Form::submit('Purchase', ['class' => 'btn btn-primary']) !!}
                 </div>
+                <br>
                 @endforeach
             {!! Form::close() !!}
         @endif
