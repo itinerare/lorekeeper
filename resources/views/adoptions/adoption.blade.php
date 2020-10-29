@@ -21,13 +21,14 @@
     @foreach($stock as $stocks)
     <div class="col-md-3 col-6 profile-inventory-item">
         <div class="card p-3">
+            <div class="text-center"><h3><strong><a href="{{ $stocks->character->url }}"> {!! $stocks->character->displayname !!}</a> (<a href="{{ $stocks->character->image->species->url }}">{!! $stocks->character->image->species->name !!}</a>)</strong></h3></div>
                     <div class="text-center inventory-character" data-id="{{ $stocks->character->id }}">
-                        <h3><strong><a href="{{ $stocks->character->url }}"> {!! $stocks->character->displayname !!}</a> (<a href="{{ $stocks->character->image->species->url }}">{!! $stocks->character->image->species->name !!}</a>)</strong></h3>
                         <div class="mb-1">
                             <img src="{{ $stocks->character->image->thumbnailUrl }}">
                         </div>
                             <br>
                             <strong>Cost:</strong>
+                            <br>
                     @if($stocks->currency->count() > 1)
                         <?php 
                             $currencies = []; // Create an empty array
@@ -49,6 +50,8 @@
                     @endif
                     @if($stocks->use_character_bank == 1) <i class="fas fa-paw" data-toggle="tooltip" title="Can be purchased using Character Bank"></i>@endif
                     @if($stocks->use_user_bank == 1) <i class="fas fa-user" data-toggle="tooltip" title="Can be purchased using User Bank"></i> @endif
+                    <br>
+                    <a href="#" class="btn btn-primary m-2">Purchase</a>
                 </div>
             </div>
         </div>

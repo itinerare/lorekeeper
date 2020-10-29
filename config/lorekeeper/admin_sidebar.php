@@ -111,12 +111,12 @@ return [
                 'url' => 'admin/data/shops'
             ],
             [
-                'name' => 'Adoption Center',
-                'url' => 'admin/data/adoptions'
-            ],
-            [
                 'name' => 'Adopt Stock',
                 'url' => 'admin/data/stock'
+            ],
+            [
+                'name' => 'Adoption Center',
+                'url' => 'admin/data/adoptions'
             ],
             [
                 'name' => 'Prompt Categories',

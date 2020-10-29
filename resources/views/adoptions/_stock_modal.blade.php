@@ -4,12 +4,27 @@
     <div class="text-center mb-3">
         <div class="mb-1"><a href="{{ $stock->character->url }}"><img src="{{ $stock->character->image->thumbnailUrl }}" /></a></div>
         <div><a href="{{ $stock->character->url }}"><strong>{{ $stock->character->slug }}</strong></a></div>
-        @foreach($stock->currency as $currency)
-        <div><strong>Cost: </strong>{!! $currency->cost !!} {!! $currency->currency->name !!}</div>
-        @endforeach
-        @if($stock->is_limited_stock) <div>Stock: {{ $stock->quantity }}</div> @endif
+        <strong>Cost:</strong>
+        @if($stock->currency->count() > 1)
+            <?php 
+                $currencies = []; // Create an empty array
+                foreach($stock->currency as $currency)
+                {
+                $d1 = $currency->cost;
+                $d2 = $currency->currency->name;
+                $currencies[] = ' ' . $d1 . ' ' . $d2; // Add a new value to your array
+                }
+                echo implode(" or", $currencies); // implode the full array and separate the values with "or"
+            ?>
+                <br>
+            @else
+                @foreach($stock->currency as $currency)
+                {!! $currency->cost !!}
+                {!! $currency->currency->name !!}
+                <br>
+            @endforeach
+        @endif
     </div>
-
     @if(Auth::check())
         <h5>Purchase</h5>
         @if($stock->is_limited_stock && $stock->quantity == 0)
