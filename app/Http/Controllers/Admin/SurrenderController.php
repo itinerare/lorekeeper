@@ -82,4 +82,22 @@ class SurrenderController extends Controller
         ] : []));
     }
 
+    /**
+     * 
+     * Approves / rejects surrender and distributes rewards etc etc
+     */
+    public function postSurrender(Request $request, SurrenderManager $service, $id, $action)
+    {
+        $data = $request->only(['grant', 'staff_comments']);
+        if($action == 'reject' && $service->rejectSubmission($data + ['id' => $id], Auth::user())) {
+            flash('Submission rejected successfully.')->success();
+            }
+            elseif($action == 'approve' && $service->approveSubmission($data + ['id' => $id], Auth::user())) {
+                flash('Submission approved successfully.')->success();
+            }
+            else {
+                foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            }
+            return redirect()->back();
+    }
 }

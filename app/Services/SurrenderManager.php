@@ -13,22 +13,23 @@ use Settings;
 use App\Models\User\User;
 use App\Models\Character\Character;
 use App\Models\Currency\Currency;
-use App\Models\Item\Item;
 use App\Models\Adoption\Surrender;
+
+use App\Services\CurrencyManager;
 
 class SurrenderManager extends Service
 {
     /*
     |--------------------------------------------------------------------------
-    | Submission Manager
+    | Surrender Manager
     |--------------------------------------------------------------------------
     |
-    | Handles creation and modification of submission data.
+    | Handles creation and modification of surrender data.
     |
     */
 
     /**
-     * Creates a new submission.
+     * Creates a new surrender.
      *
      * @param  array                  $data
      * @param  \App\Models\User\User  $user
@@ -46,7 +47,7 @@ class SurrenderManager extends Service
             // might be needed
             $characters = Character::where('user_id', $user->id)->where('id', $data['character_id'])->first();
             
-            // Get a list of rewards, then create the submission itself
+            // Get a list of rewards, then create the surrender itself
             $surrender = Surrender::create([
                 'user_id' => $user->id,
                 'character_id' => $data['character_id'],
@@ -63,98 +64,42 @@ class SurrenderManager extends Service
     }
 
     /**
-     * Processes reward data into a format that can be used for distribution.
-     *
-     * @param  array $data
-     * @param  bool  $isCharacter
-     * @param  bool  $isStaff
-     * @return array
-     */
-    private function processRewards($data, $isCharacter, $isStaff = false)
-    {
-        if($isCharacter)
-        {
-            $assets = createAssetsArray(true);
-            if(isset($data['character_currency_id'][$data['character_id']]) && isset($data['character_quantity'][$data['character_id']]))
-            {
-                foreach($data['character_currency_id'][$data['character_id']] as $key => $currency)
-                {
-                    if($data['character_quantity'][$data['character_id']][$key]) addAsset($assets, $data['currencies'][$currency], $data['character_quantity'][$data['character_id']][$key]);
-                }
-            }
-            return $assets;
-        }
-        else
-        {
-            $assets = createAssetsArray(false);
-            // Process the additional rewards
-            if(isset($data['rewardable_type']) && $data['rewardable_type'])
-            {
-                foreach($data['rewardable_type'] as $key => $type)
-                {
-                    $reward = null;
-                    switch($type)
-                    {
-                        case 'Item':
-                            $reward = Item::find($data['rewardable_id'][$key]);
-                            break;
-                        case 'Currency':
-                            $reward = Currency::find($data['rewardable_id'][$key]);
-                            if(!$reward->is_user_owned) throw new \Exception("Invalid currency selected.");
-                            break;
-                        case 'LootTable':
-                            if (!$isStaff) break;
-                            $reward = LootTable::find($data['rewardable_id'][$key]);
-                            break;
-                    }
-                    if(!$reward) continue;
-                    addAsset($assets, $reward, $data['quantity'][$key]);
-                }
-            }
-            return $assets;
-        }
-    }
-
-    /**
-     * Rejects a submission.
+     * Rejects a surrender.
      *
      * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return mixed
      */
-    public function rejectSubmission($data, $user)
+    public function rejectSurrender($data, $user)
     {
         DB::beginTransaction();
 
         try {
-            // 1. check that the submission exists
-            // 2. check that the submission is pending
-            if(!isset($data['submission'])) $submission = Submission::where('status', 'Pending')->where('id', $data['id'])->first();
-            elseif($data['submission']->status == 'Pending') $submission = $data['submission'];
-            else $submission = null;
-            if(!$submission) throw new \Exception("Invalid submission.");
-			
-			if(isset($data['staff_comments']) && $data['staff_comments']) $data['parsed_staff_comments'] = parse($data['staff_comments']);
-			else $data['parsed_staff_comments'] = null;
+            // 1. check that the surrender exists
+            // 2. check that the surrender is pending
+            if(!isset($data['surrender'])) $surrender = Surrender::where('status', 'Pending')->where('id', $data['id'])->first();
+            elseif($data['surrender']->status == 'Pending') $surrender = $data['surrender'];
+            else $surrender = null;
+            if(!$surrender) throw new \Exception("Invalid surrender.");
 
             // The only things we need to set are: 
             // 1. staff comment
             // 2. staff ID
             // 3. status
-            $submission->update([
+            $surrender->update([
                 'staff_comments' => $data['staff_comments'],
-				'parsed_staff_comments' => $data['parsed_staff_comments'],
                 'staff_id' => $user->id,
                 'status' => 'Rejected'
             ]);
 
-            Notifications::create($submission->prompt_id ? 'SUBMISSION_REJECTED' : 'CLAIM_REJECTED', $submission->user, [
+            // need to make notifications
+            Notifications::create('SURRENDER_REJECTED', $surrender->user, [
                 'staff_url' => $user->url,
                 'staff_name' => $user->name,
-                'submission_id' => $submission->id,
+                'surrender_id' => $surrender->id,
             ]);
 
-            return $this->commitReturn($submission);
+            return $this->commitReturn($surrender);
         } catch(\Exception $e) { 
             $this->setError('error', $e->getMessage());
         }
@@ -162,100 +107,48 @@ class SurrenderManager extends Service
     }
 
     /**
-     * Approves a submission.
+     * Approves a surrender.
      *
      * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return mixed
      */
-    public function approveSubmission($data, $user)
+    public function approveSurrender($data, $user, CurrencyManager $service)
     {
         DB::beginTransaction();
 
         try {
-            // 1. check that the submission exists
-            // 2. check that the submission is pending
-            $submission = Submission::where('status', 'Pending')->where('id', $data['id'])->first();
-            if(!$submission) throw new \Exception("Invalid submission.");
+            // 1. check that the surrender exists
+            // 2. check that the surrender is pending
+            $surrender = Surrender::where('status', 'Pending')->where('id', $data['id'])->first();
+            if(!$surrender) throw new \Exception("Invalid surrender.");
 
-            // The character identification comes in both the slug field and as character IDs
-            // that key the reward ID/quantity arrays. 
-            // We'll need to match characters to the rewards for them.
-            // First, check if the characters are accessible to begin with.
-            if(isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
-                if(count($characters) != count($data['slug'])) throw new \Exception("One or more of the selected characters do not exist.");
-            }
-            else $characters = [];
+            // Distribute user currency
+            // need to fix -> check previous code
+            if(!$service->creditCurrency('Adoption Surrender', $user, $surrender->user, $promptLogType, $promptData)) throw new \Exception("Failed to distribute currency to user.");
 
-            // Get the updated set of rewards
-            $rewards = $this->processRewards($data, false, true);
-
-            // Logging data
-            $promptLogType = $submission->prompt_id ? 'Prompt Rewards' : 'Claim Rewards';
-            $promptData = [
-                'data' => 'Received rewards for '.($submission->prompt_id ? 'submission' : 'claim').' (<a href="'.$submission->viewUrl.'">#'.$submission->id.'</a>)'
-            ];
-
-            // Distribute user rewards
-            if(!$rewards = fillUserAssets($rewards, $user, $submission->user, $promptLogType, $promptData)) throw new \Exception("Failed to distribute rewards to user.");
-            
-            // Retrieve all currency IDs for characters
-            $currencyIds = [];
-            if(isset($data['character_currency_id'])) {
-                foreach($data['character_currency_id'] as $c)
-                    foreach($c as $currencyId) $currencyIds[] = $currencyId;
-            }
-            array_unique($currencyIds);
-            $currencies = Currency::whereIn('id', $currencyIds)->where('is_character_owned', 1)->get()->keyBy('id');
-
-            // We're going to remove all characters from the submission and reattach them with the updated data
-            $submission->characters()->delete();
-            
-            // Distribute character rewards
-            foreach($characters as $c) 
-            {
-                // Users might not pass in clean arrays (may contain redundant data) so we need to clean that up
-                $assets = $this->processRewards($data + ['character_id' => $c->id, 'currencies' => $currencies], true);
-
-                if(!fillCharacterAssets($assets, $user, $c, $promptLogType, $promptData)) throw new \Exception("Failed to distribute rewards to character.");
-                
-                SubmissionCharacter::create([
-                    'character_id' => $c->id,
-                    'submission_id' => $submission->id,
-                    'data' => json_encode(getDataReadyAssets($assets))
-                ]);
-            }
-
-            // Increment user submission count if it's a prompt
-            if($submission->prompt_id) {
-                $user->settings->submission_count++;
-                $user->settings->save();
-            }
-			
-			if(isset($data['staff_comments']) && $data['staff_comments']) $data['parsed_staff_comments'] = parse($data['staff_comments']);
-			else $data['parsed_staff_comments'] = null;
+            // Add character to the adoption stock
+            // pseudo code
+            // $service2->createStock( - - - - )
 
             // Finally, set: 
 			// 1. staff comments
             // 2. staff ID
             // 3. status
-            // 4. final rewards
-            $submission->update([
+            $surrender->update([
 			    'staff_comments' => $data['staff_comments'],
 				'parsed_staff_comments' => $data['parsed_staff_comments'],
                 'staff_id' => $user->id,
                 'status' => 'Approved',
-                'data' => json_encode(getDataReadyAssets($rewards))
             ]);
 
-            Notifications::create($submission->prompt_id ? 'SUBMISSION_APPROVED' : 'CLAIM_APPROVED', $submission->user, [
+            Notifications::create('SURRENDER_APPROVED', $surrender->user, [
                 'staff_url' => $user->url,
                 'staff_name' => $user->name,
-                'submission_id' => $submission->id,
+                'surrender_id' => $surrender->id,
             ]);
 
-            return $this->commitReturn($submission);
+            return $this->commitReturn($surrender);
         } catch(\Exception $e) { 
             $this->setError('error', $e->getMessage());
         }
