@@ -161,3 +161,6 @@ Route::group(['prefix' => 'adoptions'], function() {
     Route::post('buy', 'AdoptionController@postBuy');
     Route::get('history', 'AdoptionController@getPurchaseHistory');
 });
+
+Route::get('surrender', 'SurrenderController@getSurrender');
+Route::post('surrender/post', 'SurrenderController@postSurrender');

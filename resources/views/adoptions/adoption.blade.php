@@ -14,6 +14,14 @@
     <p>{!! $adoption->parsed_description !!}</p>
 </div>
 
+@if(Settings::get('is_surrenders_open'))
+@if(auth::check())
+<div class="text-right mb-2">
+<a href="{{ url('surrender') }}" class="btn btn-dark">Surrender Character to Adoption Center</a>
+</div>
+@endif
+@endif
+
 @if(!count($stock))
     <p>No stock found.</p>
 @else 

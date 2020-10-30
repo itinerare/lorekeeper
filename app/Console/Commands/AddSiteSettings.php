@@ -123,6 +123,32 @@ class AddSiteSettings extends Command
         }
         else $this->line("Skipped: is_myos_open");
         
+        if(!DB::table('site_settings')->where('key', 'is_surrenders_open')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'is_surrenders_open',
+                    'value' => 1,
+                    'description' => '0: Characters can not be surrendered by users to the adoption center, 1: Characters can be submitted to surrender queue.'
+                ]
+
+            ]);
+            $this->info("Added:   is_surrenders_open / Default: 1");
+        }
+        else $this->line("Skipped: is_surrenders_open");
+
+        if(!DB::table('site_settings')->where('key', 'calculate_by_traits')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'calculate_by_traits',
+                    'value' => 0,
+                    'description' => '0: Characters must have currency be added manually, 1: Characters are valued automaticall by traits. THIS MUST BE HARDCODED. The controller has been commented for ease.'
+                ]
+
+            ]);
+            $this->info("Added:   calculate_by_traits / Default: 0");
+        }
+        else $this->line("Skipped: calculate_by_traits");
+
         if(!DB::table('site_settings')->where('key', 'is_design_updates_open')->exists()) {
             DB::table('site_settings')->insert([
                 [

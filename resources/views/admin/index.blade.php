@@ -98,6 +98,25 @@
           </div>
       @endif
     @endif
+    @if(Auth::user()->hasPower('manage_characters') && Auth::user()->hasPower('manage_submissions'))
+    <div class="col-sm-6">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Surrender Submissions @if($submissionCount)<span class="badge badge-primary">{{ $submissionCount }}</span>@endif</h5>
+                <p class="card-text">
+                    @if($surrenderCount)
+                        {{ $surrenderCount }} surrender{{ $surrenderCount == 1 ? '' : 's' }} awaiting processing.
+                    @else
+                        The surrender queue is clear. Hooray!
+                    @endif
+                </p>
+                <div class="text-right">
+                    <a href="{{ url('admin/surrenders/pending') }}" class="card-link">View Queue <span class="fas fa-caret-right ml-1"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
     @if (!Auth::user()->hasPower('manage_submissions') && !Auth::user()->hasPower('manage_characters'))
       <div class="card p-4 col-12">
         <h5 class="card-title">You do not have a rank that allows you to access any queues.</h5>

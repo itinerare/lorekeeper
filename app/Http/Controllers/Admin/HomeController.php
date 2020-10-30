@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Settings;
 
 use App\Models\Submission\Submission;
+use App\Models\Adoption\Surrender;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Trade;
@@ -24,6 +25,7 @@ class HomeController extends Controller
     {
         $openTransfersQueue = Settings::get('open_transfers_queue');
         return view('admin.index', [
+            'surrenderCount' => Surrender::where('status', 'Pending')->count(),
             'submissionCount' => Submission::where('status', 'Pending')->whereNotNull('prompt_id')->count(),
             'claimCount' => Submission::where('status', 'Pending')->whereNull('prompt_id')->count(),
             'designCount' => CharacterDesignUpdate::characters()->where('status', 'Pending')->count(),

@@ -91,9 +91,7 @@ class AdoptionManager extends Service
                 'quantity' => $quantity
             ]);
             
-            // Give the user the character, noting down 1. whose currency was used (user or character) 2. who purchased it 3. which adoption it was purchased from
-
-            /// FIXXX NEEDED
+            // doing stuff manually because why not and because hopefully no one ever looks here
             $data = [];
             $data['recipient_id'] = $user->id;
             $data['reason'] = 'Bought from adoption center';

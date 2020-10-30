@@ -137,6 +137,9 @@
                             <a class="dropdown-item" href="{{ url('claims/new') }}">
                                 Submit Claim
                             </a>
+                            <a class="dropdown-item" href="{{ url('surrender') }}">
+                                Submit Surrender
+                            </a>
                         </div>
                     </li>
                     
