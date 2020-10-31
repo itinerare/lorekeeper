@@ -25,7 +25,7 @@
 
 <ul class="nav nav-tabs mb-3">
   <li class="nav-item">
-    <a class="nav-link {{ set_active('admin/surrenders/pending*') }} {{ set_active('admin/surrenders/submissions') }}" href="{{ url('admin/surrenders/pending') }}">Pending</a>
+    <a class="nav-link {{ set_active('admin/surrenders/pending*') }} {{ set_active('admin/surrenders/surrenders') }}" href="{{ url('admin/surrenders/pending') }}">Pending</a>
   </li>
   <li class="nav-item">
     <a class="nav-link {{ set_active('admin/surrenders/approved*') }}" href="{{ url('admin/surrenders/approved') }}">Approved</a>

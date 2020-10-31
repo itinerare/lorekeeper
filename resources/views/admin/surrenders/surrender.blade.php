@@ -124,7 +124,7 @@
     </div>
 @else
     <div class="alert alert-danger">This surrender has already been processed.</div>
-    @include('home._submission_content', ['submission' => $surrender])
+    @include('home._surrender_content', ['surrender' => $surrender])
 @endif
 
 @endsection
