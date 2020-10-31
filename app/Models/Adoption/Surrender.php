@@ -115,16 +115,6 @@ class Surrender extends Model
     **********************************************************************************************/
 
     /**
-     * Get the data attribute as an associative array.
-     *
-     * @return array
-     */
-    public function getDataAttribute()
-    {
-        return json_decode($this->attributes['data'], true);
-    }
-
-    /**
      * Get the viewing URL of the submission/claim.
      *
      * @return string

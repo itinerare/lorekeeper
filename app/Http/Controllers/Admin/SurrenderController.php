@@ -60,13 +60,21 @@ class SurrenderController extends Controller
         // getting all the traits for the character that the surrender form is for
         $features = $surrender->character->image->features()->get();
         // since a character can have multiple traits, we need to use a foreach to calculate each trait one by one 
-        $totalcost = 0;
+        $totalcost = 0; // set this to be whatever your base price should be
         foreach ($features as $traits) {
             // find rarities attached to trait
+            // You can also set this to something else , just make sure to change the variables
             $rarity = Rarity::where('id', $traits->rarity_id)->first();
 
             switch ($rarity->name) {
                 // e.g if the rarity name returns rare, the cost is 100
+                // the following are example / placeholder worth
+                case 'common':
+                    $totalcost += 10;
+                break;
+                case 'uncommon':
+                    $totalcost += 50;
+                break;
                 case 'rare':
                     $totalcost += 100;
                 break;
@@ -88,12 +96,12 @@ class SurrenderController extends Controller
      */
     public function postSurrender(Request $request, SurrenderManager $service, $id, $action)
     {
-        $data = $request->only(['grant', 'staff_comments']);
-        if($action == 'reject' && $service->rejectSubmission($data + ['id' => $id], Auth::user())) {
-            flash('Submission rejected successfully.')->success();
+        $data = $request->only(['grant', 'staff_comments', 'currency_id']);
+        if($action == 'reject' && $service->rejectSurrender($data + ['id' => $id], Auth::user())) {
+            flash('Surrender rejected successfully.')->success();
             }
-            elseif($action == 'approve' && $service->approveSubmission($data + ['id' => $id], Auth::user())) {
-                flash('Submission approved successfully.')->success();
+            elseif($action == 'approve' && $service->approveSurrender($data + ['id' => $id], Auth::user())) {
+                flash('Surrender approved successfully.')->success();
             }
             else {
                 foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

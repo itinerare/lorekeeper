@@ -14,8 +14,11 @@ use App\Models\User\User;
 use App\Models\Character\Character;
 use App\Models\Currency\Currency;
 use App\Models\Adoption\Surrender;
+use App\Models\Adoption\Adoption;
+use App\Models\Adoption\AdoptionStock;
 
 use App\Services\CurrencyManager;
+use App\Services\AdoptionService;
 
 class SurrenderManager extends Service
 {
@@ -113,7 +116,7 @@ class SurrenderManager extends Service
      * @param  \App\Models\User\User  $user
      * @return mixed
      */
-    public function approveSurrender($data, $user, CurrencyManager $service)
+    public function approveSurrender($data, $user)
     {
         DB::beginTransaction();
 
@@ -123,21 +126,41 @@ class SurrenderManager extends Service
             $surrender = Surrender::where('status', 'Pending')->where('id', $data['id'])->first();
             if(!$surrender) throw new \Exception("Invalid surrender.");
 
+            if(!$data['currency_id']) {
+                throw new \Exception("Please select a currency type.");
+            }
             // Distribute user currency
-            // need to fix -> check previous code
-            if(!$service->creditCurrency('Adoption Surrender', $user, $surrender->user, $promptLogType, $promptData)) throw new \Exception("Failed to distribute currency to user.");
+            if(!(new CurrencyManager)->creditCurrency(NULL, $surrender->user, 'Adoption Stock', 'Stock worth', $data['currency_id'], $data['grant'])) { 
+                throw new \Exception("Failed to distribute currency to user.");
+            }
+            // Manual stuff
+            $data['recipient_id'] = User::find(1)->id;
+            $data['reason'] = 'Surrendered to adoption center';
+            $data['use_user_bank'] = 1;
+            $data['use_character_bank'] = 1;
+            $data['cost'] = $data['grant'] + 100;
+            $data['character_id'] = $surrender->character_id;
+            $adopt = Character::where('id', $surrender->character_id)->first();
+            $surrenderer = User::where('id', $surrender->user_id)->first();
 
+            if(AdoptionStock::where('character_id', $surrender->character_id)->exists()) {
+                throw new \Exception("This character already exists as stock.");
+            }
+            // Transfer character to admin
+            if(!(new CharacterManager)->adminTransfer($data, $adopt, $surrenderer)) {
+                throw new \Exception("Failed to transfer character.");
+            }
             // Add character to the adoption stock
-            // pseudo code
-            // $service2->createStock( - - - - )
-
+            if(!(new AdoptionService)->createAdoptionStock(Adoption::find(1), $data, null)) {
+                throw new \Exception("Failed to create stock.");
+            }
+            
             // Finally, set: 
 			// 1. staff comments
             // 2. staff ID
             // 3. status
             $surrender->update([
 			    'staff_comments' => $data['staff_comments'],
-				'parsed_staff_comments' => $data['parsed_staff_comments'],
                 'staff_id' => $user->id,
                 'status' => 'Approved',
             ]);

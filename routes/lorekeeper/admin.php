@@ -159,6 +159,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('adoptions/edit/{id?}', 'AdoptionController@postCreateEditAdoption');
     Route::post('stock/{id}', 'AdoptionController@postEditAdoptionStock');
     Route::post('stock/create/new', 'AdoptionController@postCreateStock');
+    Route::post('stock/delete/{id}', 'AdoptionController@postDeleteStock');
     
     # FEATURES (TRAITS)
     Route::get('trait-categories', 'FeatureController@getIndex');
@@ -389,7 +390,7 @@ Route::group(['prefix' => 'surrenders', 'middleware' => ['power:manage_submissio
     Route::get('/', 'SurrenderController@getSurrenderIndex');
     Route::get('/{status}', 'SurrenderController@getSurrenderIndex')->where('status', 'pending|approved|rejected');
     Route::get('edit/{id}', 'SurrenderController@getSurrender');
-    Route::post('edit/{id}/{action}', 'SubmissionController@postSubmission')->where('action', 'approve|reject');
+    Route::post('edit/{id}/{action}', 'SurrenderController@postSurrender')->where('action', 'approve|reject');
 });
 
 # DESIGN APPROVALS

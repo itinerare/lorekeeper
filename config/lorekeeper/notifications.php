@@ -245,4 +245,16 @@ return [
         'message' => 'The transfer for <a href="{character_url}">{character_name}</a> was approved by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Transfers</a>)',
         'url' => 'characters/transfers/incoming'
     ],
+    // SURRENDER_ACCEPTED
+    220 => [
+        'message' => 'Your surrender (#{surrender_id}) was approved by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
+        'url' => 'surrenders/view/{surrenders_id}'
+    ],
+
+    // surrenders_REJECTED
+    221 => [
+        'message' => 'Your surrender (#{surrender_id}) was rejected by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
+        'url' => 'surrenders/view/{surrender_id}'
+    ],
+    
 ];

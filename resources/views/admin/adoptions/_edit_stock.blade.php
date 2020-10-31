@@ -5,8 +5,13 @@
 @section('admin-content')
 {!! breadcrumbs(['Admin Panel' => 'admin', 'Adoptions' => 'admin/data/adoptions', 'Adoption Stock' => 'admin/data/stock', 'Edit Stock' => 'admin/data/stock/edit']) !!}
 
-{!! Form::open(['url' => 'admin/data/stock/'.$id]) !!}
 <h1> Edit Stock - #{{ $id }} </h1>
+
+<div class="text-right">
+<a href="#" data-toggle="modal" data-target="#delete" class="btn btn-danger mb-2">Delete Stock</a>
+</div>
+
+{!! Form::open(['url' => 'admin/data/stock/'.$id]) !!}
 <div class="card mb-3 stock">
     <div class="card-body">
         <div class="form-group">
@@ -47,7 +52,29 @@
             {!! Form::select('currency_id[]', $currencies,  null, ['class' => 'form-control', 'placeholder' => 'Select Currency']) !!}
         </div>
         <a href="#" class="remove-feature btn btn-danger">Remove</a>
+
 </div>
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="delete">delete stock</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {!! Form::open(['url' => 'admin/data/stock/delete/'.$id]) !!}
+        <div class="modal-body">
+            This will delete the stock and remove it from the center.
+        </div>
+        <div class="modal-footer">
+            {!! Form::submit('Delete Stock', ['class' => 'btn btn-danger']) !!}
+        </div>
+        {!! Form::close() !!}
+      </div>
+    </div>
+  </div>
+
 @endsection
 @section('scripts')
 @parent

@@ -103,7 +103,7 @@ class AdoptionManager extends Service
             }
 
             $adoptionStock->delete();
-            $adoptionCurrency->delete();
+            AdoptionCurrency::where('stock_id', $adoptionStock->id)->delete();
 
             return $this->commitReturn($adoption);
         } catch(\Exception $e) { 
@@ -112,17 +112,4 @@ class AdoptionManager extends Service
         return $this->rollbackReturn(false);
     }
 
-    /**
-     * Checks if the purchase limit for an character from a shop has been reached.
-     *
-     * @param  \App\Models\Shop\ShopStock  $shopStock
-     * @param  \App\Models\User\User      $user
-     * @return bool
-     */
-    public function checkPurchaseLimitReached($shopStock, $user)
-    {
-        if($shopStock->purchase_limit > 0)
-            return (ShopLog::where('shop_id', $shopStock->shop_id)->where('character_id', $shopStock->character_id)->where('user_id', $user->id)->sum('quantity') >= $shopStock->purchase_limit);
-        return false;
-    }
 }

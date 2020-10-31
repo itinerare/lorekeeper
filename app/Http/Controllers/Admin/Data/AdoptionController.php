@@ -139,9 +139,30 @@ class AdoptionController extends Controller
             'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'purchase_limit'
         ]);
 
-        if($service->createAdoptionStock(Adoption::find(1), $data, Auth::user())) {
+        if($service->createAdoptionStock(Adoption::find(1), $data)) {
             flash('Adoption stock updated successfully.')->success();
-            return redirect()->back();
+            return redirect()->to('admin/data/stock');
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Creates an adoption's stock.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\AdoptionService  $service
+     * @param  int                       $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDeleteStock($id, AdoptionService $service)
+    {
+
+        if($service->deleteStock($id)) {
+            flash('Adoption stock deleted successfully.')->success();
+            return redirect()->to('admin/data/stock');
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

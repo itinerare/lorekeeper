@@ -70,7 +70,7 @@ class AdoptionService extends Service
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Adoption\Adoption
      */
-    public function createAdoptionStock($adoption, $data, $id)
+    public function createAdoptionStock($adoption, $data)
     {
         DB::beginTransaction();
 
@@ -155,6 +155,35 @@ class AdoptionService extends Service
     }
 
     /**
+     * Deletes stock
+     *
+     * @param  array                  $data 
+     * @param  \App\Models\Adoption\Adoption  $adoption
+     * @return array
+     */
+    public function deleteStock($id) {
+        
+        DB::beginTransaction();
+
+            try {
+
+                if(!$id) throw new \Exception("This stock doesn't exist");
+
+                $adoptionStock = AdoptionStock::find($id);
+
+                $adoptionStock->delete();
+                
+                AdoptionCurrency::where('stock_id', $id)->delete();
+
+                return $this->commitReturn($id);
+
+            } catch(\Exception $e) { 
+                $this->setError('error', $e->getMessage());
+        }
+            return $this->rollbackReturn(false);
+    }
+
+    /**
      * Processes currencies for use to buy
      *
      * @param  array                  $data 
@@ -189,7 +218,13 @@ class AdoptionService extends Service
      * @return array
      */
     private function popCreationCosts($data, $id) {
+
+        if($data['currency_id'] = array()) {
         $currency = array_unique($data['currency_id']);
+        }
+        else {
+            $currency = $data['currency_id'];
+        }
             foreach($currency as $key => $type)
                 AdoptionCurrency::create([
                     'stock_id'       => $id->id,

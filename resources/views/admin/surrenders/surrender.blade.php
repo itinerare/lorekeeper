@@ -1,8 +1,8 @@
-@extends('home.layout')
+@extends('admin.layout')
 
-@section('home-title') Surrender (#{{ $surrender->id }}) @endsection
+@section('admin-title') Surrender (#{{ $surrender->id }}) @endsection
 
-@section('home-content')
+@section('admin-content')
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Submission Queue' => 'admin/surrenders/pending', 'Surrender (#' . $surrender->id . ')' => $surrender->viewUrl]) !!}
 
 @if($surrender->status == 'Pending')
@@ -78,6 +78,10 @@
         <div class="form-group">
             {!! Form::label('grant', 'Grant amount') !!} {!! add_help('This is in case an admin needs to overwrite the estimated worth, in case traits are missing etc.') !!}
             {!! Form::text('grant', $estimate, ['class' => 'form-control']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('currency_id', 'Currency type to be given to user') !!} {!! add_help('You can set a default in the controller') !!}
+            {!! Form::select('currency_id', $currencies,  null, ['class' => 'form-control', 'placeholder' => 'Select Currency type']) !!}
         </div>
 		<div class="form-group">
             {!! Form::label('staff_comments', 'Staff Comments (Optional)') !!}

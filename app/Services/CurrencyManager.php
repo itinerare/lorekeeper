@@ -218,7 +218,7 @@ class CurrencyManager extends Service
     public function creditCurrency($sender, $recipient, $type, $data, $currency, $quantity)
     {
         DB::beginTransaction();
-
+        
         try {
             if(is_numeric($currency)) $currency = Currency::find($currency);
             if($recipient->logType == 'User') {
