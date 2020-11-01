@@ -137,7 +137,7 @@ class AdoptionController extends Controller
     public function postCreateStock(Request $request, AdoptionService $service)
     {
         $data = $request->only([
-            'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_viewable'
+            'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_visible'
         ]);
 
         if($service->createAdoptionStock(Adoption::find(1), $data)) {
