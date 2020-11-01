@@ -2,6 +2,8 @@
 
 @section('profile-title') {{ $user->name }}'s Profile @endsection
 
+@section('meta-img') {{ asset('/images/avatars/'.$user->avatar) }} @endsection
+
 @section('profile-content')
 {!! breadcrumbs(['Users' => 'users', $user->name => $user->url]) !!}
 
@@ -10,6 +12,7 @@
 @endif
 
 <h1>
+<img src="/images/avatars/{{ $user->avatar }}" style="width:125px; height:125px; float:left; border-radius:50%; margin-right:25px;">
     {!! $user->displayName !!}
 
     @if($user->settings->is_fto)
@@ -57,7 +60,11 @@
                     <div class="row">
                         @foreach($items as $item)
                             <div class="col-md-3 col-6 profile-inventory-item">
-                                <img src="{{ $item->imageUrl }}" data-toggle="tooltip" title="{{ $item->name }}" />
+                                @if($item->imageUrl)
+                                    <img src="{{ $item->imageUrl }}" data-toggle="tooltip" title="{{ $item->name }}" />
+                                @else
+                                    <p>{{ $item->name }}</p>
+                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -86,4 +93,10 @@
 </div>
 @endforeach
 <div class="text-right"><a href="{{ $user->url.'/characters' }}">View all...</a></div>
+<hr>
+<br><br>
+
+@comments(['model' => $user->profile,
+        'perPage' => 5
+    ])  
 @endsection
