@@ -102,7 +102,7 @@
     <div class="col-sm-6">
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title">Surrender Submissions @if($surrenderCount)<span class="badge badge-primary">{{ $submissionCount }}</span>@endif</h5>
+                <h5 class="card-title">Surrender Submissions @if($surrenderCount)<span class="badge badge-primary">{{ $surrenderCount }}</span>@endif</h5>
                 <p class="card-text">
                     @if($surrenderCount)
                         {{ $surrenderCount }} surrender{{ $surrenderCount == 1 ? '' : 's' }} awaiting processing.
