@@ -18,7 +18,7 @@
             {!! Form::select('character_id', $characters, null, ['class' => 'form-control stock-field', 'data-name' => 'character_id']) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('notes', 'Additional Notes') !!}
+            {!! Form::label('notes', 'Additional Notes (optional)') !!}
             {!! Form::textarea('notes', null, ['class' => 'form-control', 'placeholder' => 'Include any extra neccessary details, as well as any character pages such as Toyhouse etc.']) !!}
         </div>
         <div class="form-group">

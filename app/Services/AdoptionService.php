@@ -77,7 +77,6 @@ class AdoptionService extends Service
         try {
 
             if(!$data['cost']) throw new \Exception("The character is missing a cost.");
-
             // Validation
             $data['adoption_id'] = 1;
             if(!isset($data['use_user_bank'])) $data['use_user_bank'] = 0;

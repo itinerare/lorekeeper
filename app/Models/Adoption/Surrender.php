@@ -15,7 +15,7 @@ class Surrender extends Model
     protected $fillable = [
         'character_id', 'user_id', 'staff_id', 'notes',
         'comments', 'staff_comments',
-        'status', 'worth'
+        'status', 'worth',
     ];
 
     /**

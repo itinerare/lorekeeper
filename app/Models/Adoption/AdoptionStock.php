@@ -13,7 +13,7 @@ class AdoptionStock extends Model
      * @var array
      */
     protected $fillable = [
-        'adoption_id', 'character_id', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'sort', 'is_visisble'
+        'adoption_id', 'character_id', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'sort', 'is_visible'
     ];
 
     /**

@@ -104,7 +104,7 @@ class SurrenderController extends Controller
             flash('Surrender rejected successfully.')->success();
             }
             elseif($action == 'approve' && $service->approveSurrender($data + ['id' => $id], Auth::user())) {
-                flash('Surrender approved successfully. Make sure to make it visible!')->success();
+                flash('Surrender approved successfully. Make sure to make it visible when you\'re ready!')->success();
                 return redirect()->to('admin/data/stock');
             }
             else {
