@@ -48,6 +48,9 @@
                             <a class="dropdown-item" href="{{ url('designs') }}">
                                 Design Approvals
                             </a>
+                            <a class="dropdown-item" href="{{ url('surrenders') }}">
+                                Surrenders
+                            </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('characters/transfers/incoming') }}">
                                 Character Transfers
@@ -137,7 +140,7 @@
                             <a class="dropdown-item" href="{{ url('claims/new') }}">
                                 Submit Claim
                             </a>
-                            <a class="dropdown-item" href="{{ url('surrender') }}">
+                            <a class="dropdown-item" href="{{ url('surrenders/new') }}">
                                 Submit Surrender
                             </a>
                         </div>

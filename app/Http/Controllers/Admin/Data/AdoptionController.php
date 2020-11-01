@@ -61,9 +61,10 @@ class AdoptionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function getEditStock($id) {
-        
+        $stock = AdoptionStock::find($id);
+        if(!$stock) abort(404);
         return view('admin.adoptions._edit_stock', [
-            'id' => $id,
+            'stock' => $stock,
             'characters' => Character::orderBy('id')->where('user_id', 1)->pluck('slug', 'id'),
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
         ]);
@@ -136,7 +137,7 @@ class AdoptionController extends Controller
     public function postCreateStock(Request $request, AdoptionService $service)
     {
         $data = $request->only([
-            'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'purchase_limit'
+            'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_viewable'
         ]);
 
         if($service->createAdoptionStock(Adoption::find(1), $data)) {
@@ -181,7 +182,7 @@ class AdoptionController extends Controller
     public function postEditAdoptionStock(Request $request, AdoptionService $service, $id)
     {
         $data = $request->only([
-             'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'purchase_limit'
+             'adoption_id', 'character_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_visisble'
         ]);
 
         if($service->updateAdoptionStock(Adoption::find(1), $data, $id)) {

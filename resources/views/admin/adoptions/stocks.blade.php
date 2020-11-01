@@ -17,6 +17,11 @@
     <p>No stock found.</p>
 @else 
     @foreach($stock as $stocks)
+    @if($stocks->is_visible == 1)
+    <div style="opacity:1;">
+    @else
+    <div style="opacity:0.5;">
+    @endif
         <div class="card mb-2">
             <div class="card-body row p-3">
                 <div class="col col-form-label">
@@ -41,8 +46,13 @@
                     @if($stocks->use_character_bank == 1) <i class="fas fa-paw" data-toggle="tooltip" title="Can be purchased using Character Bank"></i>@endif
                     @if($stocks->use_user_bank == 1) <i class="fas fa-user" data-toggle="tooltip" title="Can be purchased using User Bank"></i> @endif
                 </div>
-                <div class="col text-right">
-                    <a href="{{ url('admin/data/stock/edit/'.$stocks->id) }}" class="btn btn-dark edit-button">Edit Adoptable</a>
+                <div class="col col-form-label">   
+                    @if($stocks->is_visible == 0)
+                    Hidden
+                    @endif
+                </div>
+                <div class="mr-3 text-right">
+                    <a href="{{ url('admin/data/stock/edit/'.$stocks->id) }}" class="btn btn-dark edit-button" style="opacity:1!important;">Edit Adoptable</a>
                 </div>
             </div>
         </div>

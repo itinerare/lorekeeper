@@ -9,7 +9,7 @@
 @else
 <div class="alert alert-warning">Please note that by surrendering your characters you acknowledge they will be sold for onsite currency and retrieval after the form has been approved may not be possible</div>
 
-{!! Form::open(['url' => 'surrender/post']) !!}
+{!! Form::open(['url' => 'surrenders/new/post']) !!}
 
 <div class="card mb-3 stock">
     <div class="card-body">

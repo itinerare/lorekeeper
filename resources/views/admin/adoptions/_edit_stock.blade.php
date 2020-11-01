@@ -1,22 +1,22 @@
 @extends('admin.layout')
 
-@section('admin-title') Adoptions @endsection
+@section('admin-title') Adoption Stock @endsection
 
 @section('admin-content')
 {!! breadcrumbs(['Admin Panel' => 'admin', 'Adoptions' => 'admin/data/adoptions', 'Adoption Stock' => 'admin/data/stock', 'Edit Stock' => 'admin/data/stock/edit']) !!}
 
-<h1> Edit Stock - #{{ $id }} </h1>
+<h1> Edit Stock - #{{ $stock->id }} </h1>
 
 <div class="text-right">
 <a href="#" data-toggle="modal" data-target="#delete" class="btn btn-danger mb-2">Delete Stock</a>
 </div>
 
-{!! Form::open(['url' => 'admin/data/stock/'.$id]) !!}
+{!! Form::open(['url' => 'admin/data/stock/'.$stock->id]) !!}
 <div class="card mb-3 stock">
     <div class="card-body">
         <div class="form-group">
             {!! Form::label('character_id', 'Character') !!}
-            {!! Form::select('character_id', $characters, null, ['class' => 'form-control stock-field', 'data-name' => 'character_id']) !!}
+            {!! Form::select('character_id', $characters, $stock->character_id, ['class' => 'form-control stock-field', 'data-name' => 'character_id']) !!}
         </div>
 
         <div><a href="#" class="btn btn-primary mb-3" id="add-feature">Add Currency</a></div>
@@ -26,15 +26,19 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::checkbox('use_user_bank', 1, 1, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'use_user_bank']) !!}
+                {!! Form::checkbox('use_user_bank', $stock->use_user_bank, 1, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'use_user_bank']) !!}
                 {!! Form::label('use_user_bank', 'Use User Bank', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow users to purchase the character using the currency in their accounts, provided that users can own that currency.') !!}
             </div>
         </div>
         <div class="col-md-6">
-            <div class="form-group mb-0">
-                {!! Form::checkbox('use_character_bank', 1, 1, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'use_character_bank']) !!}
+            <div class="form-group mb-3">
+                {!! Form::checkbox('use_character_bank', $stock->use_character_bank, 1, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'use_character_bank']) !!}
                 {!! Form::label('use_character_bank', 'Use Character Bank', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow users to purchase the character using the currency belonging to characters they own, provided that characters can own that currency.') !!}
             </div>
+        </div>
+        <div class="form-group">
+            {!! Form::checkbox('is_visible', 1, $stock->is_visible, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+            {!! Form::label('is_visible', 'Set Viewable', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the item will not be visible to regular users.') !!}
         </div>
         <div class="text-right">
             {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
@@ -63,7 +67,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        {!! Form::open(['url' => 'admin/data/stock/delete/'.$id]) !!}
+        {!! Form::open(['url' => 'admin/data/stock/delete/'.$stock->id]) !!}
         <div class="modal-body">
             This will delete the stock and remove it from the center.
         </div>

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Adoption;
+namespace App\Models\Species;
 
 use Config;
 use App\Models\Model;
 
-class Adoption extends Model
+class Species extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -13,7 +13,7 @@ class Adoption extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'has_image', 'description', 'parsed_description', 'is_active'
+        'name', 'sort', 'has_image', 'description', 'parsed_description'
     ];
 
     /**
@@ -21,7 +21,8 @@ class Adoption extends Model
      *
      * @var string
      */
-    protected $table = 'adoptions';
+    protected $table = 'specieses';
+    
     
     /**
      * Validation rules for creation.
@@ -29,10 +30,11 @@ class Adoption extends Model
      * @var array
      */
     public static $createRules = [
-        'name' => 'required|unique:item_categories|between:3,25',
+        'name' => 'required|unique:specieses|between:3,25',
         'description' => 'nullable',
         'image' => 'mimes:png',
     ];
+    
     
     /**
      * Validation rules for updating.
@@ -52,19 +54,11 @@ class Adoption extends Model
     **********************************************************************************************/
 
     /**
-     * Get the adoption stock.
+     * Get the subtypes for this species.
      */
-    public function stock() 
+    public function subtypes() 
     {
-        return $this->hasMany('App\Models\Adoption\AdoptionStock');
-    }
-    
-    /**
-     * Get the adoption stock as items for display purposes.
-     */
-    public function displayStock()
-    {
-        return $this->belongsToMany('App\Models\Character\Character', 'adoption_stock')->withPivot('character_id', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity',  'id');
+        return $this->hasMany('App\Models\Species\Subtype');
     }
 
     /**********************************************************************************************
@@ -74,13 +68,13 @@ class Adoption extends Model
     **********************************************************************************************/
     
     /**
-     * Displays the adoption's name, linked to its purchase page.
+     * Displays the model's name, linked to its encyclopedia page.
      *
      * @return string
      */
     public function getDisplayNameAttribute()
     {
-        return '<a href="'.$this->url.'" class="display-adoption">'.$this->name.'</a>';
+        return '<a href="'.$this->url.'" class="display-species">'.$this->name.'</a>';
     }
 
     /**
@@ -90,7 +84,7 @@ class Adoption extends Model
      */
     public function getImageDirectoryAttribute()
     {
-        return 'images/data/adoptions';
+        return 'images/data/species';
     }
 
     /**
@@ -98,7 +92,7 @@ class Adoption extends Model
      *
      * @return string
      */
-    public function getAdoptionImageFileNameAttribute()
+    public function getSpeciesImageFileNameAttribute()
     {
         return $this->id . '-image.png';
     }
@@ -108,7 +102,7 @@ class Adoption extends Model
      *
      * @return string
      */
-    public function getAdoptionImagePathAttribute()
+    public function getSpeciesImagePathAttribute()
     {
         return public_path($this->imageDirectory);
     }
@@ -118,10 +112,10 @@ class Adoption extends Model
      *
      * @return string
      */
-    public function getAdoptionImageUrlAttribute()
+    public function getSpeciesImageUrlAttribute()
     {
         if (!$this->has_image) return null;
-        return asset($this->imageDirectory . '/' . $this->adoptionImageFileName);
+        return asset($this->imageDirectory . '/' . $this->speciesImageFileName);
     }
 
     /**
@@ -131,6 +125,16 @@ class Adoption extends Model
      */
     public function getUrlAttribute()
     {
-        return url('adoptions');
+        return url('world/species?name='.$this->name);
+    }
+
+    /**
+     * Gets the URL for a masterlist search of characters of this species.
+     *
+     * @return string
+     */
+    public function getSearchUrlAttribute()
+    {
+        return url('masterlist?species_id='.$this->id);
     }
 }

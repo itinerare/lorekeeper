@@ -33,7 +33,7 @@ class Surrender extends Model
     public $timestamps = true;
     
     /**
-     * Validation rules for submission creation.
+     * Validation rules for surrender creation.
      *
      * @var array
      */
@@ -42,7 +42,7 @@ class Surrender extends Model
     ];
     
     /**
-     * Validation rules for submission updating.
+     * Validation rules for surrender updating.
      *
      * @var array
      */
@@ -57,7 +57,7 @@ class Surrender extends Model
     **********************************************************************************************/
 
     /**
-     * Scope a query to sort submissions oldest first.
+     * Scope a query to sort surrenders oldest first.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -68,7 +68,7 @@ class Surrender extends Model
     }
 
     /**
-     * Scope a query to sort submissions by newest first.
+     * Scope a query to sort surrenders by newest first.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -76,6 +76,32 @@ class Surrender extends Model
     public function scopeSortNewest($query)
     {
         return $query->orderBy('id', 'DESC');
+    }
+
+     /**
+     * Scope a query to only include pending surrenders.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'Pending');
+    }
+
+    /**
+     * Scope a query to only include viewable surrenders.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeViewable($query, $user)
+    {
+        if($user && $user->hasPower('manage_surrenders')) return $query;
+        return $query->where(function($query) use ($user) {
+            if($user) $query->where('user_id', $user->id)->orWhere('status', 'Approved');
+            else $query->where('status', 'Approved');
+        });
     }
 
     /**********************************************************************************************
@@ -93,7 +119,7 @@ class Surrender extends Model
     }
     
     /**
-     * Get the user who made the submission.
+     * Get the user who made the surrender.
      */
     public function user() 
     {
@@ -101,7 +127,7 @@ class Surrender extends Model
     }
     
     /**
-     * Get the staff who processed the submission.
+     * Get the staff who processed the surrender.
      */
     public function staff() 
     {
@@ -115,7 +141,7 @@ class Surrender extends Model
     **********************************************************************************************/
 
     /**
-     * Get the viewing URL of the submission/claim.
+     * Get the viewing URL of the surrender/claim.
      *
      * @return string
      */
@@ -125,7 +151,7 @@ class Surrender extends Model
     }
 
     /**
-     * Get the admin URL (for processing purposes) of the submission/claim.
+     * Get the admin URL (for processing purposes) of the surrender/claim.
      *
      * @return string
      */

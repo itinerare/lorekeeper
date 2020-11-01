@@ -36,17 +36,13 @@ class AdoptionController extends Controller
      */
     public function getAdoption()
     {
-        $categories = CharacterCategory::orderBy('sort', 'DESC')->get();
         $adoption = Adoption::where('id', 1)->where('is_active', 1)->first();
         if(!$adoption) abort(404);
-        $characters = count($categories) ? $adoption->displayStock()->orderByRaw('FIELD(character_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')->orderBy('name')->get()->groupBy('character_category_id') : $adoption->displayStock()->orderBy('name')->get()->groupBy('character_category_id');
         return view('adoptions.adoption', [
             'adoption' => $adoption,
-            'characters' => $characters,
-            'categories' => $categories->keyBy('id'),
             'adoptions' => Adoption::where('is_active', 1)->get(),
             'currencies' => Currency::whereIn('id', AdoptionCurrency::pluck('currency_id')->toArray())->get()->keyBy('id'),
-            'stock' => AdoptionStock::get()
+            'stock' => AdoptionStock::visible()->get()
         ]);
     }
 

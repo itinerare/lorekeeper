@@ -13,7 +13,7 @@ class AdoptionStock extends Model
      * @var array
      */
     protected $fillable = [
-        'adoption_id', 'character_id', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'sort', 'purchase_limit'
+        'adoption_id', 'character_id', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'sort', 'is_visisble'
     ];
 
     /**
@@ -51,5 +51,23 @@ class AdoptionStock extends Model
     public function currency() 
     {
         return $this->hasMany('App\Models\Adoption\AdoptionCurrency', 'stock_id');
+    }
+
+    /**********************************************************************************************
+    
+        SCOPE
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to only include active prompts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        return $query->where('is_visible', 1);
+        
     }
 }

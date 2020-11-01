@@ -31,6 +31,10 @@
                 {!! Form::label('use_character_bank', 'Use Character Bank', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow users to purchase the character using the currency belonging to characters they own, provided that characters can own that currency.') !!}
             </div>
         </div>
+        <div class="form-group">
+            {!! Form::checkbox('is_visible', 1, 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+            {!! Form::label('is_visible', 'Set Viewable', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the item will not be visible to regular users.') !!}
+        </div>
         <div class="text-right">
             {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
         </div>

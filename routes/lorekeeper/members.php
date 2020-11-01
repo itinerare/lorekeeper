@@ -162,5 +162,8 @@ Route::group(['prefix' => 'adoptions'], function() {
     Route::get('history', 'AdoptionController@getPurchaseHistory');
 });
 
-Route::get('surrender', 'SurrenderController@getSurrender');
-Route::post('surrender/post', 'SurrenderController@postSurrender');
+Route::group(['prefix' => 'surrenders'], function() {
+Route::get('new', 'SurrenderController@getSurrender');
+Route::get('/', 'SurrenderController@getIndex')->where('status', 'pending|approved|rejected');
+Route::post('new/post', 'SurrenderController@postSurrender');
+});

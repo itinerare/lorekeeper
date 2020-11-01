@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Settings;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Services\SurrenderManager;
 
+use App\Models\Rarity;
 use App\Models\Adoption\Adoption;
 use App\Models\Adoption\Surrender;
 use App\Models\Adoption\AdoptionStock;
@@ -20,6 +22,25 @@ use App\Models\Currency\Currency;
 
 class SurrenderController extends Controller
 {
+    /**
+     * Shows the user's surrender log.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getIndex(Request $request)
+    {
+        $surrenders = Surrender::where('user_id', Auth::user()->id);
+        $type = $request->get('type');
+        if(!$type) $type = 'Pending';
+        
+        $surrenders = $surrenders->where('status', ucfirst($type));
+
+        return view('home.surrenders', [
+            'surrender' => $surrenders->orderBy('id', 'DESC')->paginate(20)->appends($request->query()),
+        ]);
+    }
+
     //
     /**
      * Shows surrender form
@@ -57,6 +78,42 @@ class SurrenderController extends Controller
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->to('surrender');
+    }
+
+    /**
+     * Shows the surrender page.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPublicSurrender($id)
+    {
+        $surrender = Surrender::viewable(Auth::user())->where('id', $id)->first();
+        if(!$surrender) abort(404);
+        $features = $surrender->character->image->features()->get();
+        
+        $totalcost = 0; 
+        foreach ($features as $traits) {
+            $rarity = Rarity::where('id', $traits->rarity_id)->first();
+
+            switch ($rarity->name) {
+                
+                case 'common':
+                    $totalcost += 10;
+                break;
+                case 'uncommon':
+                    $totalcost += 50;
+                break;
+                case 'rare':
+                    $totalcost += 100;
+                break;
+                }
+            }
+        return view('home.surrender', [
+            'estimate' => $totalcost,
+            'surrender' => $surrender,
+            'user' => $surrender->user
+        ]);
     }
 
 }
