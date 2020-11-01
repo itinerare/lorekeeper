@@ -138,7 +138,15 @@ class SurrenderManager extends Service
             $data['reason'] = 'Surrendered to adoption center';
             $data['use_user_bank'] = 1;
             $data['use_character_bank'] = 1;
+            
+            // Edit if you turn on calculate by traits
+            if(Settings::get('calculate_by_traits')) {
             $data['cost'] = $data['grant'] + 100;
+            }
+            else {
+            $data['cost'] = $data['grant'];
+            }
+
             $data['character_id'] = $surrender->character_id;
             $adopt = Character::where('id', $surrender->character_id)->first();
             $surrenderer = User::where('id', $surrender->user_id)->first();

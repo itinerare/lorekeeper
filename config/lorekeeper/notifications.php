@@ -248,13 +248,13 @@ return [
     // SURRENDER_ACCEPTED
     220 => [
         'message' => 'Your surrender (#{surrender_id}) was approved by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
-        'url' => 'surrenders/view/{surrenders_id}'
+        'url' => 'surrender/view/{surrenders_id}'
     ],
 
     // surrenders_REJECTED
     221 => [
         'message' => 'Your surrender (#{surrender_id}) was rejected by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
-        'url' => 'surrenders/view/{surrender_id}'
+        'url' => 'surrender/view/{surrender_id}'
     ],
     
 ];
