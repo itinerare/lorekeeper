@@ -57,11 +57,6 @@
             <div class="col-md-6 mb-md-0 mb-2">
                 <h5>User Suggested worth:</h5>
                 {{ $surrender->worth }}
-                <br>
-                <br>
-                <h5>Estimated worth:</h5>
-                <div class="alert alert-warning">The estimated worth will always be the amount granted to the user. If you believe more / less is the worth, edit the grant amount area.</div>
-                {{ $estimate }}
             </div>
         </div>
     </div>
