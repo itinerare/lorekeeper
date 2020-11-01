@@ -21,11 +21,6 @@ class AssociatedCurrencyForAdopts extends Migration
             $table->integer('currency_id')->unsigned();
             $table->integer('cost')->default(0);
         });
-
-        Schema::table('adoption_stock', function(Blueprint $table) {
-            $table->dropColumn('currency_id');
-            $table->dropColumn('cost');
-        });
     }
 
     /**
@@ -37,10 +32,5 @@ class AssociatedCurrencyForAdopts extends Migration
     {
         //
         Schema::dropIfExists('adoption_currency');
-
-        Schema::table('adoption_stock', function(Blueprint $table) {
-            $table->integer('currency_id')->unsigned();
-            $table->integer('cost')->default(0);
-        });
     }
 }
