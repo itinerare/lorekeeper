@@ -77,7 +77,7 @@ class SurrenderController extends Controller
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
-        return redirect()->to('surrender');
+        return redirect()->to('surrenders');
     }
 
     /**

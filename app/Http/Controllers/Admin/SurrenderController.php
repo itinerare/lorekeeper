@@ -55,12 +55,12 @@ class SurrenderController extends Controller
     {
         $surrender = Surrender::where('id', $id)->first();
         if(!$surrender) abort(404);
-
-        if(Settings::get('is_surrenders_open')) {
+        
+        if(Settings::get('calculate_by_traits')) {
+        $totalcost = 0; // set this to be whatever your base price should be
         // getting all the traits for the character that the surrender form is for
         $features = $surrender->character->image->features()->get();
         // since a character can have multiple traits, we need to use a foreach to calculate each trait one by one 
-        $totalcost = 0; // set this to be whatever your base price should be
         foreach ($features as $traits) {
             // find rarities attached to trait
             // You can also set this to something else , just make sure to change the variables
@@ -80,6 +80,9 @@ class SurrenderController extends Controller
                 break;
                 }
             }
+        }
+        else {
+            $totalcost = null;
         }
         return view('admin.surrenders.surrender', [
             'surrender' => $surrender,

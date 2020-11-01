@@ -61,7 +61,11 @@
                 <br>
                 <h5>Estimated worth:</h5>
                 <div class="alert alert-warning">The estimated worth will always be the amount granted to the user. If you believe more / less is the worth, edit the grant amount area.</div>
+                @if($estimate == NULL)
+                Calculate by traits is off
+                @else
                 {{ $estimate }}
+                @endif
             </div>
         </div>
     </div>
