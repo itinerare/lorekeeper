@@ -285,14 +285,14 @@ return [
         'url' => 'characters/transfers/incoming'
     ],
     // SURRENDER_ACCEPTED
-    220 => [
+    218 => [
         'name' => 'Surrender Approved',
         'message' => 'Your surrender (#{surrender_id}) was approved by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
         'url' => 'surrender/view/{surrender_id}'
     ],
 
     // surrenders_REJECTED
-    221 => [
+    219 => [
         'name' => 'Surrender Rejected',
         'message' => 'Your surrender (#{surrender_id}) was rejected by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
         'url' => 'surrender/view/{surrender_id}'
