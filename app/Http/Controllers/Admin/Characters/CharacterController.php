@@ -88,7 +88,7 @@ class CharacterController extends Controller
      * @param  Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateCharacterMyoSubtype(Request $request) {
+    public function getCreateCharacterMyoSubtype(Request $request, $type) {
       $species = $request->input('species');
       return view('admin.masterlist._create_character_subtype', [
           'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
