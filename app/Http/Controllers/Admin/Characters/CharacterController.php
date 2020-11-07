@@ -92,7 +92,8 @@ class CharacterController extends Controller
       $species = $request->input('species');
       return view('admin.masterlist._create_character_subtype', [
           'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-          'isMyo' => $request->input('myo')
+          'isMyo' => $request->input('myo'),
+          'type' => $type
       ]);
     }
 

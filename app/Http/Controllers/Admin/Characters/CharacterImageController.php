@@ -57,12 +57,13 @@ class CharacterImageController extends Controller
      * @param  Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getNewImageSubtype(Request $request) {
+    public function getNewImageSubtype(Request $request, $type) {
       $species = $request->input('species');
       $id = $request->input('id');
       return view('character.admin._upload_image_subtype', [
           'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-          'subtype' => $id
+          'subtype' => $id,
+          'type' => $type
       ]);
     }
 
@@ -137,12 +138,13 @@ class CharacterImageController extends Controller
      * @param  Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditImageSubtype(Request $request) {
+    public function getEditImageSubtype(Request $request, $type) {
       $species = $request->input('species');
       $id = $request->input('id');
       return view('character.admin._edit_features_subtype', [
           'image' => CharacterImage::find($id),
           'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+          'type' => $type
       ]);
     }
 

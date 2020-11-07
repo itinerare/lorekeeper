@@ -247,10 +247,10 @@
       var species = $('#species').val();
       var myo = '<?php echo($isMyo); ?>';
       $.ajax({
-        type: "GET", url: "{{ url('admin/masterlist/check-subtype') }}?species="+species+"&myo="+myo, dataType: "text"
+        type: "GET", url: "{{ url('admin/masterlist/check-subtype/1') }}?species="+species+"&myo="+myo, dataType: "text"
       }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
       $.ajax({
-        type: "GET", url: "{{ url('admin/masterlist/check-subtype') }}?species="+species+"&myo="+myo, dataType: "text"
+        type: "GET", url: "{{ url('admin/masterlist/check-subtype/2') }}?species="+species+"&myo="+myo, dataType: "text"
       }).done(function (res) { $("#subtypes_2").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
     });
 </script>

@@ -74,10 +74,10 @@
       var species = $('#species').val();
       var id = '<?php echo($image->id); ?>';
       $.ajax({
-        type: "GET", url: "{{ url('admin/character/image/traits/subtype') }}?species="+species+"&id="+id, dataType: "text"
+        type: "GET", url: "{{ url('admin/character/image/traits/subtype/1') }}?species="+species+"&id="+id, dataType: "text"
       }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
       $.ajax({
-        type: "GET", url: "{{ url('admin/character/image/traits/subtype') }}?species="+species+"&id="+id, dataType: "text"
+        type: "GET", url: "{{ url('admin/character/image/traits/subtype/2') }}?species="+species+"&id="+id, dataType: "text"
       }).done(function (res) { $("#subtypes_2").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
     });
 
