@@ -149,3 +149,12 @@ Route::group(['prefix' => 'surrender'], function() {
     Comments
 **************************************************************************************************/
 Route::get('comment/{id}', 'PermalinkController@getComment');
+
+/**************************************************************************************************
+    Reports
+**************************************************************************************************/
+Route::group(['prefix' => 'reports', 'namespace' => 'Users'], function() {
+    Route::get('/bug-reports', 'ReportController@getBugIndex');
+});
+
+

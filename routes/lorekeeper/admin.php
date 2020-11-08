@@ -405,6 +405,13 @@ Route::group(['prefix' => 'surrenders', 'middleware' => ['power:manage_submissio
     Route::get('edit/{id}', 'SurrenderController@getSurrender');
     Route::post('edit/{id}/{action}', 'SurrenderController@postSurrender')->where('action', 'approve|reject');
 });
+# REPORTS
+Route::group(['prefix' => 'reports', 'middleware' => 'power:manage_reports'], function() {
+    Route::get('/', 'ReportController@getReportIndex');
+    Route::get('/{status}', 'ReportController@getReportIndex')->where('status', 'pending|assigned|closed');
+    Route::get('edit/{id}', 'ReportController@getReport');
+    Route::post('edit/{id}/{action}', 'ReportController@postReport')->where('action', 'assign|close');
+});
 
 # DESIGN APPROVALS
 Route::group(['prefix' => 'designs', 'middleware' => 'power:manage_characters'], function() {

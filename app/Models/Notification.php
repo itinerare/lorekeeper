@@ -143,6 +143,9 @@ class Notification extends Model
     const CHARACTER_TRANSFER_ACCEPTABLE   = 38;
     const SURRENDER_APPROVED              = 218;
     const SURRENDER_REJECTED              = 219;
+    const BOOKMARK_GIFT_WRITING           = 39;
+    const REPORT_ASSIGNED                 = 220;
+    const REPORT_CLOSED                   = 221;
     const COMMENT_MADE                    = 239;
     const COMMENT_REPLY                   = 240;
     const CHARACTER_ITEM_GRANT            = 501;
