@@ -223,7 +223,7 @@ class AdoptionService extends Service
      */
     private function popCreationCosts($data, $id) {
 
-        if($data['currency_id'] == array()) {
+        if(is_array($data['currency_id'])) {
         $currency = array_unique($data['currency_id']);
         foreach($currency as $key => $type)
                 AdoptionCurrency::create([
