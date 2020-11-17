@@ -65,7 +65,7 @@ class AdoptionController extends Controller
         if(!$stock) abort(404);
         return view('admin.adoptions._edit_stock', [
             'stock' => $stock,
-            'characters' => Character::orderBy('id')->where('user_id', 1)->pluck('slug', 'id'),
+            'characters' => Character::orderBy('id')->get()->where('user_id', 1)->pluck('fullname', 'id'),
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
         ]);
     }
@@ -79,9 +79,8 @@ class AdoptionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function getCreateStock() {
-        
         return view('admin.adoptions._create_stock', [
-            'characters' => Character::orderBy('id')->where('user_id', 1)->pluck('slug', 'id'),
+            'characters' => Character::orderBy('id')->get()->where('user_id', 1)->pluck('fullname', 'id'),
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
         ]);
     }
@@ -98,7 +97,7 @@ class AdoptionController extends Controller
         if(!$adoption) abort(404);
         return view('admin.adoptions.create_edit_adoption', [
             'adoption' => $adoption,
-            'characters' => Character::orderBy('id')->where('user_id', 1)->pluck('slug', 'id'),
+            'characters' => Character::orderBy('id')->get()->where('user_id', 1)->pluck('fullname', 'id'),
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
         ]);
     }

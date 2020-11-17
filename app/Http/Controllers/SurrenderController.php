@@ -50,7 +50,7 @@ class SurrenderController extends Controller
      */
     public function getSurrender()
     {
-        $characters = Character::orderBy('id')->where('user_id', Auth::user()->id)->pluck('slug', 'id');
+        $characters = Character::orderBy('id')->get()->where('user_id', Auth::user()->id)->pluck('fullname', 'id');
         $adoption = Adoption::where('id', 1)->where('is_active', 1)->first();
         if(!$adoption) abort(404);
         return view('adoptions.surrender_form', [
