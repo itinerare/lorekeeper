@@ -56,7 +56,7 @@
             </div>
             <div class="col-md-6 mb-md-0 mb-2">
                 <h5>User Suggested worth:</h5>
-                {{ $surrender->worth }}
+                {{ $surrender->worth }} @if($surrender->worth) {{ $worth->name }} @endif
             </div>
         </div>
     </div>

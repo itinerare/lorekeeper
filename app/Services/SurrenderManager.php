@@ -57,6 +57,7 @@ class SurrenderManager extends Service
                 'worth' => $data['worth'],
                 'notes' => $data['notes'],
                 'status' => 'Pending',
+                'currency_id' => $data['currency_id'],
                 ]);
 
             return $this->commitReturn($surrender);

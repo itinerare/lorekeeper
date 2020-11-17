@@ -69,7 +69,7 @@ class SurrenderController extends Controller
     public function postSurrender(Request $request, SurrenderManager $service) {
 
         $request->validate(Surrender::$createRules);
-        $data = $request->only(['character_id', 'notes', 'worth']);
+        $data = $request->only(['character_id', 'notes', 'worth', 'currency_id']);
 
         if($service->createSurrender($data, Auth::user())) {
             flash('Surrender submitted successfully.')->success();
@@ -112,7 +112,8 @@ class SurrenderController extends Controller
         return view('home.surrender', [
             'estimate' => $totalcost,
             'surrender' => $surrender,
-            'user' => $surrender->user
+            'user' => $surrender->user,
+            'worth' => Currency::find($surrender->currency_id),
         ]);
     }
 

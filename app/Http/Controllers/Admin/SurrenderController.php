@@ -88,6 +88,7 @@ class SurrenderController extends Controller
             'surrender' => $surrender,
             'estimate' => $totalcost,
         ] + ($surrender->status == 'Pending' ? [
+            'worth' => Currency::find($surrender->currency_id),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'count' => Surrender::where('status', 'Approved')->where('user_id', $surrender->user_id)->count()
         ] : []));

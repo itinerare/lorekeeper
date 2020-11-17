@@ -23,7 +23,11 @@
         </div>
         <div class="form-group">
             {!! Form::label('worth', 'Suggested Worth (optional)') !!}
-            {!! Form::text('worth', null, ['class' => 'form-control', 'placeholder' => 'Suggested worth does not influence amount of currency given, but gives admins insight to see if the grant has malfunctioned.']) !!}
+            {!! Form::number('worth', null, ['class' => 'form-control', 'placeholder' => 'Suggested worth does not influence amount of currency given, but gives admins insight to see if the grant has malfunctioned.']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('currency_id', 'Currency') !!} {!! add_help('If you do not want to input a worth, just leave this field as default.') !!}
+            {!! Form::select('currency_id', $currencies, null , ['class' => 'form-control', 'placeholder' => 'Select Currency type']) !!}
         </div>
         <div class="text-right">
             {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}

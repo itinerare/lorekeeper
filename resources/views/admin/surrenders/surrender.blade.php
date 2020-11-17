@@ -63,14 +63,14 @@
                 </div>
                 <div class="col-md-6 mb-md-0 mb-2">
                     <h5>User Suggested worth:</h5>
-                    {{ $surrender->worth }}
+                    {{ $surrender->worth }} @if($surrender->worth) {{ $worth->name }} @endif
                     <br>
                     <br>
-                    <h5>Estimated worth:</h5>
-                    <div class="alert alert-warning">The estimated worth will always be the amount granted to the user. If you believe more / less is the worth, edit the grant amount area.</div>
                     @if($estimate == NULL)
                     Calculate by traits is off
                     @else
+                    <h5>Estimated worth:</h5>
+                    <div class="alert alert-warning">The estimated worth will always be the amount granted to the user. If you believe more / less is the worth, edit the grant amount area.</div>
                     {{ $estimate }}
                     @endif
                 </div>
@@ -85,7 +85,7 @@
         </div>
         <div class="form-group">
             {!! Form::label('currency_id', 'Currency type to be given to user') !!} {!! add_help('You can set a default in the controller') !!}
-            {!! Form::select('currency_id', $currencies,  null, ['class' => 'form-control', 'placeholder' => 'Select Currency type']) !!}
+            {!! Form::select('currency_id', $currencies, $surrender->currency_id ? $worth : null, ['class' => 'form-control']) !!}
         </div>
 		<div class="form-group">
             {!! Form::label('staff_comments', 'Staff Comments (Optional)') !!}
