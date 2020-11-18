@@ -20,19 +20,33 @@
         </div>
 
         <div><a href="#" class="btn btn-primary mb-3" id="add-feature">Add Currency</a></div>
-        <div class="alert alert-warning">Remember you must re-enter all currency types, as the service deletes all old currency records to prevent overlap!</div>
+<div class="form-group">
+        <div class="row">
+            @foreach($stock->currency as $currency)
+            {!! Form::label('cost', 'Current Cost', ['class' => 'col-form-label']) !!}
+                    <div class="col-4">
+                        {!! Form::text('cost[]', $currency->cost, ['class' => 'form-control', 'placeholder' => 'Enter Cost']) !!}
+                    </div>
+                    <div class="col-4">
+                        {!! Form::select('currency_id[]', $currencies, $currency->currency->id, ['class' => 'form-control', 'placeholder' => 'Select Currency']) !!}
+                    </div>
+                    <a href="#" class="remove-feature btn btn-danger">Remove</a>
+            
+            @endforeach
+        </div>
+    </div>
         <div id="featureList" class="form-group">
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::checkbox('use_user_bank', $stock->use_user_bank, 1, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'use_user_bank']) !!}
+                {!! Form::checkbox('use_user_bank', $stock->use_user_bank, $stock->use_user_bank, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'use_user_bank']) !!}
                 {!! Form::label('use_user_bank', 'Use User Bank', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow users to purchase the character using the currency in their accounts, provided that users can own that currency.') !!}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group mb-3">
-                {!! Form::checkbox('use_character_bank', $stock->use_character_bank, 1, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'use_character_bank']) !!}
+                {!! Form::checkbox('use_character_bank', $stock->use_character_bank, $stock->use_character_bank, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'use_character_bank']) !!}
                 {!! Form::label('use_character_bank', 'Use Character Bank', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow users to purchase the character using the currency belonging to characters they own, provided that characters can own that currency.') !!}
             </div>
         </div>
@@ -47,7 +61,7 @@
 </div>
 {!! Form::close() !!}
 
-<div class="feature-row hide">
+<div class="feature-row hide mb-1">
     {!! Form::label('cost', 'Cost', ['class' => 'col-form-label']) !!}
         <div class="col-4">
             {!! Form::text('cost[]', null, ['class' => 'form-control', 'placeholder' => 'Enter Cost']) !!}
@@ -56,8 +70,8 @@
             {!! Form::select('currency_id[]', $currencies,  null, ['class' => 'form-control', 'placeholder' => 'Select Currency']) !!}
         </div>
         <a href="#" class="remove-feature btn btn-danger">Remove</a>
-
 </div>
+
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content text-center">
