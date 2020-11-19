@@ -8,7 +8,7 @@
 <h1>Adopts</h1>
 
 <p>Press 'create adopt stock' to add to the center.</p> 
-<p>Only characters owned by ''Admin'' (user where id = 1) can be added to the center.</p>
+<p>Only characters owned by {!! $adoptioncenter->displayName !!} can be added to the center. This account can be changed via the "adopts_user" Site Setting.</p>
 <p>To edit, press 'edit adoptable'.</p>
 
 <a href="{{ url('admin/data/stock/create') }}" class="text-right btn btn-primary mb-2">Create Adopt Stock</a>

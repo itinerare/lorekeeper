@@ -135,8 +135,8 @@ class SurrenderManager extends Service
                 throw new \Exception("Failed to distribute currency to user.");
             }
             // Manual stuff
-            $data['recipient_id'] = User::find(1)->id;
-            $data['reason'] = 'Surrendered to adoption center';
+            $data['recipient_id'] = intval(Settings::get('adopts_user'));
+            $data['reason'] = 'Surrendered to Adoption Center';
             $data['use_user_bank'] = 1;
             $data['use_character_bank'] = 1;
 

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin\Data;
 
 use Illuminate\Http\Request;
 
+use Settings;
 use Auth;
 
 use App\Models\Adoption\Adoption;
 use App\Models\Adoption\AdoptionStock;
 use App\Models\Character\Character;
 use App\Models\Currency\Currency;
+use App\Models\User\User;
 
 use App\Services\AdoptionService;
 
@@ -34,7 +36,8 @@ class AdoptionController extends Controller
     public function getIndex()
     {
         return view('admin.adoptions.adoptions', [
-            'adoptions' => Adoption::get()
+            'adoptions' => Adoption::get(),
+            'adoptioncenter' => User::find(intval(Settings::get('adopts_user'))),
         ]);
     }
 
@@ -48,7 +51,8 @@ class AdoptionController extends Controller
      */
     public function getStockIndex() {
         return view('admin.adoptions.stocks', [
-            'stock' => AdoptionStock::get()
+            'stock' => AdoptionStock::get(),
+            'adoptioncenter' => User::find(intval(Settings::get('adopts_user'))),
         ]);
     }
 
@@ -65,7 +69,7 @@ class AdoptionController extends Controller
         if(!$stock) abort(404);
         return view('admin.adoptions._edit_stock', [
             'stock' => $stock,
-            'characters' => Character::orderBy('id')->get()->where('user_id', 1)->pluck('fullname', 'id'),
+            'characters' => Character::orderBy('id')->get()->where('user_id', intval(Settings::get('adopts_user')))->pluck('fullname', 'id'),
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
         ]);
     }
@@ -80,7 +84,7 @@ class AdoptionController extends Controller
      */
     public function getCreateStock() {
         return view('admin.adoptions._create_stock', [
-            'characters' => Character::orderBy('id')->get()->where('user_id', 1)->pluck('fullname', 'id'),
+            'characters' => Character::orderBy('id')->get()->where('user_id', intval(Settings::get('adopts_user')))->pluck('fullname', 'id'),
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
         ]);
     }
@@ -97,7 +101,7 @@ class AdoptionController extends Controller
         if(!$adoption) abort(404);
         return view('admin.adoptions.create_edit_adoption', [
             'adoption' => $adoption,
-            'characters' => Character::orderBy('id')->get()->where('user_id', 1)->pluck('fullname', 'id'),
+            'characters' => Character::orderBy('id')->get()->where('user_id', intval(Settings::get('adopts_user')))->pluck('fullname', 'id'),
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
         ]);
     }

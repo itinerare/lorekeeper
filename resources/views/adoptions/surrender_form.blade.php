@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('adoptions.layout')
 
 @section('title') Surrender Character @endsection
 
 @section('content')
-{!! breadcrumbs(['Adoption Center' => 'adoptions', 'Surrender' => 'surrender']) !!}
+{!! breadcrumbs([$adoption->name => 'adoptions', 'Surrender' => 'surrender']) !!}
 @if(!Settings::get('is_surrenders_open'))
 <div class="alert alert-danger">Surrenders are currently closed</div>
 @else
