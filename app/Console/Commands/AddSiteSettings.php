@@ -240,6 +240,19 @@ class AddSiteSettings extends Command
         }
         else $this->line("Skipped: admin_user");
 
+        if(!DB::table('site_settings')->where('key', 'adopts_user')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'adopts_user',
+                    'value' => 1,
+                    'description' => 'ID of the site\'s adoption center user.'
+                ]
+
+            ]);
+            $this->info("Added:   adopts_user / Default: 1");
+        }
+        else $this->line("Skipped: adopts_user");
+
         $this->line("\nSite settings up to date!");
         
     }

@@ -73,6 +73,10 @@ return [
                 'name' => 'Claim Submissions',
                 'url' => 'admin/claims'
             ],
+            [
+                'name' => 'Surrenders',
+                'url' => 'admin/surrenders/pending'
+            ],
         ]
     ],
     'Grants' => [
@@ -149,12 +153,12 @@ return [
                 'url' => 'admin/data/shops'
             ],
             [
-                'name' => 'Adopt Stock',
-                'url' => 'admin/data/stock'
+                'name' => 'Adoption Center',
+                'url' => 'admin/data/adoptions/edit/1'
             ],
             [
-                'name' => 'Adoption Center',
-                'url' => 'admin/data/adoptions'
+                'name' => 'Adopts',
+                'url' => 'admin/data/stock'
             ],
             [
                 'name' => 'Prompt Categories',

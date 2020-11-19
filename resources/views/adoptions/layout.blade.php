@@ -6,7 +6,7 @@
 @endsection
 
 @section('sidebar')
-    @include('adoptions._sidebar')
+    @include('adoptions._sidebar',['name' => $adoption->name])
 @endsection
 
 @section('content')

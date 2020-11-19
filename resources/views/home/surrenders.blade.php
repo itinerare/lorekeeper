@@ -4,6 +4,7 @@
 
 @section('home-content')
     
+{!! breadcrumbs(['Surrenders' => 'surrenders']) !!}
 <h1>
     Surrenders
 </h1>
@@ -34,36 +35,27 @@
     </li>
 </ul>
 
-{!! $surrender->render() !!}
-<table>
-    <thead>
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th width="20%">Character</th>
-                    <th width="20%">Submitted</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($surrender as $surrenders)
-                    <tr>
-                        <td>{!! $surrenders->user->displayName !!}</td>
-                        <td class="text-break"><a href="{{ $surrenders->character->url }}">{!! $surrenders->character->displayname !!}</a></td>
-                        <td>{!! format_date($surrenders->created_at) !!}</td>
-                        <td>
-                            <span class="badge badge-{{ $surrenders->status == 'Pending' ? 'secondary' : ($surrenders->status == 'Approved' ? 'success' : 'danger') }}">{{ $surrenders->status }}</span>
-                        </td>
-                        <td class="text-right"><a href="{{ $surrenders->viewUrl }}" class="btn btn-primary btn-sm">Details</a></td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </thead>
-</table>
-{!! $surrender->render() !!}
+{!! $surrenders->render() !!}
+
+<div class="row ml-md-2 mb-4">
+    <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
+        <div class="col-12 col-md-3 font-weight-bold">User</div>
+        <div class="col-6 col-md-3 font-weight-bold">Character</div>
+        <div class="col-6 col-md-3 font-weight-bold">Submitted</div>
+        <div class="col-6 col-md font-weight-bold">Status</div>
+    </div>
+    @foreach($surrenders as $surrender)
+    <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
+        <div class="col-12 col-md-3">{!! $surrender->user->displayName !!}</div>
+        <div class="col-6 col-md-3"><a href="{{ $surrender->character->url }}">{!! $surrender->character->displayname !!}</a></div>
+        <div class="col-6 col-md-3">{!! pretty_date($surrender->created_at) !!}</div>
+        <div class="col-6 col-md-2"><span class="badge badge-{{ $surrender->status == 'Pending' ? 'secondary' : ($surrender->status == 'Approved' ? 'success' : 'danger') }}">{{ $surrender->status }}</span></div>
+        <div class="col-6 col-md"><a href="{{ $surrender->viewUrl }}" class="btn btn-primary btn-sm">Details</a></div>
+    </div>
+    @endforeach
+</div>
+
+{!! $surrenders->render() !!}
 
 
 @endsection

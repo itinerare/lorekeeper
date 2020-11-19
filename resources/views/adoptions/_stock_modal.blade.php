@@ -2,9 +2,9 @@
     <div class="text-center">Invalid character selected.</div>
 @else
     <div class="text-center mb-3">
-        <div class="mb-1"><a href="{{ $stock->character->url }}"><img src="{{ $stock->character->image->thumbnailUrl }}" /></a></div>
-        <div><a href="{{ $stock->character->url }}"><strong>{{ $stock->character->slug }}</strong></a></div>
-        <strong>Cost:</strong>
+        <div class="mb-1"><a href="{{ $stock->character->url }}"><img src="{{ $stock->character->image->imageUrl }}" class="mw-100" /></a></div>
+        <h5>{!! $stock->character->displayName !!}</h5>
+        <strong>Adoption Fee:</strong>
         @if($stock->currency->count() > 1)
             <?php 
                 $currencies = []; // Create an empty array
@@ -64,12 +64,10 @@
                     </div>
                 @endif
                 @foreach($stock->currency as $currency)
-                <div class="text-center">
-                    {!! Form::hidden('currency_id', $currency->currency_id) !!}
-                    <div class="text-uppercase text-muted">Purchase with {!! $currency->currency->name !!}</div>
-                    {!! Form::submit('Purchase', ['class' => 'btn btn-primary']) !!}
-                </div>
-                <br>
+                    <div class="text-center">
+                        {!! Form::hidden('currency_id', $currency->currency_id) !!}
+                        {!! Form::submit('Purchase for '. $currency->cost.' '.$currency->currency->name , ['class' => 'btn btn-primary']) !!}
+                    </div>  
                 @endforeach
             {!! Form::close() !!}
         @endif

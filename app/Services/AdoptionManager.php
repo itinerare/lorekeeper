@@ -4,6 +4,7 @@ use App\Services\Service;
 
 use DB;
 use Config;
+use Settings;
 
 use App\Models\Character\Character;
 use App\Models\Adoption\Adoption;
@@ -46,7 +47,7 @@ class AdoptionManager extends Service
             if(!$adoptionStock) throw new \Exception("Invalid character selected.");
 
             // Check if the character has a quantity, and if it does, check there is stock remaining
-            if($adoptionStock->is_limited_stock && $adoptionStock->quantity < 1) throw new \Exception("This character is out of stock.");
+            if($adoptionStock->is_limited_stock && $adoptionStock->quantity < 1) throw new \Exception("This character is no longer available.");
 
             $character = null;
             if($data['bank'] == 'character')

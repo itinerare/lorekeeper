@@ -37,7 +37,7 @@ class SurrenderController extends Controller
         $surrenders = $surrenders->where('status', ucfirst($type));
 
         return view('home.surrenders', [
-            'surrender' => $surrenders->orderBy('id', 'DESC')->paginate(20)->appends($request->query()),
+            'surrenders' => $surrenders->orderBy('id', 'DESC')->paginate(20)->appends($request->query()),
         ]);
     }
 

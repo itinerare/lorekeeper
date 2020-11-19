@@ -4,6 +4,7 @@ use App\Services\Service;
 
 use DB;
 use Config;
+use Settings;
 
 use App\Models\Adoption\Adoption;
 use App\Models\Adoption\AdoptionStock;

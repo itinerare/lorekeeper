@@ -42,7 +42,7 @@ class AdoptionController extends Controller
             'adoption' => $adoption,
             'adoptions' => Adoption::where('is_active', 1)->get(),
             'currencies' => Currency::whereIn('id', AdoptionCurrency::pluck('currency_id')->toArray())->get()->keyBy('id'),
-            'stock' => AdoptionStock::visible()->get()
+            'stocks' => AdoptionStock::visible()->get()
         ]);
     }
 
@@ -93,7 +93,8 @@ class AdoptionController extends Controller
     {
         return view('adoptions.purchase_history', [
             'logs' => Auth::user()->getAdoptionLogs(0),
-            'adoptions' => Adoption::where('is_active', 1)->orderBy('sort', 'DESC')->get(),
+            'adoptions' => Adoption::where('is_active', 1)->get(),
+            'adoption' => Adoption::find(1)
         ]);
     }
 }

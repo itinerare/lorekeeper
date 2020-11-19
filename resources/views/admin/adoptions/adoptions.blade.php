@@ -8,7 +8,7 @@
 <h1>Adoptions</h1>
 
 <p>Press edit to add characters to the store.</p> 
-<p>Only characters owned by ''Admin'' (user where id = 1) can be added to the center.</p>
+<p>Only characters owned by {!! $adoptioncenter->displayName !!} can be added to the center. This account can be changed via the "adopts_user" Site Setting.</p>
 
 @if(!count($adoptions))
     <p>No adoption center found.</p>
