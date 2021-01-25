@@ -72,7 +72,7 @@ class BrowseController extends Controller
                 break;
         }
 
-        return view('browse.users', [  
+        return view('browse.users', [
             'users' => $query->paginate(30)->appends($request->query()),
             'ranks' => [0 => 'Any Rank'] + Rank::orderBy('ranks.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'blacklistLink' => Settings::get('blacklist_link')
@@ -103,8 +103,8 @@ class BrowseController extends Controller
             if($key != '0' && ($request->get('key') != $key)) $canView = false;
 
         }
-        return view('browse.blacklist', [ 
-            'canView' => $canView, 
+        return view('browse.blacklist', [
+            'canView' => $canView,
             'privacy' => $privacy,
             'key' => $key,
             'users' => $canView ? User::where('is_banned', 1)->orderBy('users.name')->paginate(30)->appends($request->query()) : null,
@@ -122,13 +122,13 @@ class BrowseController extends Controller
         $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->myo(0);
 
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
-        
+
         if($request->get('name')) $query->where(function($query) use ($request) {
             $query->where('characters.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('characters.slug', 'LIKE', '%' . $request->get('name') . '%');
         });
         if($request->get('rarity_id')) $query->where('rarity_id', $request->get('rarity_id'));
         if($request->get('character_category_id')) $query->where('character_category_id', $request->get('character_category_id'));
-        
+
         if($request->get('sale_value_min')) $query->where('sale_value', '>=', $request->get('sale_value_min'));
         if($request->get('sale_value_max')) $query->where('sale_value', '<=', $request->get('sale_value_max'));
 
@@ -139,7 +139,7 @@ class BrowseController extends Controller
 
         if($request->get('username')) {
             $name = $request->get('username');
-            
+
             // Usernames are prevented from containing spaces, but this is to deal with previously made accounts with spaces in names
             $name = str_replace('%20', ' ', $name);
 
@@ -158,7 +158,10 @@ class BrowseController extends Controller
         if($request->get('species_id')) $imageQuery->where('species_id', $request->get('species_id'));
         if($request->get('subtype_id')) {
             if(!$request->get('search_images')) {
-            $imageQuery->where('subtype_id', $request->get('subtype_id'))->orWhere('subtype_id_2', $request->get('subtype_id'))
+            $imageQuery->where(function ($query) use($keyword) {
+                $query->where('subtype_id', $request->get('subtype_id'))
+                   ->orWhere('subtype_id_2', $request->get('subtype_id'));
+              })
             ->whereIn('id', $query->pluck('character_image_id')->toArray()
             );
             }
@@ -245,7 +248,7 @@ class BrowseController extends Controller
 
         if(!Auth::check() || !Auth::user()->hasPower('manage_characters')) $query->visible();
 
-        return view('browse.masterlist', [  
+        return view('browse.masterlist', [
             'isMyo' => false,
             'characters' => $query->paginate(24)->appends($request->query()),
             'categories' => [0 => 'Any Category'] + CharacterCategory::orderBy('character_categories.sort', 'DESC')->pluck('name', 'id')->toArray(),
@@ -267,12 +270,12 @@ class BrowseController extends Controller
         $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->myo(1);
 
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
-        
+
         if($request->get('name')) $query->where(function($query) use ($request) {
             $query->where('characters.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('characters.slug', 'LIKE', '%' . $request->get('name') . '%');
         });
         if($request->get('rarity_id')) $query->where('rarity_id', $request->get('rarity_id'));
-        
+
         if($request->get('sale_value_min')) $query->where('sale_value', '>=', $request->get('sale_value_min'));
         if($request->get('sale_value_max')) $query->where('sale_value', '<=', $request->get('sale_value_max'));
 
@@ -283,10 +286,10 @@ class BrowseController extends Controller
 
         if($request->get('username')) {
             $name = $request->get('username');
-            
+
             // Usernames are prevented from containing spaces, but this is to deal with previously made accounts with spaces in names
             $name = str_replace('%20', ' ', $name);
-            
+
             $owners = User::where('name', 'LIKE', '%' . $name . '%')->orWhere('alias', 'LIKE', '%' . $name . '%')->pluck('id')->toArray();
             $query->where(function($query) use ($owners, $name) {
                 $query->whereIn('user_id', $owners)->orWhere('owner_alias', 'LIKE', '%' . $name . '%');
@@ -346,7 +349,7 @@ class BrowseController extends Controller
 
         if(!Auth::check() || !Auth::user()->hasPower('manage_characters')) $query->visible();
 
-        return view('browse.myo_masterlist', [  
+        return view('browse.myo_masterlist', [
             'isMyo' => true,
             'slots' => $query->paginate(30)->appends($request->query()),
             'specieses' => [0 => 'Any Species'] + Species::orderBy('specieses.sort', 'DESC')->pluck('name', 'id')->toArray(),
