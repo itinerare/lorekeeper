@@ -158,7 +158,7 @@ class BrowseController extends Controller
         if($request->get('species_id')) $imageQuery->where('species_id', $request->get('species_id'));
         if($request->get('subtype_id')) {
             if(!$request->get('search_images')) {
-            $imageQuery->where(function ($query) use($keyword) {
+            $imageQuery->where(function ($query) use($request) {
                 $query->where('subtype_id', $request->get('subtype_id'))
                    ->orWhere('subtype_id_2', $request->get('subtype_id'));
               })
