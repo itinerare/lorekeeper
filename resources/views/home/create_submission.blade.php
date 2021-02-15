@@ -143,6 +143,7 @@
 
             $formSubmit.on('click', function(e) {
                 e.preventDefault();
+                this.disabled=true;
                 $submissionForm.submit();
             });
         });

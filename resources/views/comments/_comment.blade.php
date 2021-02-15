@@ -24,7 +24,7 @@
             <div class="border p-3 rounded {{ $comment->is_featured ? 'border-success bg-light' : '' }} "><p>{!! nl2br($markdown->line($comment->comment)) !!} </p>
             <p class="border-top pt-1 text-right mb-0">
                 <small class="text-muted">{!! $comment->created_at !!}
-                @if($comment->created_at != $comment->updated_at) 
+                @if($comment->created_at != $comment->updated_at)
                     <span class="text-muted border-left mx-1 px-1">(Edited {!! ($comment->updated_at) !!})</span>
                 @endif
                 </small>
@@ -50,7 +50,7 @@
                 @endcan
             </div>
         @endif
-        
+
             @can('edit-comment', $comment)
                 <div class="modal fade" id="comment-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
@@ -102,13 +102,13 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-sm btn-outline-secondary text-uppercase" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-sm btn-outline-success text-uppercase">Reply</button>
+                                    <button type="submit" onclick="this.disabled=true;" class="btn btn-sm btn-outline-success text-uppercase">Reply</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-            @endcan 
+            @endcan
 
             @can('delete-comment', $comment)
                 <div class="modal fade" id="delete-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
@@ -131,7 +131,7 @@
                         </div>
                     </div>
                 </div>
-            @endcan 
+            @endcan
 
             <div class="modal fade" id="feature-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
@@ -155,7 +155,7 @@
                 </div>
             </div>
 
-            
+
         </div>
 
             <br /><br />{{-- Margin bottom --}}
@@ -165,7 +165,7 @@
                     @foreach($grouped_comments[$comment->getKey()] as $child)
                         @php $limit++; @endphp
 
-                        @if($limit >= 3) 
+                        @if($limit >= 3)
                             <a href="{{ url('comment/').'/'.$comment->id }}"><span class="btn btn-secondary w-100 my-2">See More Replies</span></a>
                             @break
                         @endif

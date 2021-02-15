@@ -278,6 +278,7 @@
 
             $formSubmit.on('click', function(e) {
                 e.preventDefault();
+                this.disabled=true;
                 $gallerySubmissionForm.submit();
             });
 
