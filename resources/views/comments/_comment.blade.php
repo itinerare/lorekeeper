@@ -85,7 +85,7 @@
                 <div class="modal fade" id="reply-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <form method="POST" action="{{ route('comments.reply', $comment->getKey()) }}">
+                            <form method="POST" action="{{ route('comments.reply', $comment->getKey()) }}" id="comment">
                                 @csrf
                                 <div class="modal-header">
                                     <h5 class="modal-title">Reply to Comment</h5>
@@ -102,7 +102,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-sm btn-outline-secondary text-uppercase" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" onclick="this.disabled=true;" class="btn btn-sm btn-outline-success text-uppercase">Reply</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-success text-uppercase">Reply</button>
                                 </div>
                             </form>
                         </div>
@@ -181,3 +181,8 @@
 
     </div>
   </div>
+<script>
+$('#comment').submit(function(){
+    $(this).find(':input[type=submit]').prop('disabled', true);
+});
+</script>

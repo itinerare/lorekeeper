@@ -10,7 +10,7 @@
                 {{ $errors->first('commentable_id') }}
             </div>
         @endif
-        <form method="POST" action="{{ route('comments.store') }}">
+        <form method="POST" action="{{ route('comments.store') }}" id="comment">
             @csrf
             @honeypot
             <input type="hidden" name="commentable_type" value="\{{ get_class($model) }}" />
@@ -30,3 +30,8 @@
     </div>
 </div>
 <br />
+<script>
+$('#comment').submit(function(){
+    $(this).find(':input[type=submit]').prop('disabled', true);
+});
+</script>
