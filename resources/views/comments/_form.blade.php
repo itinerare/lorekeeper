@@ -10,7 +10,7 @@
                 {{ $errors->first('commentable_id') }}
             </div>
         @endif
-        <form method="POST" action="{{ route('comments.store') }}">
+        <form method="POST" action="{{ route('comments.store') }}" id="comment">
             @csrf
             @honeypot
             <input type="hidden" name="commentable_type" value="\{{ get_class($model) }}" />
@@ -25,8 +25,13 @@
                 </div>
                 <small class="form-text text-muted"><a target="_blank" href="https://help.github.com/articles/basic-writing-and-formatting-syntax">Markdown</a> cheatsheet.</small>
             </div>
-            <button onclick="this.disabled=true;" type="submit" class="btn btn-sm btn-outline-success text-uppercase">Submit</button>
+            <button type="submit" class="btn btn-sm btn-outline-success text-uppercase">Submit</button>
         </form>
     </div>
 </div>
 <br />
+<script>
+$('#comment').submit(function(){
+    $(this).find(':input[type=submit]').prop('disabled', true);
+});
+</script>
