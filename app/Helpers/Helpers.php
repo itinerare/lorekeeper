@@ -281,3 +281,24 @@ function prettyProfileName($url)
     if(isset($name) && isset($site)) return $name.'@'.$site;
     else return $url;
 }
+
+/**
+ * Capture a web screenshot.
+ *
+ * @param  string   $url
+ * @return blob
+ */
+function screenshot($url)
+{
+    // Validate URL
+    if(!empty($url) && filter_var($url, FILTER_VALIDATE_URL)) {
+        // Set expiry five minutes in the future
+        $expires = Carbon\Carbon::now()->valueOf() + (1000 * 300);
+        // Hash key, expiry, and URL
+        $hash = md5(env('THUMB_IO_KEY').$expires.$url);
+
+        // Return API call URL
+        return "https://image.thum.io/get/png/auth/".env('THUMB_IO_ID').'-'.$expires.'-'.$hash."/".$url;
+    }
+    else return false;
+}

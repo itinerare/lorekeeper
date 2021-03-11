@@ -16,15 +16,29 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ config('app.url', 'http://localhost') }}">
-    <meta property="og:image" content="@if(View::hasSection('meta-img')) @yield('meta-img') @else {{ asset('images/meta-image.png') }} @endif">
-    <meta property="og:title" content="{{ config('lorekeeper.settings.site_name', 'Lorekeeper') }} -@yield('title')">
+    <meta property="og:image" content="@if(View::hasSection('meta-img')) @yield('meta-img') @else @if(screenshot(url()->current())){{ screenshot(url()->current()) }}@else{{ asset('images/meta-image.png') }}@endif @endif">
+    <meta property="og:site_name" content="{{ config('lorekeeper.settings.site_name', 'Lorekeeper') }}" />
+    <meta property="og:title" content="
+        @if(View::hasSection('title'))
+            @yield('title')
+        @else
+            {{ config('lorekeeper.settings.site_name', 'Lorekeeper') }}
+        @endif
+    ">
     <meta property="og:description" content="@if(View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('lorekeeper.settings.site_desc', 'A Lorekeeper ARPG') }} @endif">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ config('app.url', 'http://localhost') }}">
-    <meta property="twitter:image" content="@if(View::hasSection('meta-img')) @yield('meta-img') @else {{ asset('images/meta-image.png') }} @endif">
-    <meta property="twitter:title" content="{{ config('lorekeeper.settings.site_name', 'Lorekeeper') }} -@yield('title')">
+    <meta property="twitter:image" content="@if(View::hasSection('meta-img')) @yield('meta-img') @else @if(screenshot(url()->current())){{ screenshot(url()->current()) }}@else{{ asset('images/meta-image.png') }}@endif @endif">
+    <meta name="twitter:site" content="{{ '@'.config('lorekeeper.settings.site_name', 'Lorekeeper') }}" />
+    <meta property="twitter:title" content="
+        @if(View::hasSection('title'))
+            @yield('title')
+        @else
+            {{ config('lorekeeper.settings.site_name', 'Lorekeeper') }}
+        @endif
+    ">
     <meta property="twitter:description" content="@if(View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('lorekeeper.settings.site_desc', 'A Lorekeeper ARPG') }} @endif">
 
     <!-- Scripts -->
