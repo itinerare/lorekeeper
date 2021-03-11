@@ -298,7 +298,7 @@ function screenshot($url)
         $hash = md5(env('THUMB_IO_KEY').$expires.$url);
 
         // Return API call URL
-        return "https://image.thum.io/get/png/auth/".env('THUMB_IO_ID').'-'.$expires.'-'.$hash."/".$url;
+        return "https://image.thum.io/get/allowJPG/auth/".env('THUMB_IO_ID').'-'.$expires.'-'.$hash."/".$url;
     }
     else return false;
 }
