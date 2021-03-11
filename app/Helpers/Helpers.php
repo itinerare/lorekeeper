@@ -295,10 +295,10 @@ function screenshot($url)
         // Set expiry five minutes in the future
         $expires = Carbon\Carbon::now()->valueOf() + (1000 * 300);
         // Hash key, expiry, and URL
-        $hash = md5(env('THUMB_IO_KEY').$expires.$url);
+        $hash = md5(env('THUM_IO_KEY').$expires.$url);
 
         // Return API call URL
-        return "https://image.thum.io/get/allowJPG/auth/".env('THUMB_IO_ID').'-'.$expires.'-'.$hash."/".$url;
+        return "https://image.thum.io/get/allowJPG/auth/".env('THUM_IO_ID').'-'.$expires.'-'.$hash."/".$url;
     }
     else return false;
 }
