@@ -55,7 +55,7 @@
                 <div class="modal fade" id="comment-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <form method="POST" action="{{ route('comments.update', $comment->getKey()) }}">
+                            <form method="POST" action="{{ route('comments.update', $comment->getKey()) }}" id="comment">
                                 @method('PUT')
                                 @csrf
                                 <div class="modal-header">

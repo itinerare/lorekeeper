@@ -249,7 +249,7 @@
                         @endif
                     </p>
                     <div class="text-right">
-                        <a href="#" id="formSubmit" class="btn btn-primary">Confirm</a>
+                        <button href="#" id="formSubmit" class="btn btn-primary">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -278,7 +278,7 @@
 
             $formSubmit.on('click', function(e) {
                 e.preventDefault();
-                this.disabled=true;
+                $(this).prop('disabled', true);
                 $gallerySubmissionForm.submit();
             });
 

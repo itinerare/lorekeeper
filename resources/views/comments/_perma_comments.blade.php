@@ -49,7 +49,7 @@
             <div class="modal fade" id="comment-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <form method="POST" action="{{ route('comments.update', $comment->getKey()) }}">
+                        <form method="POST" action="{{ route('comments.update', $comment->getKey()) }}" id="comment">
                             @method('PUT')
                             @csrf
                             <div class="modal-header">
@@ -79,7 +79,7 @@
             <div class="modal fade" id="reply-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <form method="POST" action="{{ route('comments.reply', $comment->getKey()) }}">
+                        <form method="POST" action="{{ route('comments.reply', $comment->getKey()) }}" id="comment">
                             @csrf
                             <div class="modal-header">
                                 <h5 class="modal-title">Reply to Comment</h5>
@@ -178,3 +178,8 @@ url should be equal to the last replies permalink (e.g reply 5)--}}
         </div>
     </div>
 </div>
+<script>
+$('#comment').submit(function(){
+    $(this).find(':input[type=submit]').prop('disabled', true);
+});
+</script>
