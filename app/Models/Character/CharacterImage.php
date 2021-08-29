@@ -20,10 +20,10 @@ class CharacterImage extends Model
      */
     protected $fillable = [
         'character_id', 'user_id', 'species_id', 'subtype_id', 'subtype_id_2', 'rarity_id', 'url',
-        'extension', 'use_cropper', 'hash', 'sort', 
+        'extension', 'use_cropper', 'hash', 'fullsize_hash', 'sort',
         'x0', 'x1', 'y0', 'y1',
         'description', 'parsed_description',
-        'is_valid', 
+        'is_valid',
     ];
 
     /**
@@ -39,7 +39,7 @@ class CharacterImage extends Model
      * @var string
      */
     public $timestamps = true;
-    
+
     /**
      * Validation rules for image creation.
      *
@@ -51,7 +51,7 @@ class CharacterImage extends Model
         'image' => 'required|mimes:jpeg,gif,png|max:20000',
         'thumbnail' => 'nullable|mimes:jpeg,gif,png|max:20000',
     ];
-    
+
     /**
      * Validation rules for image updating.
      *
@@ -64,41 +64,41 @@ class CharacterImage extends Model
         'rarity_id' => 'required',
         'description' => 'nullable',
     ];
-    
+
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
-    
+
     /**
      * Get the character associated with the image.
      */
-    public function character() 
+    public function character()
     {
         return $this->belongsTo('App\Models\Character\Character', 'character_id');
     }
-    
+
     /**
      * Get the user who owned the character at the time of image creation.
      */
-    public function user() 
+    public function user()
     {
         return $this->belongsTo('App\Models\User\User', 'user_id');
     }
-    
+
     /**
      * Get the species of the character image.
      */
-    public function species() 
+    public function species()
     {
         return $this->belongsTo('App\Models\Species\Species', 'species_id');
     }
-    
+
     /**
      * Get the subtype of the character image.
      */
-    public function subtype() 
+    public function subtype()
     {
         return $this->belongsTo('App\Models\Species\Subtype', 'subtype_id');
     }
@@ -106,15 +106,15 @@ class CharacterImage extends Model
     /**
      * Get the subtype of the character image.
      */
-    public function subtypeTwo() 
+    public function subtypeTwo()
     {
         return $this->belongsTo('App\Models\Species\Subtype', 'subtype_id_2');
     }
-    
+
     /**
      * Get the rarity of the character image.
      */
-    public function rarity() 
+    public function rarity()
     {
         return $this->belongsTo('App\Models\Rarity', 'rarity_id');
     }
@@ -122,7 +122,7 @@ class CharacterImage extends Model
     /**
      * Get the features (traits) attached to the character image, ordered by display order.
      */
-    public function features() 
+    public function features()
     {
         $ids = FeatureCategory::orderBy('sort', 'DESC')->pluck('id')->toArray();
 
@@ -130,33 +130,33 @@ class CharacterImage extends Model
 
         return count($ids) ? $query->orderByRaw(DB::raw('FIELD(features.feature_category_id, '.implode(',', $ids).')')) : $query;
     }
-    
+
     /**
      * Get the designers/artists attached to the character image.
      */
-    public function creators() 
+    public function creators()
     {
         return $this->hasMany('App\Models\Character\CharacterImageCreator', 'character_image_id');
     }
-    
+
     /**
      * Get the designers attached to the character image.
      */
-    public function designers() 
+    public function designers()
     {
         return $this->hasMany('App\Models\Character\CharacterImageCreator', 'character_image_id')->where('type', 'Designer')->where('character_type', 'Character');
     }
-    
+
     /**
      * Get the artists attached to the character image.
      */
-    public function artists() 
+    public function artists()
     {
         return $this->hasMany('App\Models\Character\CharacterImageCreator', 'character_image_id')->where('type', 'Artist')->where('character_type', 'Character');
     }
 
     /**********************************************************************************************
-    
+
         SCOPES
 
     **********************************************************************************************/
@@ -174,7 +174,7 @@ class CharacterImage extends Model
     }
 
     /**********************************************************************************************
-    
+
         ACCESSORS
 
     **********************************************************************************************/
@@ -208,7 +208,7 @@ class CharacterImage extends Model
     {
         return public_path($this->imageDirectory);
     }
-    
+
     /**
      * Gets the URL of the model's image.
      *
@@ -217,6 +217,39 @@ class CharacterImage extends Model
     public function getImageUrlAttribute()
     {
         return asset($this->imageDirectory . '/' . $this->imageFileName);
+    }
+
+    /**
+     * Gets the file name of the model's fullsize image.
+     *
+     * @return string
+     */
+    public function getFullsizeFileNameAttribute()
+    {
+        return $this->id . '_'.$this->hash.'_'.$this->fullsize_hash.'_full.'.$this->extension;
+    }
+
+    /**
+     * Gets the file name of the model's fullsize image.
+     *
+     * @return string
+     */
+    public function getFullsizeUrlAttribute()
+    {
+        return asset($this->imageDirectory . '/' . $this->fullsizeFileName);
+    }
+
+    /**
+     * Gets the file name of the model's fullsize image.
+     *
+     * @param  user
+     * @return string
+     */
+    public function canViewFull($user = null)
+    {
+        if(((isset($this->character->user_id) && ($user ? $this->character->user->id == $user->id : false)) || ($user ? $user->hasPower('manage_characters') : false)))
+        return true;
+        else return false;
     }
 
     /**
@@ -238,7 +271,7 @@ class CharacterImage extends Model
     {
         return $this->imagePath;
     }
-    
+
     /**
      * Gets the URL of the model's thumbnail image.
      *
