@@ -18,7 +18,7 @@ class Gallery extends Model
     protected $fillable = [
         'id', 'parent_id', 'name', 'sort', 'description',
         'currency_enabled', 'votes_required', 'submissions_open',
-        'start_at', 'end_at', 'hide_before_start'
+        'start_at', 'end_at', 'hide_before_start', 'prompt_selection'
     ];
 
     /**
@@ -118,6 +118,23 @@ class Gallery extends Model
         })->where(function($query) {
                 $query->whereNull('end_at')->orWhere('end_at', '>', Carbon::now())->orWhere(function($query) {
                     $query->where('end_at', '<=', Carbon::now());
+                });
+        });
+
+    }
+
+    /**
+     * Scope a query to only include visible galleries.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        return $query
+            ->where(function($query) {
+                $query->whereNull('start_at')->orWhere('start_at', '<', Carbon::now())->orWhere(function($query) {
+                    $query->where('start_at', '>=', Carbon::now())->where('hide_before_start', 0);
                 });
         });
 

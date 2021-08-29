@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\Comment;
-use App\Models\Sales;
+use App\Models\Sales\Sales;
 use App\Models\User\User;
 use App\Models\News;
 use App\Models\Gallery\GallerySubmission;
@@ -27,7 +27,7 @@ class CommentController extends Controller implements CommentControllerInterface
 {
     public function __construct()
     {
-        
+
         $this->middleware('web');
 
         if (Config::get('comments.guest_commenting') == true) {
@@ -43,7 +43,7 @@ class CommentController extends Controller implements CommentControllerInterface
      */
     public function store(Request $request)
     {
-     
+
         // If guest commenting is turned off, authorize this action.
         if (Config::get('comments.guest_commenting') == false) {
             Gate::authorize('create-comment', Comment::class);
@@ -95,7 +95,7 @@ class CommentController extends Controller implements CommentControllerInterface
                 $post = 'your profile';
                 $link = $recipient->url . '/#comment-' . $comment->getKey();
                 break;
-            case 'App\Models\Sales':
+            case 'App\Models\Sales\Sales':
                 $sale = Sales::find($comment->commentable_id);
                 $recipient = $sale->user; // User that has been commented on (or owner of sale post)
                 $post = 'your sales post'; // Simple message to show if it's profile/sales/news
@@ -123,12 +123,12 @@ class CommentController extends Controller implements CommentControllerInterface
                 break;
             case 'App\Models\Gallery\GallerySubmission':
                 $submission = GallerySubmission::find($comment->commentable_id);
-                if($type == 'Staff-Staff') $recipient = User::find(Settings::get('admin_user')); 
+                if($type == 'Staff-Staff') $recipient = User::find(Settings::get('admin_user'));
                 else $recipient = $submission->user;
                 $post = (($type != 'User-User') ? 'your gallery submission\'s staff comments' : 'your gallery submission');
                 $link = (($type != 'User-User') ? $submission->queueUrl . '/#comment-' . $comment->getKey() : $submission->url . '/#comment-' . $comment->getKey());
                 break;
-            } 
+            }
 
 
         if($recipient != $sender) {
@@ -194,6 +194,7 @@ class CommentController extends Controller implements CommentControllerInterface
         $reply->commentable()->associate($comment->commentable);
         $reply->parent()->associate($comment);
         $reply->comment = $request->message;
+        $reply->type = $comment->type;
         $reply->approved = !Config::get('comments.approval_required');
         $reply->save();
 
