@@ -457,7 +457,10 @@ class BrowseController extends Controller
 
         // Searching on image properties
         if($request->get('species_id')) $imageQuery->where('species_id', $request->get('species_id'));
-        if($request->get('subtype_id')) $imageQuery->where('subtype_id', $request->get('subtype_id'));
+        if($request->get('subtype_id')) $imageQuery->where(function ($query) use($request) {
+            $query->where('subtype_id', $request->get('subtype_id'))
+               ->orWhere('subtype_id_2', $request->get('subtype_id'));
+          });
         if($request->get('feature_id')) {
             $featureIds = $request->get('feature_id');
             foreach($featureIds as $featureId) {
