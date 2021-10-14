@@ -226,6 +226,15 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
+
+    # CHALLENGES
+    Route::get('challenges', 'ChallengeController@getChallengeIndex');
+    Route::get('challenges/create', 'ChallengeController@getCreateChallenge');
+    Route::get('challenges/edit/{id}', 'ChallengeController@getEditChallenge');
+    Route::get('challenges/delete/{id}', 'ChallengeController@getDeleteChallenge');
+    Route::post('challenges/create', 'ChallengeController@postCreateEditChallenge');
+    Route::post('challenges/edit/{id?}', 'ChallengeController@postCreateEditChallenge');
+    Route::post('challenges/delete/{id}', 'ChallengeController@postDeleteChallenge');
 });
 
 
