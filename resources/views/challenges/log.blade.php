@@ -21,11 +21,16 @@
                     {!! nl2br(htmlentities($log->challenge->rules)) !!}
                 @endif
             </div>
-            @if($log->submission)
-                <div class="col-md">
-                    <h5>Submission:</h5> <a href="{{ $log->submission->url }}">#{{ $log->submission->id }}</a>
-                </div>
-            @endif
+            <div class="col-md">
+                @if($log->staff)
+                    <h6>Processed By:</h6>
+                    <p>{!! $log->staff->displayName !!}</p>
+                @endif
+                @if($log->submission)
+                    <h6>Submission:</h6>
+                    <p><a href="{{ $log->submission->viewUrl }}">#{{ $log->submission->id }}</a></p>
+                @endif
+            </div>
         </div>
         @if(isset($log->staff_comments))
             <hr/>
