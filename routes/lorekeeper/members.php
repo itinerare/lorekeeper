@@ -155,6 +155,14 @@ Route::group(['prefix' => 'reports', 'namespace' => 'Users'], function() {
     Route::get('view/{id}', 'ReportController@getReport');
 });
 
+Route::group(['prefix' => 'challenges'], function() {
+    Route::get('my-challenges', 'ChallengeController@getList');
+    Route::get('new/{id}', 'ChallengeController@getRegister');
+    Route::get('view/{id}', 'ChallengeController@getLog');
+    Route::post('new/{id}', 'ChallengeController@postRegister');
+    Route::post('edit/{id}', 'ChallengeController@postEditChallenge');
+});
+
 Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function() {
     Route::get('{type?}', 'DesignController@getDesignUpdateIndex')->where('type', 'pending|approved|rejected');
     Route::get('{id}', 'DesignController@getDesignUpdate');

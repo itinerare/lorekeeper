@@ -36,7 +36,7 @@
             @else
                 {!! add_help('Enter the URL of your submission (whether uploaded to dA or some other hosting service).') !!}
             @endif
-            {!! Form::text('url', null, ['class' => 'form-control', 'required']) !!}
+            {!! Form::text('url', Request::get('url'), ['class' => 'form-control', 'required']) !!}
         </div>
         <div class="form-group">
             {!! Form::label('comments', 'Comments (Optional)') !!} {!! add_help('Enter a comment for your ' . ($isClaim ? 'claim' : 'submission') . ' (no HTML). This will be viewed by the mods when reviewing your ' . ($isClaim ? 'claim' : 'submission') . '.') !!}

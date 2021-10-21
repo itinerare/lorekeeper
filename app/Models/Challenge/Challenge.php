@@ -140,6 +140,7 @@ class Challenge extends Model
      */
     public function getDisplayNameAttribute()
     {
+        if(!$this->is_active) return $this->name;
         return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 

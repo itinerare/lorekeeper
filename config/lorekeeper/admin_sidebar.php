@@ -81,6 +81,10 @@ return [
                 'name' => 'Claim Submissions',
                 'url' => 'admin/claims'
             ],
+            [
+                'name' => 'Challenge Logs',
+                'url' => 'admin/challenges'
+            ],
         ]
     ],
     'Grants' => [

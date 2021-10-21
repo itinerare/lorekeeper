@@ -55,7 +55,8 @@ class SetupChallenges extends Command
                 'prompt_category_id' => null,
                 'name' => 'Challenge Submissions',
                 'summary' => 'Submit challenge logs here!',
-                'hide_submissions' => 0
+                'hide_submissions' => 0,
+                'is_active' => 1
             ];
 
             $promptService = $service = new PromptService;

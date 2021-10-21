@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 use Config;
 use Carbon\Carbon;
+use Settings;
 
 use App\Models\Character\Character;
 use App\Models\Character\CharacterImageCreator;
@@ -180,13 +181,21 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany('App\Models\Gallery\GalleryFavorite')->where('user_id', $this->id);
     }
-    
+
     /**
      * Get all of the user's character bookmarks.
      */
-    public function bookmarks() 
+    public function bookmarks()
     {
         return $this->hasMany('App\Models\Character\CharacterBookmark')->where('user_id', $this->id);
+    }
+
+    /**
+     * Get all of the user's challenge logs.
+     */
+    public function challengeLogs()
+    {
+        return $this->hasMany('App\Models\Challenge\UserChallenge');
     }
 
     /**********************************************************************************************
@@ -376,10 +385,25 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getcheckBirthdayAttribute()
     {
-        $bday = $this->birthday; 
+        $bday = $this->birthday;
         if(!$bday || $bday->diffInYears(carbon::now()) < 13) return false;
         else return true;
     }
+
+    /**
+     * Check if the user can register for a new challenge
+     *
+     * @return bool
+     */
+    public function getCanChallengeAttribute()
+    {
+        // Check that registrations are currently open
+        if(Settings::get('challenges_concurrent') < 1) return false;
+        // Check if user has fewer active challenges than the current cap
+        if($this->challengeLogs()->active()->count() < Settings::get('challenges_concurrent')) return true;
+        return false;
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS
