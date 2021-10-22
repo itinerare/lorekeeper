@@ -12,5 +12,12 @@ return [
     //     'version' => '1.0.0',
     // ],
     
-
+    'challenges' => [
+        'key' => 'challenges',
+        'wiki_key' => 'Challenges',
+        'creators' => json_encode([
+            'Mercury' => 'https://github.com/itinerare/',
+        ]),
+        'version' => '1.0.1',
+    ],  
 ];
