@@ -3,7 +3,7 @@
 @section('challenges-title') Log #{{ $log->id }} @endsection
 
 @section('content')
-{!! breadcrumbs(['Challences' => 'logs', 'Log #'.$log->id => 'logs/view/'.$log->id]) !!}
+{!! breadcrumbs(['Challenges' => 'challenges', 'Log #'.$log->id => 'challenges/view/'.$log->id]) !!}
 
 <h1>
     <span class="float-right badge badge-{{ $log->status == 'Old' ? 'secondary' : 'success' }}">{{ $log->status }}</span>
