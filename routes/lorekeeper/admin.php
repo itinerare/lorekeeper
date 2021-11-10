@@ -150,6 +150,24 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get('items/tag/{id}', 'ItemController@getAddItemTag');
     Route::post('items/tag/{id}', 'ItemController@postAddItemTag');
 
+    # FRAMES
+    Route::get('frame-categories', 'FrameController@getIndex');
+    Route::get('frame-categories/create', 'FrameController@getCreateFrameCategory');
+    Route::get('frame-categories/edit/{id}', 'FrameController@getEditFrameCategory');
+    Route::get('frame-categories/delete/{id}', 'FrameController@getDeleteFrameCategory');
+    Route::post('frame-categories/create', 'FrameController@postCreateEditFrameCategory');
+    Route::post('frame-categories/edit/{id?}', 'FrameController@postCreateEditFrameCategory');
+    Route::post('frame-categories/delete/{id}', 'FrameController@postDeleteFrameCategory');
+    Route::post('frame-categories/sort', 'FrameController@postSortFrameCategory');
+
+    Route::get('frames', 'FrameController@getFrameIndex');
+    Route::get('frames/create', 'FrameController@getCreateFrame');
+    Route::get('frames/edit/{id}', 'FrameController@getEditFrame');
+    Route::get('frames/delete/{id}', 'FrameController@getDeleteFrame');
+    Route::post('frames/create', 'FrameController@postCreateEditFrame');
+    Route::post('frames/edit/{id?}', 'FrameController@postCreateEditFrame');
+    Route::post('frames/delete/{id}', 'FrameController@postDeleteFrame');
+
     # SHOPS
     Route::get('shops', 'ShopController@getIndex');
     Route::get('shops/create', 'ShopController@getCreateShop');

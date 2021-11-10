@@ -20,12 +20,12 @@ return [
     | Version
     |--------------------------------------------------------------------------
     |
-    | This is the current version of Lorekeeper that your site is on. 
+    | This is the current version of Lorekeeper that your site is on.
     | Do not change this value!
     |
     */
     'version' => '2.0.0',
-    
+
     /*
     |--------------------------------------------------------------------------
     | Site Name
@@ -161,11 +161,11 @@ return [
     | Masterlist Thumbnail Dimensions & Watermarking
     |--------------------------------------------------------------------------
     |
-    | This affects the dimensions used by the character thumbnail cropper.
+    | This affects the dimensions used for character thumbnails.
     | Using a smallish size is recommended to reduce the amount of time
     | needed to load the masterlist pages.
     |
-    | 0: Default thumbnail cropping behavior. 1: Watermark thumbnails.
+    | 0: Do not watermark thumbnails. 1: Watermark thumbnails.
     | Expects the whole of the character to be visible in the thumbnail.
     |
     */
@@ -174,6 +174,20 @@ return [
         'height' => 200
     ],
     'watermark_masterlist_thumbnails' => 0,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Character Frame Dimensions
+    |--------------------------------------------------------------------------
+    |
+    | This affects the dimensions used by the cropper. This should match the
+    | dimensions of the background of your frames.
+    |
+    */
+    'frame_dimensions' => [
+        'width' => 300,
+        'height' => 500
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -186,10 +200,12 @@ return [
     | Thumbnails will effectively be small previews of the full masterlist images.
     | This feature will not replace the manual uploading of thumbnails.
     |
+    | This is enabled by default as part of character frames.
+    |
     | Simply change to "1" to enable, or keep at "0" to disable.
     |
     */
-    'masterlist_image_automation' => 0,
+    'masterlist_image_automation' => 1,
 
     /*
     |--------------------------------------------------------------------------
