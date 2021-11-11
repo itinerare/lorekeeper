@@ -8,6 +8,7 @@ use Image;
 
 use App\Models\Frame\FrameCategory;
 use App\Models\Frame\Frame;
+use App\Models\Character\CharacterFrame;
 
 class FrameService extends Service
 {
@@ -262,6 +263,11 @@ class FrameService extends Service
         // But set it if there is no current default frame
         if(!Frame::where('is_default', 1)->count())
             $data['is_default'] = 1;
+        // If there's a pre-existing default frame, unset it
+        elseif(($frame && Frame::where('id', '!=', $frame->id)->where('is_default', 1)->count()) || (!$frame && Frame::where('is_default', 1)->count())) {
+            if($frame) Frame::where('id', '!=', $frame->id)->where('is_default', 1)->update(['is_default' => 0]);
+            else Frame::where('is_default', 1)->update(['is_default' => 0]);
+        }
 
         // If the frame is new, set a hash
         if(!$frame)
@@ -321,7 +327,8 @@ class FrameService extends Service
 
         try {
             // Check first if the frame is currently owned or if some other site feature uses it
-            if(DB::table('character_frames')->where([['frame_id', '=', $frame->id], ['count', '>', 0]])->exists()) throw new \Exception("At least one character currently owns this frame. Please remove the frame(s) before deleting it.");
+            if($frame->is_default) throw new \Exception('This frame is currently the default frame. Please set a different default frame before deleting it.');
+            if(CharacterFrame::where('frame_id', $frame->id)->exists()) throw new \Exception("At least one character currently owns this frame. Please remove the frame(s) before deleting it.");
 
             DB::table('character_frames')->where('frame_id', $frame->id)->delete();
 
