@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Data;
 use Illuminate\Http\Request;
 
 use Auth;
+use Config;
 
 use App\Models\Frame\FrameCategory;
 use App\Models\Frame\Frame;
@@ -172,9 +173,35 @@ class FrameController extends Controller
         if(isset($data['name']))
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
 
+        // Gather configured per-species and -subtype sizes
+        $sizes = collect(Config::get('lorekeeper.settings.frame_dimensions'));
+        foreach($sizes as $key=>$size) {
+            if(is_numeric($key)) {
+                $sizeArray['species'][$key] = [
+                    'species' => Species::where('id', $key)->first() ? Species::where('id', $key)->first() : 'Invalid Species',
+                    'default_frame' => Frame::where('species_id', $key)->where('is_default', 1)->first() ? 1 : 0,
+                    'width' => $size['width'],
+                    'height' => $size['height']
+                ];
+
+                foreach($size as $subtypeKey=>$subtypeSize) {
+                    if(is_numeric($subtypeKey)) {
+                        $sizeArray['subtype'][$key][$subtypeKey] = [
+                            'subtype' => Subtype::where('species_id', $key)->where('id', $subtypeKey)->first() ? Subtype::where('species_id', $key)->where('id', $subtypeKey)->first() : 'Invalid Subtype',
+                            'default_frame' => Frame::where('subtype_id', $subtypeKey)->where('is_default', 1)->first() ? 1 : 0,
+                            'width' => $subtypeSize['width'],
+                            'height' => $subtypeSize['height']
+                        ];
+                    }
+                }
+            }
+        }
+
         return view('admin.frames.frames', [
             'frames' => $query->paginate(20)->appends($request->query()),
-            'categories' => ['none' => 'Any Category'] + FrameCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+            'categories' => ['none' => 'Any Category'] + FrameCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'defaultFrame' => Frame::whereNull('species_id')->where('is_default', 1)->first() ? 1 : 0,
+            'sizes' => $sizeArray,
         ]);
     }
 

@@ -183,10 +183,28 @@ return [
     | This affects the dimensions used by the cropper. This should match the
     | dimensions of the background of your frames.
     |
+    | Additionally, if specific species or subtypes have frames of different
+    | dimensions, these can be specified; see below for an example of how to do so.
+    |
     */
     'frame_dimensions' => [
         'width' => 300,
-        'height' => 500
+        'height' => 500,
+
+        // The following is an example of specifying different dimensions for
+        // a species' or subtype's frames. Uncomment and edit it to suit your needs.
+        // This should be the ID of the species you want to impact.
+        //1 => [
+        //    'width' => 337,
+        //    'height' => 524,
+        //
+        //    // Subtypes can be specified by further nesting, like so.
+        //    // This should be the ID of the subtype you want to impact.
+        //    2 => [
+        //        'width' => 337,
+        //        'height' => 524
+        //    ]
+        //],
     ],
 
     /*

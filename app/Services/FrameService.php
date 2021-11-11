@@ -10,6 +10,9 @@ use App\Models\Frame\FrameCategory;
 use App\Models\Frame\Frame;
 use App\Models\Character\CharacterFrame;
 
+use App\Models\Species\Species;
+use App\Models\Species\Subtype;
+
 class FrameService extends Service
 {
     /*
@@ -194,6 +197,16 @@ class FrameService extends Service
 
             if((isset($data['frame_category_id']) && $data['frame_category_id']) && !FrameCategory::where('id', $data['frame_category_id'])->exists()) throw new \Exception("The selected frame category is invalid.");
 
+            if(isset($data['species_id'])) {
+                $species = Species::where('id', $data['species_id'])->first();
+                if(!$species) throw new \Exception('Invalid species selected.');
+
+                if(isset($data['subtype_id'])) {
+                    $subtype = Subtype::where('species_id', $data['species_id'])->where('id', $data['subtype_id'])->first();
+                    if(!$subtype) throw new \Exception('Invalid subtype selected. Ensure the subtype matches the species selected.');
+                }
+            }
+
             $data = $this->populateData($data);
 
             $data['item_id'] = 1;
@@ -228,6 +241,16 @@ class FrameService extends Service
             if(Frame::where('name', $data['name'])->where('id', '!=', $frame->id)->exists()) throw new \Exception("The name has already been taken.");
             if((isset($data['frame_category_id']) && $data['frame_category_id']) && !FrameCategory::where('id', $data['frame_category_id'])->exists()) throw new \Exception("The selected frame category is invalid.");
 
+            if(isset($data['species_id'])) {
+                $species = Species::where('id', $data['species_id'])->first();
+                if(!$species) throw new \Exception('Invalid species selected.');
+
+                if(isset($data['subtype_id'])) {
+                    $subtype = Subtype::where('species_id', $data['species_id'])->where('id', $data['subtype_id'])->first();
+                    if(!$subtype) throw new \Exception('Invalid subtype selected. Ensure the subtype matches the species selected.');
+                }
+            }
+
             $data = $this->populateData($data, $frame);
 
             // If either image is being reuploaded, process
@@ -260,13 +283,41 @@ class FrameService extends Service
         // Check toggle
         if(!isset($data['is_default']))
             $data['is_default'] = 0;
-        // But set it if there is no current default frame
-        if(!Frame::where('is_default', 1)->count())
-            $data['is_default'] = 1;
-        // If there's a pre-existing default frame, unset it
-        elseif(($frame && Frame::where('id', '!=', $frame->id)->where('is_default', 1)->count()) || (!$frame && Frame::where('is_default', 1)->count())) {
-            if($frame) Frame::where('id', '!=', $frame->id)->where('is_default', 1)->update(['is_default' => 0]);
-            else Frame::where('is_default', 1)->update(['is_default' => 0]);
+
+        // Check defaults relative to species and subtype if relevant
+        // This is to make sure there's a default frame for each set of configured
+        // dimensions.
+        if(isset($data['species_id']) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$data['species_id'])) {
+            if(isset($data['subtype_id']) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$data['species_id'].'.'.$data['subtype_id'])) {
+                // But set it if there is no current default frame
+                if(!Frame::where('subtype_id', $data['subtype_id'])->where('is_default', 1)->count())
+                    $data['is_default'] = 1;
+                // If there's a pre-existing default frame, unset it
+                elseif(($frame && Frame::where('subtype_id', $data['subtype_id'])->where('id', '!=', $frame->id)->where('is_default', 1)->count()) || (!$frame && Frame::where('subtype_id', $data['subtype_id'])->where('is_default', 1)->count())) {
+                    if($frame) Frame::where('subtype_id', $data['subtype_id'])->where('id', '!=', $frame->id)->where('is_default', 1)->update(['is_default' => 0]);
+                    else Frame::where('subtype_id', $data['subtype_id'])->where('is_default', 1)->update(['is_default' => 0]);
+                }
+            }
+            else {
+                // But set it if there is no current default frame
+                if(!Frame::where('species_id', $data['species_id'])->where('is_default', 1)->count())
+                    $data['is_default'] = 1;
+                // If there's a pre-existing default frame, unset it
+                elseif(($frame && Frame::where('species_id', $data['species_id'])->where('id', '!=', $frame->id)->where('is_default', 1)->count()) || (!$frame && Frame::where('species_id', $data['species_id'])->where('is_default', 1)->count())) {
+                    if($frame) Frame::where('species_id', $data['species_id'])->where('id', '!=', $frame->id)->where('is_default', 1)->update(['is_default' => 0]);
+                    else Frame::where('species_id', $data['species_id'])->where('is_default', 1)->update(['is_default' => 0]);
+                }
+            }
+        }
+        else {
+            // But set it if there is no current default frame
+            if(!Frame::whereNull('species_id')->where('is_default', 1)->count())
+                $data['is_default'] = 1;
+            // If there's a pre-existing default frame, unset it
+            elseif(($frame && Frame::whereNull('species_id')->where('id', '!=', $frame->id)->where('is_default', 1)->count()) || (!$frame && Frame::whereNull('species_id')->where('is_default', 1)->count())) {
+                if($frame) Frame::whereNull('species_id')->where('id', '!=', $frame->id)->where('is_default', 1)->update(['is_default' => 0]);
+                else Frame::whereNull('species_id')->where('is_default', 1)->update(['is_default' => 0]);
+            }
         }
 
         // If the frame is new, set a hash
@@ -327,7 +378,7 @@ class FrameService extends Service
 
         try {
             // Check first if the frame is currently owned or if some other site feature uses it
-            if($frame->is_default) throw new \Exception('This frame is currently the default frame. Please set a different default frame before deleting it.');
+            if($frame->is_default) throw new \Exception('This frame is currently a default frame. Please set a different default frame before deleting it.');
             if(CharacterFrame::where('frame_id', $frame->id)->exists()) throw new \Exception("At least one character currently owns this frame. Please remove the frame(s) before deleting it.");
 
             DB::table('character_frames')->where('frame_id', $frame->id)->delete();
