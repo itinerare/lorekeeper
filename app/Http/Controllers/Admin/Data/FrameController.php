@@ -10,6 +10,9 @@ use App\Models\Frame\FrameCategory;
 use App\Models\Frame\Frame;
 use App\Models\User\User;
 
+use App\Models\Species\Species;
+use App\Models\Species\Subtype;
+
 use App\Services\FrameService;
 
 use App\Http\Controllers\Controller;
@@ -185,6 +188,8 @@ class FrameController extends Controller
         return view('admin.frames.create_edit_frame', [
             'frame' => new Frame,
             'categories' => ['none' => 'No category'] + FrameCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'specieses' => [null => 'Any Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'subtypes' => [null => 'Any Subtype'] + Subtype::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 
@@ -202,6 +207,8 @@ class FrameController extends Controller
         return view('admin.frames.create_edit_frame', [
             'frame' => $frame,
             'categories' => ['none' => 'No category'] + FrameCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'specieses' => [null => 'Any Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'subtypes' => [null => 'Any Subtype'] + Subtype::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 
@@ -217,7 +224,7 @@ class FrameController extends Controller
     {
         $id ? $request->validate(Frame::$updateRules) : $request->validate(Frame::$createRules);
         $data = $request->only([
-            'name', 'description', 'frame_category_id', 'is_default', 'frame_image', 'back_image', 'item_id'
+            'name', 'description', 'frame_category_id', 'is_default', 'frame_image', 'back_image', 'item_id', 'species_id', 'subtype_id'
         ]);
         if($id && $service->updateFrame(Frame::find($id), $data, Auth::user())) {
             flash('Frame updated successfully.')->success();

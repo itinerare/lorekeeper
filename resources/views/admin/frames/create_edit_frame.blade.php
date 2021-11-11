@@ -28,6 +28,18 @@
             {!! Form::select('frame_category_id', $categories, $frame->frame_category_id, ['class' => 'form-control']) !!}
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            {!! Form::label('Species Restriction (Optional)') !!}
+            {!! Form::select('species_id', $specieses, $frame->species_id, ['class' => 'form-control']) !!}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            {!! Form::label('Subtype Restriction (Optional)') !!}
+            {!! Form::select('subtype_id', $subtypes, $frame->subtype_id, ['class' => 'form-control']) !!}
+        </div>
+    </div>
 </div>
 
 <div class="form-group">
@@ -81,7 +93,7 @@
     <h3>Preview</h3>
     <div class="card mb-3">
         <div class="card-body">
-            @include('world._frame_entry', ['imageUrl' => $frame->imageUrl, 'name' => $frame->displayName, 'description' => $frame->parsed_description, 'searchUrl' => $frame->searchUrl, 'isDefault' => $frame->is_default])
+            @include('world._frame_entry', ['frame' => $frame])
         </div>
     </div>
 @endif

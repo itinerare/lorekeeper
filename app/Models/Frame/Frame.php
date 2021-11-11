@@ -13,7 +13,7 @@ class Frame extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'parsed_description', 'item_id', 'is_default', 'frame_category_id', 'hash'
+        'name', 'description', 'parsed_description', 'item_id', 'is_default', 'frame_category_id', 'hash', 'species_id', 'subtype_id'
     ];
 
     /**
@@ -31,7 +31,8 @@ class Frame extends Model
     public static $createRules = [
         'name' => 'required|unique:frames|between:3,100',
         'frame_image' => 'required|mimes:png',
-        'back_image' => 'required|mimes:png'
+        'back_image' => 'required|mimes:png',
+        //'item_id' => 'required'
     ];
 
     /**
@@ -118,6 +119,22 @@ class Frame extends Model
     public function item()
     {
         return $this->belongsTo('App\Models\Item\Item');
+    }
+
+    /**
+     * Get the species the frame belongs to.
+     */
+    public function species()
+    {
+        return $this->belongsTo('App\Models\Species\Species');
+    }
+
+    /**
+     * Get the subtype the frame belongs to.
+     */
+    public function subtype()
+    {
+        return $this->belongsTo('App\Models\Species\Subtype');
     }
 
     /**********************************************************************************************

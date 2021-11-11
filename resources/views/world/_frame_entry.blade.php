@@ -1,18 +1,19 @@
 <div class="row world-entry">
-    @if($imageUrl)
-        <div class="col-md-3 world-entry-image"><a href="{{ $imageUrl }}" data-lightbox="entry" data-title="{{ $name }}">
-            <img src="{{ $imageUrl }}" class="world-entry-image" alt="{{ $name }}" />
-        </a></div>
-    @endif
-    <div class="{{ $imageUrl ? 'col-md-9' : 'col-12' }}">
+    <div class="col-md-3 world-entry-image"><a href="{{ $frame->imageUrl }}" data-lightbox="entry" data-title="{{ $frame->name }}">
+        <img src="{{ $frame->imageUrl }}" class="world-entry-image" alt="{{ $frame->name }}" />
+    </a></div>
+    <div class="{{ $frame->imageUrl ? 'col-md-9' : 'col-12' }}">
         <h3>
-            {!! $name !!} @if(isset($searchUrl) && $searchUrl) <a href="{{ $searchUrl }}" class="world-entry-search text-muted"><i class="fas fa-search"></i></a>  @endif
-            @if($isDefault)
+            {!! $frame->name !!} @if(isset($frame->searchUrl) && $frame->searchUrl) <a href="{{ $sframe->earchUrl }}" class="world-entry-search text-muted"><i class="fas fa-search"></i></a>  @endif
+            @if($frame->is_default)
                 <br/><small>Default Frame {!! add_help('This frame is automatically available to all characters, and is used by default.') !!}</small>
             @endif
         </h3>
-        <div class="world-entry-text">
-            {!! $description !!}
+        @if($frame->species_id)
+            <div><strong>Species:</strong> {!! $frame->species->displayName !!} @if($frame->subtype_id) ({!! $frame->subtype->displayName !!} subtype) @endif</div>
+        @endif
+        <div class="world-entry-text parsed-text">
+            {!! $frame->parsed_description !!}
         </div>
     </div>
 </div>
