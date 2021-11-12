@@ -4,7 +4,7 @@
     </a></div>
     <div class="{{ $frame->imageUrl ? 'col-md-9' : 'col-12' }}">
         <h3>
-            {!! $frame->name !!} @if(isset($frame->searchUrl) && $frame->searchUrl) <a href="{{ $sframe->earchUrl }}" class="world-entry-search text-muted"><i class="fas fa-search"></i></a>  @endif
+            {!! $frame->displayName !!} @if(isset($frame->searchUrl) && $frame->searchUrl) <a href="{{ $sframe->earchUrl }}" class="world-entry-search text-muted"><i class="fas fa-search"></i></a>  @endif
             @if($frame->is_default)
                 <br/><small>Default Frame {!! add_help('This frame is automatically available to all characters, and is used by default.') !!}</small>
             @endif

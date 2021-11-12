@@ -13,6 +13,8 @@ use App\Models\Item\ItemCategory;
 use App\Models\Item\Item;
 use App\Models\Feature\FeatureCategory;
 use App\Models\Feature\Feature;
+use App\Models\Frame\FrameCategory;
+use App\Models\Frame\Frame;
 use App\Models\Character\CharacterCategory;
 use App\Models\Prompt\PromptCategory;
 use App\Models\Prompt\Prompt;
@@ -232,6 +234,71 @@ class WorldController extends Controller
             'categories' => $categories->keyBy('id'),
             'rarities' => $rarities->keyBy('id'),
             'features' => $features,
+        ]);
+    }
+
+    /**
+     * Shows the frame categories page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getFrameCategories(Request $request)
+    {
+        $query = FrameCategory::query();
+        $name = $request->get('name');
+        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
+        return view('world.frame_categories', [
+            'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    /**
+     * Shows the frames page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getFrames(Request $request)
+    {
+        $query = Frame::with('category')->with('species');
+        $data = $request->only(['frame_category_id', 'species_id', 'name', 'sort']);
+        if(isset($data['frame_category_id']) && $data['frame_category_id'] != 'none')
+            $query->where('frame_category_id', $data['frame_category_id']);
+        if(isset($data['species_id']) && $data['species_id'] != 'none')
+            $query->where('species_id', $data['species_id']);
+        if(isset($data['name']))
+            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
+        if(isset($data['sort']))
+        {
+            switch($data['sort']) {
+                case 'alpha':
+                    $query->sortAlphabetical();
+                    break;
+                case 'alpha-reverse':
+                    $query->sortAlphabetical(true);
+                    break;
+                case 'category':
+                    $query->sortCategory();
+                    break;
+                case 'species':
+                    $query->sortSpecies();
+                    break;
+                case 'newest':
+                    $query->sortNewest();
+                    break;
+                case 'oldest':
+                    $query->sortOldest();
+                    break;
+            }
+        }
+        else $query->sortCategory();
+
+        return view('world.frames', [
+            'frames' => $query->paginate(20)->appends($request->query()),
+            'specieses' => ['none' => 'Any Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'categories' => ['none' => 'Any Category'] + FrameCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
         ]);
     }
 

@@ -7,6 +7,8 @@
         <div class="sidebar-item"><a href="{{ url('world/rarities') }}" class="{{ set_active('world/rarities*') }}">Rarities</a></div>
         <div class="sidebar-item"><a href="{{ url('world/trait-categories') }}" class="{{ set_active('world/trait-categories*') }}">Trait Categories</a></div>
         <div class="sidebar-item"><a href="{{ url('world/traits') }}" class="{{ set_active('world/traits*') }}">All Traits</a></div>
+        <div class="sidebar-item"><a href="{{ url('world/frame-categories') }}" class="{{ set_active('world/frame-categories*') }}">Frame Categories</a></div>
+        <div class="sidebar-item"><a href="{{ url('world/frames') }}" class="{{ set_active('world/frames*') }}">Frames</a></div>
         <div class="sidebar-item"><a href="{{ url('world/character-categories') }}" class="{{ set_active('world/character-categories*') }}">Character Categories</a></div>
     </li>
     <li class="sidebar-section">
