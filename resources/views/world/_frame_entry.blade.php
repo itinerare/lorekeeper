@@ -6,7 +6,7 @@
         <h3>
             {!! $frame->displayName !!} @if(isset($frame->searchUrl) && $frame->searchUrl) <a href="{{ $sframe->earchUrl }}" class="world-entry-search text-muted"><i class="fas fa-search"></i></a>  @endif
             @if($frame->is_default)
-                <br/><small>Default Frame {!! add_help('This frame is automatically available to all characters, and is used by default.') !!}</small>
+                <br/><small>Default Frame{!! add_help('This frame is automatically available to all characters '.(isset($frame->species_id) ? ' of this species'.(isset($frame->subtype_id) ? ' and subtype' : '' ) : 'barring species and/or subtype differences or restrictions' ).', and is used by default.') !!}</small>
             @endif
         </h3>
         @if($frame->species_id)
