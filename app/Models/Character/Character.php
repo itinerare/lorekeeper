@@ -208,6 +208,14 @@ class Character extends Model
         return $this->belongsToMany('App\Models\Item\Item', 'character_items')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('character_items.deleted_at');
     }
 
+    /**
+     * Get the character's unlocked frames.
+     */
+    public function frames()
+    {
+        return $this->hasMany('App\Models\Character\CharacterFrame', 'character_id');
+    }
+
     /**********************************************************************************************
 
         SCOPES

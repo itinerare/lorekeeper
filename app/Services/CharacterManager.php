@@ -25,12 +25,14 @@ use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterBookmark;
+use App\Models\Character\CharacterFrame;
 use App\Models\User\UserCharacterLog;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\Rarity;
 use App\Models\Currency\Currency;
 use App\Models\Feature\Feature;
+use App\Models\Frame\Frame;
 
 class CharacterManager extends Service
 {
@@ -1299,6 +1301,61 @@ class CharacterManager extends Service
             if($notifyTrading) $character->notifyBookmarkers('BOOKMARK_TRADING');
             if($notifyGiftArt) $character->notifyBookmarkers('BOOKMARK_GIFTS');
             if($notifyGiftWriting) $character->notifyBookmarkers('BOOKMARK_GIFT_WRITING');
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Unlocks a frame for a character.
+     *
+     * @param  \App\Models\Character\Character  $character
+     * @param  array                            $data
+     * @param  \App\Models\User\User            $user
+     * @return  bool
+     */
+    public function unlockCharacterFrame($character, $data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Check that the character and frame to be applied both exist
+            if(!$character) throw new \Exception('Invalid character selected.');
+            $frame = Frame::where('id', $data['frame_id'])->first();
+            if(!$frame) throw new \Exception('Invalid frame selected.');
+
+            // Check that the user can unlock the frame
+            if($character->user_id != $user->id && !$user->hasPower('manage_characters'))
+                throw new \Exception('You cannot unlock frames for this character.');
+
+            // Check that the character does not already have the frame unlocked
+            if($character->frames()->where('frame_id', $frame->id)->exists())
+                throw new \Exception('The selected character already has this frame unlocked, or you have attempted to unlock it more than once.');
+
+            // Check that the frame can be unlocked for this character
+            if(isset($frame->species_id) && $character->image->species_id != $frame->species_id)
+                throw new \Exception('This frame cannot be applied to this species.');
+            if(isset($frame->subtype_id) && $character->image->subtype_id != $frame->subtype_id)
+                throw new \Exception('This frame cannot be applied to this subtype.');
+
+            $characterFrame = CharacterFrame::create([
+                'character_id' => $character->id,
+                'frame_id' => $frame->id
+            ]);
+
+            if(!$characterFrame)
+                throw new \Exception('Failed to unlock character frame.');
+
+            if($character->user_id != $user->id && !isset($data['log_data']))
+                $data['log_data'] = 'Admin Granted';
+
+            // Add a log for the character
+            // This logs all the updates made to the character
+            if(!$this->createLog($user->id, null, null, null, $character->id, 'Unlocked Frame', isset($data['log_data']) ? $data['log_data'] : null, 'character', true, null, null))
+                throw new \Exception('Failed to create log for character.');
 
             return $this->commitReturn(true);
         } catch(\Exception $e) {
