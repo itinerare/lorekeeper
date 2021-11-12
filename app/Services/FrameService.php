@@ -284,41 +284,17 @@ class FrameService extends Service
         if(!isset($data['is_default']))
             $data['is_default'] = 0;
 
-        // Check defaults relative to species and subtype if relevant
-        // This is to make sure there's a default frame for each set of configured
-        // dimensions.
-        if(isset($data['species_id']) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$data['species_id'])) {
-            if(isset($data['subtype_id']) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$data['species_id'].'.'.$data['subtype_id'])) {
-                // But set it if there is no current default frame
-                if(!Frame::where('subtype_id', $data['subtype_id'])->where('is_default', 1)->count())
-                    $data['is_default'] = 1;
-                // If there's a pre-existing default frame, unset it
-                elseif(($frame && Frame::where('subtype_id', $data['subtype_id'])->where('id', '!=', $frame->id)->where('is_default', 1)->count()) || (!$frame && Frame::where('subtype_id', $data['subtype_id'])->where('is_default', 1)->count())) {
-                    if($frame) Frame::where('subtype_id', $data['subtype_id'])->where('id', '!=', $frame->id)->where('is_default', 1)->update(['is_default' => 0]);
-                    else Frame::where('subtype_id', $data['subtype_id'])->where('is_default', 1)->update(['is_default' => 0]);
-                }
-            }
-            else {
-                // But set it if there is no current default frame
-                if(!Frame::where('species_id', $data['species_id'])->where('is_default', 1)->count())
-                    $data['is_default'] = 1;
-                // If there's a pre-existing default frame, unset it
-                elseif(($frame && Frame::where('species_id', $data['species_id'])->where('id', '!=', $frame->id)->where('is_default', 1)->count()) || (!$frame && Frame::where('species_id', $data['species_id'])->where('is_default', 1)->count())) {
-                    if($frame) Frame::where('species_id', $data['species_id'])->where('id', '!=', $frame->id)->where('is_default', 1)->update(['is_default' => 0]);
-                    else Frame::where('species_id', $data['species_id'])->where('is_default', 1)->update(['is_default' => 0]);
-                }
-            }
-        }
-        else {
-            // But set it if there is no current default frame
-            if(!Frame::whereNull('species_id')->where('is_default', 1)->count())
-                $data['is_default'] = 1;
-            // If there's a pre-existing default frame, unset it
-            elseif(($frame && Frame::whereNull('species_id')->where('id', '!=', $frame->id)->where('is_default', 1)->count()) || (!$frame && Frame::whereNull('species_id')->where('is_default', 1)->count())) {
-                if($frame) Frame::whereNull('species_id')->where('id', '!=', $frame->id)->where('is_default', 1)->update(['is_default' => 0]);
-                else Frame::whereNull('species_id')->where('is_default', 1)->update(['is_default' => 0]);
-            }
-        }
+        // Ensure there is a default frame for this combination of species and/or subtype
+        // (or lack thereof)
+        // Start by checking for the presence of a default frame for these settings
+        $defaultFrame = (new Frame)->defaultFrame(isset($data['species_id']) ? $data['species_id'] : null, isset($data['subtype_id']) ? $data['subtype_id'] : null);
+
+        // Set the toggle if there is no current default frame
+        if(!$defaultFrame)
+            $data['is_default'] = 1;
+        // If there is a default frame but the toggle is set, update that frame
+        if($defaultFrame && (isset($data['is_default']) && $data['is_default']))
+            $defaultFrame->update(['is_default' => 0]);
 
         // If the frame is new, set a hash
         if(!$frame)

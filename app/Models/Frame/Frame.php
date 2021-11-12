@@ -263,4 +263,94 @@ class Frame extends Model
         }
         return Config::get('lorekeeper.settings.frame_dimensions.height');
     }
+
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Checks if a frame is valid for a given species and/or subtype combination.
+     *
+     * @param  int                      $species_id
+     * @param  int                      $subtype_id
+     * @return bool
+     */
+    public function isValid($species_id = null, $subtype_id = null)
+    {
+        // First fetch all available frames
+        $availableFrames = $this->availableFrames($species_id, $subtype_id)->pluck('name', 'id');
+
+        // Then check if the provided frame ID is present
+        if(isset($availableFrames[$this->id])) return 1;
+        return 0;
+    }
+
+    /**
+     * Gets the context-sensitive available frames.
+     * This checks against the frame sizes configured for the site.
+     *
+     * @param  int              $species_id
+     * @param  int              $subtype_id
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function availableFrames($species_id = null, $subtype_id = null)
+    {
+        // First filter down to species with configured settings
+        $configuredSpecies = collect(Config::get('lorekeeper.settings.frame_dimensions'))->filter(function($setting, $key) {
+            return is_numeric($key);
+        });
+
+        // Size is configured first by species and then by subtype ID,
+        // so start by checking that species-specific settings exist at all
+        if((isset($species_id) && $species_id) && isset($configuredSpecies[$species_id])) {
+            // Get just the settings for the specified species for convenience
+            $speciesSettings = $configuredSpecies[$species_id];
+
+            // Subtypes are more restrictive, so then check that first
+            if(isset($subtype_id) && $subtype_id && isset($speciesSettings[$subtype_id])) {
+                // If there are subtype-specific settings, that means only
+                // frames specifically for that subtype are "safe"
+                return $this->where('subtype_id', $subtype_id)->get();
+            }
+            else {
+                // If this is of a configured species, but not a configured subtype,
+                // it's important to return only frames for the species but not any
+                // configured subtypes
+                // To this end, filter the species settings down to just subtypes
+                $configuredSubtypes = collect($speciesSettings)->filter(function($setting, $key) {
+                    return is_numeric($key);
+                });
+
+                // Then return all frames specific to this species except those for
+                // subtypes with configured dimensions
+                return $this->where('species_id', $species_id)->where(function($query) use($configuredSubtypes) {
+                    return $query->whereNull('subtype_id')
+                    ->orWhereNotIn('subtype_id', $configuredSubtypes->keys());
+                })->get();
+            }
+        }
+        // Otherwise return all frames that do not correspond to a configured species
+        else return $this->where(function($query) use($configuredSpecies) {
+            return $query->whereNull('species_id')
+            ->orWhereNotIn('species_id', $configuredSpecies->keys());
+        })->get();
+    }
+
+    /**
+     * Gets the context-sensitive default frame.
+     *
+     * @param  int              $species_id
+     * @param  int              $subtype_id
+     * @return \App\Models\Frame\Frame
+     */
+    public function defaultFrame($species_id = null, $subtype_id = null)
+    {
+        // First fetch all available frames
+        $availableFrames = $this->availableFrames($species_id, $subtype_id);
+
+        // Then locate and return the default frame from among them
+        return $availableFrames->where('is_default', 1)->first();
+    }
 }

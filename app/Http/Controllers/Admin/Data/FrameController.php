@@ -174,25 +174,26 @@ class FrameController extends Controller
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
 
         // Gather configured per-species and -subtype sizes
-        $sizes = collect(Config::get('lorekeeper.settings.frame_dimensions'));
-        foreach($sizes as $key=>$size) {
-            if(is_numeric($key)) {
-                $sizeArray['species'][$key] = [
-                    'species' => Species::where('id', $key)->first() ? Species::where('id', $key)->first() : 'Invalid Species',
-                    'default_frame' => Frame::where('species_id', $key)->where('is_default', 1)->first() ? 1 : 0,
-                    'width' => $size['width'],
-                    'height' => $size['height']
-                ];
+        $sizes = collect(Config::get('lorekeeper.settings.frame_dimensions'))->filter(function($setting, $key) {
+            return is_numeric($key);
+        });
 
-                foreach($size as $subtypeKey=>$subtypeSize) {
-                    if(is_numeric($subtypeKey)) {
-                        $sizeArray['subtype'][$key][$subtypeKey] = [
-                            'subtype' => Subtype::where('species_id', $key)->where('id', $subtypeKey)->first() ? Subtype::where('species_id', $key)->where('id', $subtypeKey)->first() : 'Invalid Subtype',
-                            'default_frame' => Frame::where('subtype_id', $subtypeKey)->where('is_default', 1)->first() ? 1 : 0,
-                            'width' => $subtypeSize['width'],
-                            'height' => $subtypeSize['height']
-                        ];
-                    }
+        foreach($sizes as $key=>$size) {
+            $sizeArray['species'][$key] = [
+                'species' => Species::where('id', $key)->first() ? Species::where('id', $key)->first() : 'Invalid Species',
+                'default_frame' => (new Frame)->defaultFrame($key, null) ? 1 : 0,
+                'width' => $size['width'],
+                'height' => $size['height']
+            ];
+
+            foreach($size as $subtypeKey=>$subtypeSize) {
+                if(is_numeric($subtypeKey)) {
+                    $sizeArray['subtype'][$key][$subtypeKey] = [
+                        'subtype' => Subtype::where('species_id', $key)->where('id', $subtypeKey)->first() ? Subtype::where('species_id', $key)->where('id', $subtypeKey)->first() : 'Invalid Subtype',
+                        'default_frame' => (new Frame)->defaultFrame($key, $subtypeKey) ? 1 : 0,
+                        'width' => $subtypeSize['width'],
+                        'height' => $subtypeSize['height']
+                    ];
                 }
             }
         }
