@@ -16,7 +16,7 @@
 </p>
 <ul>
     <li>
-        Default: {{ Config::get('lorekeeper.settings.frame_dimensions.width') }}px x {{ Config::get('lorekeeper.settings.frame_dimensions.height') }}px. {!! $defaultFrame ? 'Has' : '<strong>No</strong>' !!} default frame!
+        Default: {{ Config::get('lorekeeper.settings.frame_dimensions.width') }}px x {{ Config::get('lorekeeper.settings.frame_dimensions.height') }}px. {!! $defaultFrame ? 'Has' : '<strong class="text-danger">No</strong>' !!} default frame!
     </li>
     @if(isset($sizes['species']))
         @foreach($sizes['species'] as $size)
