@@ -49,6 +49,6 @@ class CharacterFrame extends Model
      */
     public function frame()
     {
-        return $this->belongsTo('App\Models\Character\Frame');
+        return $this->belongsTo('App\Models\Frame\Frame');
     }
 }
