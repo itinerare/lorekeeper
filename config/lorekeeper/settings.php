@@ -192,17 +192,17 @@ return [
         // The following is an example of specifying different dimensions for
         // a species' or subtype's frames. Uncomment and edit it to suit your needs.
         // This should be the ID of the species you want to impact.
-        1 => [
-            'width' => 337,
-            'height' => 524,
-
-            // Subtypes can be specified by further nesting, like so.
-            // This should be the ID of the subtype you want to impact.
-            6 => [
-                'width' => 337,
-                'height' => 524
-            ]
-        ],
+        // 1 => [
+        //    'width' => 300,
+        //    'height' => 500,
+        //
+        //    // Subtypes can be specified by further nesting, like so.
+        //    // This should be the ID of the subtype you want to impact.
+        //    2 => [
+        //        'width' => 300,
+        //        'height' => 500,
+        //    ]
+        //],
     ],
 
     /*
