@@ -515,6 +515,9 @@ class CharacterManager extends Service
             if($character->user_id != $user->id && !$user->hasPower('manage_characters'))
                 throw new \Exception('You cannot change this character\'s frame.');
 
+            if(!file_exists( public_path($character->image->imageDirectory.'/'.$character->image->cropFileName)))
+                throw new \Exception('This character cannot have frames applied yet.');
+
             $characterImage = $character->image;
 
             // Perform frame-related validation
