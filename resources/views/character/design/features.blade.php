@@ -118,7 +118,7 @@
 @endsection
 
 @section('scripts')
-@include('widgets._image_upload_js')
+@include('widgets._image_upload_js', ['character' => $request->character])
 
 <script>
   $( "#species" ).change(function() {

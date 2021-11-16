@@ -20,7 +20,7 @@ class CharacterImage extends Model
      */
     protected $fillable = [
         'character_id', 'user_id', 'species_id', 'subtype_id', 'rarity_id', 'url',
-        'extension', 'use_cropper', 'hash', 'fullsize_hash', 'sort',
+        'extension', 'use_cropper', 'hash', 'fullsize_hash', 'sort', 'frame_id',
         'x0', 'x1', 'y0', 'y1',
         'description', 'parsed_description',
         'is_valid',
@@ -147,6 +147,14 @@ class CharacterImage extends Model
         return $this->hasMany('App\Models\Character\CharacterImageCreator', 'character_image_id')->where('type', 'Artist')->where('character_type', 'Character');
     }
 
+    /**
+     * Get the current frame for the character image.
+     */
+    public function frame()
+    {
+        return $this->belongsTo('App\Models\Frame\Frame', 'frame_id');
+    }
+
     /**********************************************************************************************
 
         SCOPES
@@ -242,6 +250,26 @@ class CharacterImage extends Model
         if(((isset($this->character->user_id) && ($user ? $this->character->user->id == $user->id : false)) || ($user ? $user->hasPower('manage_characters') : false)))
         return true;
         else return false;
+    }
+
+    /**
+     * Gets the file name of the model's cropped image.
+     *
+     * @return string
+     */
+    public function getCropFileNameAttribute()
+    {
+        return $this->id . '_'.$this->hash.'_crop.'.$this->extension;
+    }
+
+    /**
+     * Gets the file name of the model's cropped image.
+     *
+     * @return string
+     */
+    public function getCropUrlAttribute()
+    {
+        return asset($this->imageDirectory . '/' . $this->fullsizeFileName);
     }
 
     /**

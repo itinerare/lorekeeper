@@ -99,6 +99,8 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
 
     Route::post('{slug}/approval', 'CharacterController@postCharacterApproval');
     Route::get('{slug}/approval', 'CharacterController@getCharacterApproval');
+
+    Route::post('{slug}/frame', 'CharacterController@postEditCharacterFrame');
 });
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');

@@ -18,6 +18,7 @@ use App\Models\Feature\Feature;
 use App\Services\CharacterManager;
 
 use App\Http\Controllers\Controller;
+use App\Models\Frame\Frame;
 
 class CharacterImageController extends Controller
 {
@@ -48,6 +49,7 @@ class CharacterImageController extends Controller
             'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$this->character->image->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
             'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
+            'frameHelper' => new Frame,
             'isMyo' => false
         ]);
     }
@@ -228,6 +230,7 @@ class CharacterImageController extends Controller
     {
         return view('character.admin._reupload_image_modal', [
             'image' => CharacterImage::find($id),
+            'frameHelper' => new Frame,
         ]);
     }
 

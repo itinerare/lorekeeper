@@ -236,39 +236,45 @@ class Frame extends Model
         return url('world/frames?name='.$this->name);
     }
 
-    /**
-     * Gets the context-sensitive width of the frame's background.
-     *
-     * @return int
-     */
-    public function getContextWidthAttribute()
-    {
-        if(isset($this->species_id)) {
-            if(isset($this->subtype_id) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$this->species_id.'.'.$this->subtype_id.'.width')) return Config::get('lorekeeper.settings.frame_dimensions.'.$this->species_id.'.'.$this->subtype_id.'.width');
-            if(null !== Config::get('lorekeeper.settings.frame_dimensions.'.$this->species_id.'.width')) return Config::get('lorekeeper.settings.frame_dimensions.'.$this->species_id.'.width');
-        }
-        return Config::get('lorekeeper.settings.frame_dimensions.width');
-    }
-
-    /**
-     * Gets the context-sensitive height of the frame's background.
-     *
-     * @return int
-     */
-    public function getContextHeightAttribute()
-    {
-        if(isset($this->species_id)) {
-            if(isset($this->subtype_id) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$this->species_id.'.'.$this->subtype_id.'.height')) return Config::get('lorekeeper.settings.frame_dimensions.'.$this->species_id.'.'.$this->subtype_id.'.height');
-            if(null !== Config::get('lorekeeper.settings.frame_dimensions.'.$this->species_id.'.height')) return Config::get('lorekeeper.settings.frame_dimensions.'.$this->species_id.'.height');
-        }
-        return Config::get('lorekeeper.settings.frame_dimensions.height');
-    }
-
     /**********************************************************************************************
 
         OTHER FUNCTIONS
 
     **********************************************************************************************/
+
+    /**
+     * Gets the context-sensitive width of a frame's background.
+     *
+     * @return int
+     */
+    public function contextWidth($species_id = null, $subtype_id = null)
+    {
+        if(!$species_id) $species_id = $this->species_id;
+        if(!$subtype_id) $subtype_id = $this->subtype_id;
+
+        if(isset($species_id) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$species_id.'.width')) {
+            if(isset($subtype_id) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$species_id.'.'.$subtype_id.'.width')) return Config::get('lorekeeper.settings.frame_dimensions.'.$species_id.'.'.$subtype_id.'.width');
+            return Config::get('lorekeeper.settings.frame_dimensions.'.$species_id.'.width');
+        }
+        return Config::get('lorekeeper.settings.frame_dimensions.width');
+    }
+
+    /**
+     * Gets the context-sensitive height of a frame's background.
+     *
+     * @return int
+     */
+    public function contextHeight($species_id = null, $subtype_id = null)
+    {
+        if(!$species_id) $species_id = $this->species_id;
+        if(!$subtype_id) $subtype_id = $this->subtype_id;
+
+        if(isset($species_id) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$species_id)) {
+            if(isset($subtype_id) && null !== Config::get('lorekeeper.settings.frame_dimensions.'.$species_id.'.'.$subtype_id.'.height')) return Config::get('lorekeeper.settings.frame_dimensions.'.$species_id.'.'.$subtype_id.'.height');
+            return Config::get('lorekeeper.settings.frame_dimensions.'.$species_id.'.height');
+        }
+        return Config::get('lorekeeper.settings.frame_dimensions.height');
+    }
 
     /**
      * Checks if a frame is valid for a given species and/or subtype combination.

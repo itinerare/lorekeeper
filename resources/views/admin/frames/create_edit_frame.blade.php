@@ -74,7 +74,7 @@
         <div class="form-group">
             {!! Form::label('Back Image') !!}
             <div>{!! Form::file('back_image') !!}</div>
-            <div class="text-muted">Must be .png, Configured size: {{ $frame->contextWidth }}px x {{ $frame->contextHeight }}px</div>
+            <div class="text-muted">Must be .png, Configured size: {{ $frame->contextWidth() }}px x {{ $frame->contextHeight() }}px</div>
         </div>
         @if($frame->id)
             Current Image:

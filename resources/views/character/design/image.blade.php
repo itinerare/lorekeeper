@@ -20,9 +20,9 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <h3 class="text-center">Thumbnail Image</h3>
+                    <h3 class="text-center">Cropped Image</h3>
                     <div class="text-center">
-                        <a href="{{ $request->thumbnailUrl }}"><img src="{{ $request->thumbnailUrl }}" class="mw-100" alt="Thumbnail for request {{ $request->id }}" /></a>
+                        <a href="{{ $request->cropUrl }}"><img src="{{ $request->cropUrl }}" class="mw-100" alt="Cropped image for request {{ $request->id }}" /></a>
                     </div>
                 </div>
             </div>
@@ -54,9 +54,9 @@
 
 @if(($request->status == 'Draft' && $request->user_id == Auth::user()->id) || ($request->status == 'Pending' && Auth::user()->hasPower('manage_characters')))
     @if($request->status == 'Draft' && $request->user_id == Auth::user()->id)
-        <p>Select the image you would like to use on the masterlist and an optional thumbnail. Please only upload images that you are allowed to use AND are able to credit to the artist! Note that while staff members cannot edit your uploaded image, they may choose to recrop or upload a different thumbnail.</p>
+        <p>Select the image you would like to use on the masterlist. Please only upload images that you are allowed to use AND are able to credit to the artist! Note that while staff members cannot edit your uploaded image, they may choose to recrop it.</p>
     @else
-        <p>As a staff member, you may modify the thumbnail of the uploaded image and/or the credits, but not the image itself. If you have recropped the thumbnail, you may need to hard refresh to see the new one.</p>
+        <p>As a staff member, you may modify the cropped version of the uploaded image and/or the credits, but not the image itself. If you have recropped the image, you may need to hard refresh to see the new one.</p>
     @endif
     {!! Form::open(['url' => 'designs/'.$request->id.'/image', 'files' => true]) !!}
         @if($request->status == 'Draft' && $request->user_id == Auth::user()->id)
@@ -67,44 +67,17 @@
         @else
             <div class="form-group">
                 {!! Form::checkbox('modify_thumbnail', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                {!! Form::label('modify_thumbnail', 'Modify Thumbnail', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Toggle this option to modify the thumbnail, otherwise only the credits will be saved.') !!}
+                {!! Form::label('modify_thumbnail', 'Re-crop', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Toggle this option to modify the cropped character image, otherwise only the credits will be saved.') !!}
             </div>
         @endif
-@if (Config::get('lorekeeper.settings.masterlist_image_automation') === 1)
-        <div class="form-group">
-            {!! Form::checkbox('use_cropper', 1, 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'id' => 'useCropper']) !!}
-            {!! Form::label('use_cropper', 'Use Thumbnail Automation', ['class' => 'form-check-label ml-3']) !!} {!! add_help('A thumbnail is required for the upload (used for the masterlist). You can use the Thumbnail Automation, or upload a custom thumbnail.') !!}
-        </div>
-        <div class="card mb-3" id="thumbnailCrop">
+        <div class="card mb-3">
             <div class="card-body">
-                <div id="cropSelect">By using this function, the thumbnail will be automatically generated from the full image.</div>
-                {!! Form::hidden('x0', 1) !!}
-                {!! Form::hidden('x1', 1) !!}
-                {!! Form::hidden('y0', 1) !!}
-                {!! Form::hidden('y1', 1) !!}
-            </div>
-        </div>
-@else
-        <div class="form-group">
-            {!! Form::checkbox('use_cropper', 1, 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'id' => 'useCropper']) !!}
-            {!! Form::label('use_cropper', 'Use Image Cropper', ['class' => 'form-check-label ml-3']) !!} {!! add_help('A thumbnail is required for the upload (used for the masterlist). You can use the image cropper (crop dimensions can be adjusted in the site code), or upload a custom thumbnail.') !!}
-        </div>
-        <div class="card mb-3" id="thumbnailCrop">
-            <div class="card-body">
-                <div id="cropSelect">Select an image to use the thumbnail cropper.</div>
-                <img src="#" id="cropper" class="hide" alt="" />
+                <div id="cropSelect">Select an image to use the cropper.</div>
+                <img src="#" id="cropper" alt="" />
                 {!! Form::hidden('x0', null, ['id' => 'cropX0']) !!}
                 {!! Form::hidden('x1', null, ['id' => 'cropX1']) !!}
                 {!! Form::hidden('y0', null, ['id' => 'cropY0']) !!}
                 {!! Form::hidden('y1', null, ['id' => 'cropY1']) !!}
-            </div>
-        </div>
-@endif
-        <div class="card mb-3" id="thumbnailUpload">
-            <div class="card-body">
-                {!! Form::label('Thumbnail Image') !!} {!! add_help('This image is shown on the masterlist page.') !!}
-                <div>{!! Form::file('thumbnail') !!}</div>
-                <div class="text-muted">Recommended size: {{ Config::get('lorekeeper.settings.masterlist_thumbnails.width') }}px x {{ Config::get('lorekeeper.settings.masterlist_thumbnails.height') }}px</div>
             </div>
         </div>
         <p>
@@ -179,5 +152,5 @@
 @endsection
 
 @section('scripts')
-@include('widgets._image_upload_js', ['useUploaded' => ($request->status == 'Pending' && Auth::user()->hasPower('manage_characters'))])
+@include('widgets._image_upload_js', ['useUploaded' => ($request->status == 'Pending' && Auth::user()->hasPower('manage_characters')), 'character' => $request->character])
 @endsection

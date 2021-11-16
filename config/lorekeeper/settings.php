@@ -158,22 +158,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Masterlist Thumbnail Dimensions & Watermarking
+    | Masterlist Thumbnail Dimensions
     |--------------------------------------------------------------------------
     |
     | This affects the dimensions used for character thumbnails.
     | Using a smallish size is recommended to reduce the amount of time
     | needed to load the masterlist pages.
     |
-    | 0: Do not watermark thumbnails. 1: Watermark thumbnails.
-    | Expects the whole of the character to be visible in the thumbnail.
+    | Note that thumbnails will be watermarked if masterlist images are.
     |
     */
     'masterlist_thumbnails' => [
         'width' => 200,
         'height' => 200
     ],
-    'watermark_masterlist_thumbnails' => 0,
 
     /*
     |--------------------------------------------------------------------------
@@ -194,17 +192,17 @@ return [
         // The following is an example of specifying different dimensions for
         // a species' or subtype's frames. Uncomment and edit it to suit your needs.
         // This should be the ID of the species you want to impact.
-        //1 => [
-        //    'width' => 337,
-        //    'height' => 524,
-        //
-        //    // Subtypes can be specified by further nesting, like so.
-        //    // This should be the ID of the subtype you want to impact.
-        //    2 => [
-        //        'width' => 337,
-        //        'height' => 524
-        //    ]
-        //],
+        1 => [
+            'width' => 337,
+            'height' => 524,
+
+            // Subtypes can be specified by further nesting, like so.
+            // This should be the ID of the subtype you want to impact.
+            6 => [
+                'width' => 337,
+                'height' => 524
+            ]
+        ],
     ],
 
     /*
@@ -220,10 +218,7 @@ return [
     |
     | This is enabled by default as part of character frames.
     |
-    | Simply change to "1" to enable, or keep at "0" to disable.
-    |
     */
-    'masterlist_image_automation' => 1,
 
     /*
     |--------------------------------------------------------------------------

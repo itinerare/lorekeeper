@@ -15,6 +15,8 @@ use App\Models\Rarity;
 use App\Models\Feature\Feature;
 use App\Models\Character\CharacterProfile;
 
+use App\Models\Frame\Frame;
+
 use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
 use App\Models\User\UserCurrency;
@@ -73,8 +75,19 @@ class CharacterController extends Controller
      */
     public function getCharacter($slug)
     {
+        $character = $this->character;
+
+        $frameHelper = new Frame;
+        $defaultFrame = $frameHelper->defaultFrame($character->image->species_id, $character->image->subtype_id);
+        // Fetch character's frames, including only valid options
+        $frameOptions = Frame::whereIn('id', $character->frames->filter(function($frame) use($character) {
+            return $frame->frame->isValid($character->image->species_id, $character->image->subtype_id);
+        })->pluck('id')->toArray())->pluck('name', 'id')->toArray();
+
         return view('character.character', [
-            'character' => $this->character,
+            'character' => $character,
+            'frameHelper' => $frameHelper,
+            'frameOptions' => [$defaultFrame->id => $defaultFrame->name] + $frameOptions,
         ]);
     }
 
@@ -159,10 +172,46 @@ class CharacterController extends Controller
      */
     public function getCharacterImages($slug)
     {
+        $character = $this->character;
+
+        $frameHelper = new Frame;
+        $defaultFrame = $frameHelper->defaultFrame($character->image->species_id, $character->image->subtype_id);
+        // Fetch character's frames, including only valid options
+        $frameOptions = Frame::whereIn('id', $character->frames->filter(function($frame) use($character) {
+            return $frame->frame->isValid($character->image->species_id, $character->image->subtype_id);
+        })->pluck('id')->toArray())->pluck('name', 'id')->toArray();
+
         return view('character.images', [
             'user' => Auth::check() ? Auth::user() : null,
-            'character' => $this->character,
+            'character' => $character,
+            'frameHelper' => $frameHelper,
+            'frameOptions' => [$defaultFrame->id => $defaultFrame->name] + $frameOptions,
         ]);
+    }
+
+    /**
+     * Changes a character's current frame.
+     *
+     * @param  \Illuminate\Http\Request       $request
+     * @param  App\Services\CharacterManager  $service
+     * @param  string                         $slug
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEditCharacterFrame(Request $request, CharacterManager $service, $slug)
+    {
+        if(!Auth::check()) abort(404);
+
+        $isMod = Auth::user()->hasPower('manage_characters');
+        $isOwner = ($this->character->user_id == Auth::user()->id);
+        if(!$isMod && !$isOwner) abort(404);
+
+        if($service->updateCharacterFrame($request->only(['frame_id']), $this->character, Auth::user())) {
+            flash('Frame updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
     }
 
     /**

@@ -19,12 +19,10 @@ $( document ).ready(function() {
 
     function updateCropper() {
         if(useCropper) {
-            $thumbnailUpload.addClass('hide');
-            $thumbnailCrop.removeClass('hide');
+            $thumbnailUpload.removeClass('hide');
         }
         else {
-            $thumbnailCrop.addClass('hide');
-            $thumbnailUpload.removeClass('hide');
+            $thumbnailUpload.addClass('hide');
         }
     }
 
@@ -47,7 +45,7 @@ $( document ).ready(function() {
         $trigger.css({ visibility: 'hidden' });
         $clone.find('.designer-select').selectize();
     }
-    
+
     $('.add-artist').on('click', function(e) {
         e.preventDefault();
         addArtistRow($(this));
@@ -66,7 +64,7 @@ $( document ).ready(function() {
     }
 
     // Traits /////////////////////////////////////////////////////////////////////////////////////
-    
+
     $('#add-feature').on('click', function(e) {
         e.preventDefault();
         addFeatureRow();
@@ -92,8 +90,8 @@ $( document ).ready(function() {
 
     // Croppie ////////////////////////////////////////////////////////////////////////////////////
 
-    var thumbnailWidth = {{ Config::get('lorekeeper.settings.masterlist_thumbnails.width') }};
-    var thumbnailHeight = {{ Config::get('lorekeeper.settings.masterlist_thumbnails.height') }};
+    var thumbnailWidth = {{ isset($character) && $character->image ? $frameHelper->contextWidth($character->image->species_id, $character->image->subtype_id) : Config::get('lorekeeper.settings.frame_dimensions.width'); }};
+    var thumbnailHeight = {{ isset($character) && $character->image ? $frameHelper->contextHeight($character->image->species_id, $character->image->subtype_id) : Config::get('lorekeeper.settings.frame_dimensions.height'); }};
     var $cropper = $('#cropper');
     var c = null;
     var $x0 = $('#cropX0');
@@ -161,7 +159,7 @@ $( document ).ready(function() {
         $y1.val(values.points[3]);
     }
 
-    
+
 });
-    
+
 </script>

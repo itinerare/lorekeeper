@@ -24,8 +24,8 @@ class CharacterDesignUpdate extends Model
         'use_cropper', 'x0', 'x1', 'y0', 'y1',
         'hash', 'species_id', 'subtype_id', 'rarity_id',
         'has_comments', 'has_image', 'has_addons', 'has_features',
-        'submitted_at', 'update_type', 'fullsize_hash', 
-        'approval_votes', 'rejection_votes'
+        'submitted_at', 'update_type', 'fullsize_hash',
+        'approval_votes', 'rejection_votes', 'frame_id'
     ];
 
     /**
@@ -317,6 +317,36 @@ class CharacterDesignUpdate extends Model
     public function getThumbnailUrlAttribute()
     {
         return asset($this->imageDirectory . '/' . $this->thumbnailFileName);
+    }
+
+    /**
+     * Gets the file name of the model's cropped image.
+     *
+     * @return string
+     */
+    public function getCropFileNameAttribute()
+    {
+        return $this->id . '_'.$this->hash.'_crop.'.$this->extension;
+    }
+
+    /**
+     * Gets the path to the file directory containing the model's cropped image.
+     *
+     * @return string
+     */
+    public function getCropPathAttribute()
+    {
+        return $this->imagePath;
+    }
+
+    /**
+     * Gets the URL of the model's cropped image.
+     *
+     * @return string
+     */
+    public function getCropUrlAttribute()
+    {
+        return asset($this->imageDirectory . '/' . $this->cropFileName);
     }
 
     /**
