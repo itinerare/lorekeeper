@@ -469,7 +469,7 @@ class CharacterManager extends Service
         $frontImage = Image::make($frame->imagePath.'/'.$frame->frameFileName);
 
         // Ensure character image is sized appropriately for the frame back
-        $image->resize($backImage->width(), $backImage->height(), function ($constraint) {
+        $image->resize($backImage->width()+20, $backImage->height()+20, function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });
