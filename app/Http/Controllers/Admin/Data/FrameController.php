@@ -202,7 +202,7 @@ class FrameController extends Controller
             'frames' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + FrameCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'defaultFrame' => Frame::whereNull('species_id')->where('is_default', 1)->first() ? 1 : 0,
-            'sizes' => $sizeArray,
+            'sizes' => isset($sizeArray) ? $sizeArray : [],
         ]);
     }
 
