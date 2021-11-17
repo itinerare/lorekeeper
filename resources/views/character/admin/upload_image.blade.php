@@ -217,8 +217,8 @@ $( document ).ready(function() {
 
     // Croppie ////////////////////////////////////////////////////////////////////////////////////
 
-    var thumbnailWidth = {{ $frameHelper->contextWidth($character->image->species_id, $character->image->subtype_id); }};
-    var thumbnailHeight = {{ $frameHelper->contextHeight($character->image->species_id, $character->image->subtype_id); }};
+    var thumbnailWidth = {{ $frameHelper->contextWidth($character->image->species_id, $character->image->subtype_id) }};
+    var thumbnailHeight = {{ $frameHelper->contextHeight($character->image->species_id, $character->image->subtype_id) }};
     var $cropper = $('#cropper');
     var c = null;
     var $x0 = $('#cropX0');

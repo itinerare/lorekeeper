@@ -61,8 +61,8 @@
 
         // Croppie ////////////////////////////////////////////////////////////////////////////////////
 
-        var thumbnailWidth = {{ $frameHelper->contextWidth($image->species_id, $image->subtype_id); }};
-        var thumbnailHeight = {{ $frameHelper->contextHeight($image->species_id, $image->subtype_id); }};
+        var thumbnailWidth = {{ $frameHelper->contextWidth($image->species_id, $image->subtype_id) }};
+        var thumbnailHeight = {{ $frameHelper->contextHeight($image->species_id, $image->subtype_id) }};
         var $cropper = $('#cropper');
         var c = null;
         var $x0 = $('#cropX0');
