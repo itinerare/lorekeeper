@@ -540,7 +540,8 @@ class CharacterController extends Controller
         return view('character.update_form', [
             'character' => $this->character,
             'queueOpen' => Settings::get('is_design_updates_open'),
-            'request' => $this->character->designUpdate()->active()->first()
+            'request' => $this->character->designUpdate()->active()->first(),
+            'frameHelper' => new Frame,
         ]);
     }
 

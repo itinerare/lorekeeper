@@ -90,8 +90,8 @@ $( document ).ready(function() {
 
     // Croppie ////////////////////////////////////////////////////////////////////////////////////
 
-    var thumbnailWidth = {{ isset($character) && $character->image ? $frameHelper->contextWidth($character->image->species_id, $character->image->subtype_id) : Config::get('lorekeeper.settings.frame_dimensions.width'); }};
-    var thumbnailHeight = {{ isset($character) && $character->image ? $frameHelper->contextHeight($character->image->species_id, $character->image->subtype_id) : Config::get('lorekeeper.settings.frame_dimensions.height'); }};
+    var thumbnailWidth = {{ isset($character) && $character->image ? $frameHelper->contextWidth($character->image->species_id, $character->image->subtype_id) : Config::get('lorekeeper.settings.frame_dimensions.width') }};
+    var thumbnailHeight = {{ isset($character) && $character->image ? $frameHelper->contextHeight($character->image->species_id, $character->image->subtype_id) : Config::get('lorekeeper.settings.frame_dimensions.height') }};
     var $cropper = $('#cropper');
     var c = null;
     var $x0 = $('#cropX0');
