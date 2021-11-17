@@ -82,7 +82,7 @@ class CharacterController extends Controller
         // Fetch character's frames, including only valid options
         $frameOptions = Frame::whereIn('id', $character->frames->filter(function($frame) use($character) {
             return $frame->frame->isValid($character->image->species_id, $character->image->subtype_id);
-        })->pluck('id')->toArray())->pluck('name', 'id')->toArray();
+        })->pluck('frame_id')->toArray())->pluck('name', 'id')->toArray();
 
         return view('character.character', [
             'character' => $character,
@@ -179,7 +179,7 @@ class CharacterController extends Controller
         // Fetch character's frames, including only valid options
         $frameOptions = Frame::whereIn('id', $character->frames->filter(function($frame) use($character) {
             return $frame->frame->isValid($character->image->species_id, $character->image->subtype_id);
-        })->pluck('id')->toArray())->pluck('name', 'id')->toArray();
+        })->pluck('frame_id')->toArray())->pluck('name', 'id')->toArray();
 
         return view('character.images', [
             'user' => Auth::check() ? Auth::user() : null,
