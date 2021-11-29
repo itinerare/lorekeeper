@@ -179,6 +179,15 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('traits/edit/{id?}', 'FeatureController@postCreateEditFeature');
     Route::post('traits/delete/{id}', 'FeatureController@postDeleteFeature');
 
+    # STATUS EFFECTS
+    Route::get('status-effects', 'StatusController@getIndex');
+    Route::get('status-effects/create', 'StatusController@getCreateStatusEffect');
+    Route::get('status-effects/edit/{id}', 'StatusController@getEditStatusEffect');
+    Route::get('status-effects/delete/{id}', 'StatusController@getDeleteStatusEffect');
+    Route::post('status-effects/create', 'StatusController@postCreateEditStatusEffect');
+    Route::post('status-effects/edit/{id?}', 'StatusController@postCreateEditStatusEffect');
+    Route::post('status-effects/delete/{id}', 'StatusController@postDeleteStatusEffect');
+
     # CHARACTER CATEGORIES
     Route::get('character-categories', 'CharacterCategoryController@getIndex');
     Route::get('character-categories/create', 'CharacterCategoryController@getCreateCharacterCategory');
