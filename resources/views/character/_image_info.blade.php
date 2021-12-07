@@ -12,9 +12,11 @@
                 <li class="nav-item">
                     <a class="nav-link" id="creditsTab-{{ $image->id }}" data-toggle="tab" href="#credits-{{ $image->id }}" role="tab">Credits</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="framesTab-{{ $image->id }}" data-toggle="tab" href="#frames-{{ $image->id }}" role="tab">Frames</a>
-                </li>
+                @if(!$character->is_myo_slot)
+                    <li class="nav-item">
+                        <a class="nav-link" id="framesTab-{{ $image->id }}" data-toggle="tab" href="#frames-{{ $image->id }}" role="tab">Frames</a>
+                    </li>
+                @endif
                 @if(Auth::check() && Auth::user()->hasPower('manage_characters'))
                     <li class="nav-item">
                         <a class="nav-link" id="settingsTab-{{ $image->id }}" data-toggle="tab" href="#settings-{{ $image->id }}" role="tab"><i class="fas fa-cog"></i></a>
@@ -139,57 +141,59 @@
                 @endif
             </div>
 
-            {{-- Character frames --}}
-            <div class="tab-pane fade" id="frames-{{ $image->id }}">
+            @if(!$character->is_myo_slot)
+                {{-- Character frames --}}
+                <div class="tab-pane fade" id="frames-{{ $image->id }}">
 
-                <h5>Frames Unlocked</h5>
+                    <h5>Frames Unlocked</h5>
 
-                <strong>[Default]</strong> {!! $frameHelper->defaultFrame($image->species_id, $image->subtype_id) ? $frameHelper->defaultFrame($image->species_id, $image->subtype_id)->displayName : 'No default frame!' !!}{!! $image->character->frames->count() ? '<br/>' : '' !!}
-                @foreach($image->character->frames as $frame)
-                    {!! !$frame->frame->isValid($image->species_id, $image->subtype_id) ? '<del>' : '' !!}
-                    @if($frame->frame->category)
-                        <strong>[{!! $frame->frame->category->displayName !!}]</strong>
-                    @else
-                        <strong>[Miscellaneous]</strong>
-                    @endif
-                    {!! $frame->frame->displayName !!}{!! !$frame->frame->isValid($image->species_id, $image->subtype_id) ? '</del> (Invalid)' : '' !!}{!! !$loop->last ? '<br/>' : '' !!}
-                @endforeach
+                    <strong>[Default]</strong> {!! $frameHelper->defaultFrame($image->species_id, $image->subtype_id) ? $frameHelper->defaultFrame($image->species_id, $image->subtype_id)->displayName : 'No default frame!' !!}{!! $image->character->frames->count() ? '<br/>' : '' !!}
+                    @foreach($image->character->frames as $frame)
+                        {!! !$frame->frame->isValid($image->species_id, $image->subtype_id) ? '<del>' : '' !!}
+                        @if($frame->frame->category)
+                            <strong>[{!! $frame->frame->category->displayName !!}]</strong>
+                        @else
+                            <strong>[Miscellaneous]</strong>
+                        @endif
+                        {!! $frame->frame->displayName !!}{!! !$frame->frame->isValid($image->species_id, $image->subtype_id) ? '</del> (Invalid)' : '' !!}{!! !$loop->last ? '<br/>' : '' !!}
+                    @endforeach
 
-                @if(Auth::check() && ($image->character->user_id == Auth::user()->id || Auth::user()->hasPower('manage_characters')))
-                    <hr/>
-
-                    <h5>Change Frame</h5>
-                    @if(file_exists( public_path($image->imageDirectory.'/'.$image->cropFileName)))
-                        {!! Form::open(['url' => 'character/'.$image->character->slug.'/frame']) !!}
-                            <div class="form-group">
-                                {!! Form::select('frame_id', $frameOptions, $image->frame_id, ['class' => 'form-control']) !!}
-                                <p><small class="text-muted">You may have to hard refresh (CTRL + F5 or system equivalent) to view the new image after changing this character's frame.</small></p>
-                            </div>
-                            <div class="text-right">
-                                {!! Form::submit('Change Frame', ['class' => 'btn btn-primary']) !!}
-                            </div>
-                        {!! Form::close() !!}
-
+                    @if(Auth::check() && ($image->character->user_id == Auth::user()->id || Auth::user()->hasPower('manage_characters')))
                         <hr/>
 
-                        {!! Form::open(['url' => 'character/'.$image->character->slug.'/frame']) !!}
+                        <h5>Change Frame</h5>
+                        @if(file_exists( public_path($image->imageDirectory.'/'.$image->cropFileName)))
+                            {!! Form::open(['url' => 'character/'.$image->character->slug.'/frame']) !!}
+                                <div class="form-group">
+                                    {!! Form::select('frame_id', $frameOptions, $image->frame_id, ['class' => 'form-control']) !!}
+                                    <p><small class="text-muted">You may have to hard refresh (CTRL + F5 or system equivalent) to view the new image after changing this character's frame.</small></p>
+                                </div>
+                                <div class="text-right">
+                                    {!! Form::submit('Change Frame', ['class' => 'btn btn-primary']) !!}
+                                </div>
+                            {!! Form::close() !!}
+
+                            <hr/>
+
+                            {!! Form::open(['url' => 'character/'.$image->character->slug.'/frame']) !!}
+                                <p>
+                                    Use this if the image needs to be regenerated.
+                                <p>
+                                <div class="form-group">
+                                    {!! Form::hidden('frame_id', $image->frame_id, ['class' => 'form-control']) !!}
+                                </div>
+                                <div class="text-right">
+                                    {!! Form::submit('Regenerate Image', ['class' => 'btn btn-primary']) !!}
+                                </div>
+                            {!! Form::close() !!}
+                        @else
                             <p>
-                                Use this if the image needs to be regenerated.
-                            <p>
-                            <div class="form-group">
-                                {!! Form::hidden('frame_id', $image->frame_id, ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="text-right">
-                                {!! Form::submit('Regenerate Image', ['class' => 'btn btn-primary']) !!}
-                            </div>
-                        {!! Form::close() !!}
-                    @else
-                        <p>
-                            This character doesn't have a cropped image saved yet, so their frame cannot be changed.
-                        </p>
+                                This character doesn't have a cropped image saved yet, so their frame cannot be changed.
+                            </p>
+                        @endif
                     @endif
-                @endif
-            </div>
+                </div>
+            @endif
 
             @if(Auth::check() && Auth::user()->hasPower('manage_characters'))
                 <div class="tab-pane fade" id="settings-{{ $image->id }}">
