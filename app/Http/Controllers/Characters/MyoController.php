@@ -20,6 +20,7 @@ use App\Services\CurrencyManager;
 use App\Services\CharacterManager;
 
 use App\Http\Controllers\Controller;
+use App\Models\Frame\Frame;
 
 class MyoController extends Controller
 {
@@ -249,7 +250,8 @@ class MyoController extends Controller
         return view('character.update_form', [
             'character' => $this->character,
             'queueOpen' => Settings::get('is_myos_open'),
-            'request' => $this->character->designUpdate()->active()->first()
+            'request' => $this->character->designUpdate()->active()->first(),
+            'frameHelper' => new Frame,
         ]);
     }
 
