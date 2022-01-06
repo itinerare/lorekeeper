@@ -320,6 +320,7 @@ Route::group(['prefix' => 'masterlist', 'namespace' => 'Characters', 'middleware
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'], function() {
     Route::post('{slug}/grant', 'GrantController@postCharacterCurrency');
     Route::post('{slug}/grant-items', 'GrantController@postCharacterItems');
+    Route::post('{slug}/grant-status', 'GrantController@postCharacterStatusEffect');
 });
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:manage_characters'], function() {
 

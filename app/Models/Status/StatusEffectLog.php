@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Currency;
+namespace App\Models\Status;
 
 use Config;
 use App\Models\Model;
 
-class CurrencyLog extends Model
+class StatusEffectLog extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -43,14 +43,16 @@ class CurrencyLog extends Model
      */
     public function sender()
     {
-        $this->belongsTo('App\Models\User\User', 'sender_id');
+        if($this->sender_type == 'User') return $this->belongsTo('App\Models\User\User', 'sender_id');
+        return $this->belongsTo('App\Models\Character\Character', 'sender_id');
     }
 
     /**
-     * Get the character who received the logged action.
+     * Get the user who received the logged action.
      */
     public function recipient()
     {
+        if($this->recipient_type == 'User') return $this->belongsTo('App\Models\User\User', 'recipient_id');
         return $this->belongsTo('App\Models\Character\Character', 'recipient_id');
     }
 
@@ -59,7 +61,7 @@ class CurrencyLog extends Model
      */
     public function status()
     {
-        return $this->belongsTo('App\Models\Status\StatusEffect');
+        return $this->belongsTo('App\Models\Status\StatusEffect', 'status_effect_id');
     }
 
 }

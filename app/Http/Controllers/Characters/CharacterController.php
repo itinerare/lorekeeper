@@ -34,6 +34,7 @@ use App\Services\InventoryManager;
 use App\Services\CharacterManager;
 
 use App\Http\Controllers\Controller;
+use App\Models\Status\StatusEffect;
 
 class CharacterController extends Controller
 {
@@ -225,6 +226,24 @@ class CharacterController extends Controller
     }
 
     /**
+     * Shows a character's status effects.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterStatusEffects($slug)
+    {
+        $character = $this->character;
+        return view('character.status_effects', [
+            'character' => $this->character,
+            'statuses' => $character->getStatusEffects(),
+            'logs' => $this->character->getStatusEffectLogs(),
+        ] + (Auth::check() && (Auth::user()->hasPower('edit_inventories') || Auth::user()->id == $this->character->user_id) ? [
+            'statusOptions' => StatusEffect::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
+        ] : []));
+    }
+
+    /**
      * Transfers currency between the user and character.
      *
      * @param  \Illuminate\Http\Request       $request
@@ -354,6 +373,20 @@ class CharacterController extends Controller
         return view('character.currency_logs', [
             'character' => $this->character,
             'logs' => $this->character->getCurrencyLogs(0)
+        ]);
+    }
+
+    /**
+     * Shows a character's status effect logs.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterStatusEffectLogs($slug)
+    {
+        return view('character.status_effect_logs', [
+            'character' => $this->character,
+            'logs' => $this->character->getStatusEffectLogs(0)
         ]);
     }
 

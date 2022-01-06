@@ -23,7 +23,8 @@ use App\Models\Currency\CurrencyLog;
 use App\Models\Character\CharacterItem;
 use App\Models\Item\Item;
 use App\Models\Item\ItemLog;
-
+use App\Models\Status\StatusEffect;
+use App\Models\Status\StatusEffectLog;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -425,6 +426,32 @@ class Character extends Model
     }
 
     /**
+     * Get the character's current status effects.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getStatusEffects()
+    {
+        // Get a list of status effects that need to be displayed
+
+        $owned = CharacterStatusEffect::where('character_id', $this->id)->pluck('quantity', 'status_effect_id')->toArray();
+
+        $statuses = StatusEffect::query();
+
+        $statuses = $statuses->orderBy('name', 'DESC')->get();
+
+        foreach($statuses as $status) {
+            $status->quantity = isset($owned[$status->id]) ? $owned[$status->id] : 0;
+        }
+
+        $statuses = $statuses->filter(function($status) {
+            return $status->quantity > 0;
+        });
+
+        return $statuses;
+    }
+
+    /**
      * Get the character's currency logs.
      *
      * @param  int  $limit
@@ -435,6 +462,24 @@ class Character extends Model
         $character = $this;
         $query = CurrencyLog::with('currency')->where(function($query) use ($character) {
             $query->with('sender.rank')->where('sender_type', 'Character')->where('sender_id', $character->id)->where('log_type', '!=', 'Staff Grant');
+        })->orWhere(function($query) use ($character) {
+            $query->with('recipient.rank')->where('recipient_type', 'Character')->where('recipient_id', $character->id)->where('log_type', '!=', 'Staff Removal');
+        })->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+    }
+
+    /**
+     * Get the character's status effect logs.
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getStatusEffectLogs($limit = 10)
+    {
+        $character = $this;
+        $query = StatusEffectLog::with('status')->where(function($query) use ($character) {
+            $query->with('recipient.rank')->where('sender_type', 'Character')->where('sender_id', $character->id)->where('log_type', '!=', 'Staff Grant');
         })->orWhere(function($query) use ($character) {
             $query->with('recipient.rank')->where('recipient_type', 'Character')->where('recipient_id', $character->id)->where('log_type', '!=', 'Staff Removal');
         })->orderBy('id', 'DESC');

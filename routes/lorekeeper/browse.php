@@ -73,11 +73,13 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::get('{slug}', 'CharacterController@getCharacter');
     Route::get('{slug}/profile', 'CharacterController@getCharacterProfile');
     Route::get('{slug}/bank', 'CharacterController@getCharacterBank');
+    Route::get('{slug}/status-effects', 'CharacterController@getCharacterStatusEffects');
     Route::get('{slug}/inventory', 'CharacterController@getCharacterInventory');
     Route::get('{slug}/images', 'CharacterController@getCharacterImages');
 
     Route::get('{slug}/currency-logs', 'CharacterController@getCharacterCurrencyLogs');
     Route::get('{slug}/item-logs', 'CharacterController@getCharacterItemLogs');
+    Route::get('{slug}/status-effect-logs', 'CharacterController@getCharacterStatusEffectLogs');
     Route::get('{slug}/ownership', 'CharacterController@getCharacterOwnershipLogs');
     Route::get('{slug}/change-log', 'CharacterController@getCharacterLogs');
     Route::get('{slug}/submissions', 'CharacterController@getCharacterSubmissions');

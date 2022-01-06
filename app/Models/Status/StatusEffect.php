@@ -134,4 +134,48 @@ class StatusEffect extends Model
         if(!$this->id) return null;
         return json_decode($this->attributes['data'], true);
     }
+
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Displays a given value of the status effect.
+     *
+     * @return string
+     */
+    public function display($value)
+    {
+        $ret = '<span class="display-currency"> '.$this->name;
+        $ret .= ' (×'.$value.')';
+        return $ret . '</span>';
+    }
+
+    /**
+     * Displays the name of the status effect based on severity.
+     *
+     * @return string
+     */
+    public function displaySeverity($value)
+    {
+        $ret = '<span class="display-currency">';
+        if(isset($this->data)) {
+            foreach($this->data as $severity)
+                $severities[$severity['breakpoint']] = $severity['name'];
+            $severity = collect($severities)->filter(function ($severity,$key) use ($value) {
+                // Find only those severities whose breakpoints are below or equal to the current value
+                return $key <= $value;
+            })->sortByDesc(function ($severity,$key) {
+                // Sort by the breakpoint so that the first result will be the highest/
+                // most applicable severity
+                return $key;
+            })->first();
+
+            $ret .= $this->name.': '.$severity;
+        }
+        else $ret .= $this->name;
+        return $ret . '</span>';
+    }
 }
