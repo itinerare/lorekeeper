@@ -18,7 +18,7 @@ return [
         'creators' => json_encode([
             'Mercury' => 'https://github.com/itinerare/',
         ]),
-        'version' => '1.0.0',
+        'version' => '1.0.1',
     ],
 
 ];
