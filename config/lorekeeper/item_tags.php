@@ -18,10 +18,22 @@ return [
         'text_color' => '#ffffff',
         'background_color' => '#f6993f'
     ],
-    
+
     'slot' => [
         'name' => 'Slot',
         'text_color' => '#ffffff',
         'background_color' => '#1fd1a7'
+    ],
+
+    'buff' => [
+        'name' => 'Buff',
+        'text_color' => '#ffffff',
+        'background_color' => '#a4b88d'
+    ],
+
+    'cure' => [
+        'name' => 'Cure',
+        'text_color' => '#ffffff',
+        'background_color' => '#b4676b'
     ],
 ];

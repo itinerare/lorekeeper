@@ -117,6 +117,11 @@ function getAssetModelString($type, $namespaced = true)
             if($namespaced) return '\App\Models\Character\CharacterItem';
             else return 'CharacterItem';
             break;
+
+        case 'statuses':
+            if($namespaced) return '\App\Models\Status\StatusEffect';
+            else return 'StatusEffect';
+            break;
     }
     return null;
 }
@@ -317,6 +322,12 @@ function fillCharacterAssets($assets, $sender, $recipient, $logType, $data, $sub
             $service = new \App\Services\InventoryManager;
             foreach($contents as $asset)
                 if(!$service->creditItem($sender, ( ($asset['asset']->category && $asset['asset']->category->is_character_owned) ? $recipient : $item_recipient), $logType, $data, $asset['asset'], $asset['quantity'])) return false;
+        }
+        elseif($key == 'statuses' && count($contents))
+        {
+            $service = new \App\Services\StatusEffectManager;
+            foreach($contents as $asset)
+                if(!$service->creditStatusEffect($sender, $recipient, $logType, $data['data'], $asset['asset'], $asset['quantity'])) return false;
         }
     }
     return $assets;
