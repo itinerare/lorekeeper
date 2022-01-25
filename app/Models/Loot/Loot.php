@@ -73,6 +73,8 @@ class Loot extends Model
                 return $this->belongsTo('App\Models\Item\ItemCategory', 'rewardable_id');
             case 'ItemCategoryRarity':
                 return $this->belongsTo('App\Models\Item\ItemCategory', 'rewardable_id');
+            case 'Status':
+                return $this->belongsTo('App\Models\Status\StatusEffect', 'rewardable_id');
             case 'None':
                 // Laravel requires a relationship instance to be returned (cannot return null), so returning one that doesn't exist here.
                 return $this->belongsTo('App\Models\Loot\Loot', 'rewardable_id', 'loot_table_id')->whereNull('loot_table_id');
