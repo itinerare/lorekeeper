@@ -147,9 +147,9 @@ function createAssetsArray($isCharacter = false)
  * @param  array  $second
  * @return array
  */
-function mergeAssetsArrays($first, $second)
+function mergeAssetsArrays($first, $second, $isCharacter = false)
 {
-    $keys = getAssetKeys();
+    $keys = getAssetKeys($isCharacter);
     foreach($keys as $key)
         foreach($second[$key] as $item)
             addAsset($first, $item['asset'], $item['quantity']);
@@ -304,7 +304,7 @@ function fillCharacterAssets($assets, $sender, $recipient, $logType, $data, $sub
     {
         foreach($assets['loot_tables'] as $table)
         {
-            $assets = mergeAssetsArrays($assets, $table['asset']->roll($table['quantity']));
+            $assets = mergeAssetsArrays($assets, $table['asset']->roll($table['quantity'], true), true);
         }
         unset($assets['loot_tables']);
     }

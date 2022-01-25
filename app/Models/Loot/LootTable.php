@@ -97,9 +97,9 @@ class LootTable extends Model
      * @param  int  $quantity
      * @return \Illuminate\Support\Collection
      */
-    public function roll($quantity = 1)
+    public function roll($quantity = 1, $isCharacter = false)
     {
-        $rewards = createAssetsArray();
+        $rewards = createAssetsArray($isCharacter);
 
         $loot = $this->loot;
         $totalWeight = 0;
