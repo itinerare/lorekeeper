@@ -311,7 +311,7 @@ $( document ).ready(function() {
         attachSublistListeners($clone);
     }
     function removeSublistRow($trigger) {
-        $trigger.parent().remove();
+        $trigger.parent().parent().parent().remove();
     }
     $('#sublistList .sublist-list-entry').each(function(index) {
         attachSublistListeners($(this));
