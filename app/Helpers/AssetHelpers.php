@@ -304,7 +304,7 @@ function fillCharacterAssets($assets, $sender, $recipient, $logType, $data, $sub
     {
         foreach($assets['loot_tables'] as $table)
         {
-            $assets = mergeAssetsArrays($assets, $table['asset']->roll($table['quantity'], true), true);
+            $assets = mergeAssetsArrays($assets, $table['asset']->roll($table['quantity'], true, $recipient), true);
         }
         unset($assets['loot_tables']);
     }

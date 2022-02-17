@@ -90,7 +90,9 @@
 
 <h5>Conditional Rows</h5>
 
-<p>These rows will be added to the base loot table if the character the loot table is being rolled for meets the condition. In the case of multiple possible matches, all will matching results will be added to the table.</p>
+<p>These rows will be added to the base loot table if the character the loot table is being rolled for meets the condition. In the case of multiple possible matches, all will matching results will be added to the table. Note that rows may only be added after saving a sublist once.</p>
+
+<p>Note that checking for none of a status does not work if a character has no extant status effects.</p>
 
 <div id="sublistList" class="my-4">
     @if(isset($table->data))
