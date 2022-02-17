@@ -97,8 +97,7 @@ class LootTableController extends Controller
     {
         $id ? $request->validate(LootTable::$updateRules) : $request->validate(LootTable::$createRules);
         $data = $request->only([
-            'name', 'display_name', 'rewardable_type', 'rewardable_id', 'quantity', 'weight',
-            'criteria', 'rarity'
+            'name', 'display_name', 'rewardable_type', 'rewardable_id', 'quantity', 'weight', 'subtable_id', 'criteria', 'rarity', 'sublist_status_id', 'sublist_criteria', 'sublist_quantity'
         ]);
         if($id && $service->updateLootTable(LootTable::find($id), $data)) {
             flash('Loot table updated successfully.')->success();

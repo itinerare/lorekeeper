@@ -15,7 +15,7 @@ class LootTable extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'display_name',
+        'name', 'display_name', 'data'
     ];
 
     /**
@@ -26,6 +26,15 @@ class LootTable extends Model
     protected $table = 'loot_tables';
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
+
+    /**
      * Validation rules for creation.
      *
      * @var array
@@ -33,6 +42,8 @@ class LootTable extends Model
     public static $createRules = [
         'name' => 'required',
         'display_name' => 'required',
+        'subtable_criteria.*' => 'required_with:subtable_status_id.*',
+        'subtable_quantity.*' => 'required_with:subtable_quantity.*',
     ];
 
     /**
@@ -43,6 +54,8 @@ class LootTable extends Model
     public static $updateRules = [
         'name' => 'required',
         'display_name' => 'required',
+        'subtable_criteria.*' => 'required_with:subtable_status_id.*',
+        'subtable_quantity.*' => 'required_with:subtable_quantity.*',
     ];
 
     /**********************************************************************************************
