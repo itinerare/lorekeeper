@@ -59,7 +59,7 @@
     @endforeach
 </div>
 <div class="text-right">
-    <a href="{{ url($character->url.'/currency-logs') }}">View all...</a>
+    <a href="{{ url($character->url.'/status-effect-logs') }}">View all...</a>
 </div>
 
 @if(Auth::check() && Auth::user()->hasPower('edit_inventories'))
