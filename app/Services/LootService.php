@@ -140,7 +140,7 @@ class LootService extends Service
                 'quantity'        => $data['quantity'][$key],
                 'weight'          => $data['weight'][$key],
                 'data'            => isset($lootData) ? json_encode($lootData) : null,
-                'subtable_id'     => $data['subtable_id'][$key],
+                'subtable_id'     => $data['subtable_id'][$key] != 'null' ? $data['subtable_id'][$key] : null,
             ]);
         }
     }
