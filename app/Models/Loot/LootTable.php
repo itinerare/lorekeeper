@@ -120,7 +120,7 @@ class LootTable extends Model
             // Collect any status-specific rows
             if($isCharacter && $character) {
                 // Check for subtables
-                if(count($this->data)) {
+                if(isset($this->data) && count($this->data)) {
                     // Gather the character's status effects
                     $statuses = $character->getStatusEffects();
 
