@@ -33,6 +33,30 @@ class AddSiteSettings extends Command
     }
 
     /**
+     * Add a site setting.
+     * 
+     * Example usage:
+     * $this->addSiteSetting("site_setting_key", 1, "0: does nothing. 1: does something.");
+     * 
+     * @param  string  $key
+     * @param  int     $value
+     * @param  string  $description
+     */
+    private function addSiteSetting($key, $value, $description) {
+        if(!DB::table('site_settings')->where('key', $key)->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key'         => $key,
+                    'value'       => $value,
+                    'description' => $description,
+                ],
+            ]);
+            $this->info( "Added:   ".$key." / Default: ".$value);
+        }
+        else $this->line("Skipped: ".$key);
+    }
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -51,13 +75,11 @@ class AddSiteSettings extends Command
 
         $this->addSiteSetting('open_transfers_queue', 0, '0: Character transfers do not need mod approval, 1: Transfers must be approved by a mod.');
 
-
         $this->addSiteSetting('is_prompts_open', 1, '0: New prompt submissions cannot be made (mods can work on the queue still), 1: Prompts are submittable.');
 
         $this->addSiteSetting('is_claims_open', 1, '0: New claims cannot be made (mods can work on the queue still), 1: Claims are submittable.');
 
         $this->addSiteSetting('is_reports_open', 1, '0: New reports cannot be made (mods can work on the queue still), 1: Reports are submittable.');
-
 
         $this->addSiteSetting('is_myos_open', 1, '0: MYO slots cannot be submitted for design approval, 1: MYO slots can be submitted for approval.');
 
@@ -76,8 +98,16 @@ class AddSiteSettings extends Command
         $this->addSiteSetting('design_votes_needed', 3, 'Number of approval votes needed for a design update or MYO submission to be considered as having approval.');
 
         $this->addSiteSetting('admin_user', 1, 'ID of the site\'s admin user.');
-
+		
         $this->addSiteSetting('adopts_user', 1, 'ID of the site\'s adoption center user.');
+
+        $this->addSiteSetting('gallery_submissions_open', 1, '0: Gallery submissions closed, 1: Gallery submissions open.');
+
+        $this->addSiteSetting('gallery_submissions_require_approval', 1, '0: Gallery submissions do not require approval, 1: Gallery submissions require approval.');
+
+        $this->addSiteSetting('gallery_submissions_reward_currency', 0, '0: Gallery submissions do not reward currency, 1: Gallery submissions reward currency.');
+
+        $this->addSiteSetting('group_currency', 1, 'ID of the group currency to award from gallery submissions (if enabled).');
 
         $this->line("\nSite settings up to date!");
 

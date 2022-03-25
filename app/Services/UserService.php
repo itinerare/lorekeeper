@@ -13,11 +13,13 @@ use App\Models\Rank\Rank;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Submission\Submission;
+use App\Models\Gallery\GallerySubmission;
 use App\Models\User\UserUpdateLog;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 use App\Services\SubmissionManager;
+use App\Services\GalleryManager;
 use App\Services\CharacterManager;
 use App\Models\Trade;
 
@@ -43,11 +45,16 @@ class UserService extends Service
         // If the rank is not given, create a user with the lowest existing rank.
         if(!isset($data['rank_id'])) $data['rank_id'] = Rank::orderBy('sort')->first()->id;
 
+        // Make birthday into format we can store
+        $date = $data['dob']['day']."-".$data['dob']['month']."-".$data['dob']['year'];
+        $formatDate = carbon::parse($date);
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'rank_id' => $data['rank_id'],
             'password' => Hash::make($data['password']),
+            'birthday' => $formatDate,
         ]);
         $user->settings()->create([
             'user_id' => $user->id,
@@ -114,6 +121,28 @@ class UserService extends Service
         $user->save();
 
         $user->sendEmailVerificationNotification();
+
+        return true;
+    }
+
+    /**
+     * Updates user's birthday
+     */
+    public function updateBirthday($data, $user)
+    {
+        $user->birthday = $data;
+        $user->save();
+
+        return true;
+    }
+
+    /**
+     * Updates user's birthday setting
+     */
+    public function updateDOB($data, $user)
+    {
+        $user->settings->birthday_setting = $data;
+        $user->settings->save();
 
         return true;
     }
@@ -196,14 +225,25 @@ class UserService extends Service
                 foreach($submissions as $submission)
                     $submissionManager->rejectSubmission(['submission' => $submission, 'staff_comments' => 'User has been banned from site activity.']);
 
-                // 3. Design approvals
+                // 3. Gallery Submissions
+                $galleryManager = new GalleryManager;
+                $gallerySubmissions = GallerySubmission::where('user_id', $user->id)->where('status', 'Pending')->get();
+                foreach($gallerySubmissions as $submission) {
+                    $galleryManager->rejectSubmission($submission);
+                    $galleryManager->postStaffComments($submission->id, ['staff_comments' => 'User has been banned from site activity.'], $staff);
+                }
+                $gallerySubmissions = GallerySubmission::where('user_id', $user->id)->where('status', 'Accepted')->get();
+                foreach($gallerySubmissions as $submission)
+                    $submission->update(['is_visible' => 0]);
+
+                // 4. Design approvals
                 $requests = CharacterDesignUpdate::where('user_id', $user->id)->where(function($query) {
                     $query->where('status', 'Pending')->orWhere('status', 'Draft');
                 })->get();
                 foreach($requests as $request)
                     $characterManager->rejectRequest(['staff_comments' => 'User has been banned from site activity.'], $request, $staff, true);
 
-                // 4. Trades
+                // 5. Trades
                 $tradeManager = new TradeManager;
                 $trades = Trade::where(function($query) {
                     $query->where('status', 'Open')->orWhere('status', 'Pending');
