@@ -26,6 +26,14 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
     Route::post('password', 'AccountController@postPassword');
     Route::post('email', 'AccountController@postEmail');
     Route::post('avatar', 'AccountController@postAvatar');
+    Route::get('aliases', 'AccountController@getAliases');
+    Route::get('make-primary/{id}', 'AccountController@getMakePrimary');
+    Route::post('make-primary/{id}', 'AccountController@postMakePrimary');
+    Route::get('hide-alias/{id}', 'AccountController@getHideAlias');
+    Route::post('hide-alias/{id}', 'AccountController@postHideAlias');
+    Route::get('remove-alias/{id}', 'AccountController@getRemoveAlias');
+    Route::post('remove-alias/{id}', 'AccountController@postRemoveAlias');
+    Route::post('dob', 'AccountController@postBirthday');
 
     Route::get('bookmarks', 'BookmarkController@getBookmarks');
     Route::get('bookmarks/create', 'BookmarkController@getCreateBookmark');
@@ -39,6 +47,7 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
 Route::group(['prefix' => 'inventory', 'namespace' => 'Users'], function() {
     Route::get('/', 'InventoryController@getIndex');
     Route::post('edit', 'InventoryController@postEdit');
+    Route::get('account-search', 'InventoryController@getAccountSearch');
 
     Route::get('selector', 'InventoryController@getSelector');
 });
@@ -81,6 +90,8 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::get('{slug}/profile/edit', 'CharacterController@getEditCharacterProfile');
     Route::post('{slug}/profile/edit', 'CharacterController@postEditCharacterProfile');
 
+    Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
+
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
     Route::post('{slug}/transfer', 'CharacterController@postTransfer');
@@ -104,6 +115,24 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
 /**************************************************************************************************
     Submissions
 **************************************************************************************************/
+
+Route::group(['prefix' => 'gallery'], function() {
+    Route::get('submissions/{type}', 'GalleryController@getUserSubmissions')->where('type', 'pending|accepted|rejected');
+
+    Route::post('favorite/{id}', 'GalleryController@postFavoriteSubmission');
+
+    Route::get('submit/{id}', 'GalleryController@getNewGallerySubmission');
+    Route::get('submit/character/{slug}', 'GalleryController@getCharacterInfo');
+    Route::get('edit/{id}', 'GalleryController@getEditGallerySubmission');
+    Route::get('queue/{id}', 'GalleryController@getSubmissionLog');
+    Route::post('submit', 'GalleryController@postCreateEditGallerySubmission');
+    Route::post('edit/{id}', 'GalleryController@postCreateEditGallerySubmission');
+
+    Route::post('collaborator/{id}', 'GalleryController@postEditCollaborator');
+
+    Route::get('archive/{id}', 'GalleryController@getArchiveSubmission');
+    Route::post('archive/{id}', 'GalleryController@postArchiveSubmission');
+});
 
 Route::group(['prefix' => 'submissions', 'namespace' => 'Users'], function() {
     Route::get('/', 'SubmissionController@getIndex');
