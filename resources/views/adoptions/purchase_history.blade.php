@@ -1,12 +1,12 @@
 @extends('adoptions.layout')
 
-@section('adoptions-title') My Purchase History @endsection
+@section('adoptions-title') My Adoption History @endsection
 
 @section('adoptions-content')
-{!! breadcrumbs([$adoption->name => 'adoptions', 'My Purchase History' => 'history']) !!}
+{!! breadcrumbs([$adoption->name => 'adoptions', 'My Adoption History' => 'history']) !!}
 
 <h1>
-    My Purchase History
+    My Adoption History
 </h1>
 
 {!! $logs->render() !!}
