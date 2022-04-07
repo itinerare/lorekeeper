@@ -88,6 +88,10 @@ class SurrenderManager extends Service
                 throw new \Exception('Invalid surrender.');
             }
 
+            if (!$this->logAdminAction($user, 'Surrender Rejected', 'Rejected surrender #'.$surrender->id)) {
+                throw new \Exception('Failed to log admin action.');
+            }
+
             // The only things we need to set are:
             // 1. staff comment
             // 2. staff ID
@@ -145,6 +149,10 @@ class SurrenderManager extends Service
             $data['reason'] = 'Surrendered to Adoption Center';
             $data['use_user_bank'] = 1;
             $data['use_character_bank'] = 1;
+
+            if (!$this->logAdminAction($user, 'Surrender Accepted', 'Accepted surrender #'.$surrender->id)) {
+                throw new \Exception('Failed to log admin action.');
+            }
 
             // Edit if you turn on calculate by traits
             if (Settings::get('calculate_by_traits')) {
