@@ -25,8 +25,8 @@
             {!! Form::textarea('notes', null, ['class' => 'form-control', 'placeholder' => 'Include any extra neccessary details, as well as any character pages such as Toyhouse etc.']) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('worth', 'Suggested Worth (optional)') !!}
-            {!! Form::number('worth', null, ['class' => 'form-control', 'placeholder' => 'Suggested worth does not influence amount of currency given, but gives admins insight to see if the grant has malfunctioned.']) !!}
+            {!! Form::label('worth', 'Suggested Worth (optional)') !!} {!! add_help('Suggested worth does not influence amount of currency given, but gives admins insight to see if the grant has malfunctioned.') !!}
+            {!! Form::number('worth', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group">
             {!! Form::label('currency_id', 'Currency') !!} {!! add_help('If you do not want to input a worth, just leave this field as default.') !!}
