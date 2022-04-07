@@ -1,19 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddAdoptionShop extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
-    Schema::create('adoptions', function (Blueprint $table) {
+        Schema::create('adoptions', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('name');
@@ -30,7 +28,7 @@ class AddAdoptionShop extends Migration
             $table->integer('character_id')->unsigned();
 
             // In addition to the currency type,
-            // restrict the bank you can use to buy the item - 
+            // restrict the bank you can use to buy the item -
             // e.g. if you only want characters to be able to buy the item,
             // turn off use_user_bank so it forces the user to enter a character to buy it
             // Of course this requires a sanity check to make sure that
@@ -40,7 +38,7 @@ class AddAdoptionShop extends Migration
 
             $table->boolean('is_limited_stock')->default(1);
             $table->integer('quantity')->default(1);
-            
+
             $table->integer('sort')->unsigned()->default(0);
         });
         Schema::create('adoption_log', function (Blueprint $table) {
@@ -49,7 +47,7 @@ class AddAdoptionShop extends Migration
             $table->integer('adoption_id')->unsigned()->index();
             $table->integer('user_id')->unsigned()->index();
             $table->integer('character_id')->unsigned()->nullable()->default(null);
-            
+
             $table->integer('currency_id')->unsigned();
             $table->integer('cost')->default(0);
 
@@ -61,8 +59,6 @@ class AddAdoptionShop extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
