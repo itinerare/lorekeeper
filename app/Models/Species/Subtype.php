@@ -46,7 +46,7 @@ class Subtype extends Model
     protected $table = 'subtypes';
 
     /**
-     * Accessors to append to the model.
+     * Validation rules for updating.
      *
      * @var array
      */

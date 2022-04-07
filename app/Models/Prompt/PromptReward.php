@@ -27,6 +27,7 @@ class PromptReward extends Model
         'rewardable_id'   => 'required',
         'quantity'        => 'required|integer|min:1',
     ];
+
     /**
      * The attributes that are mass assignable.
      *

@@ -26,11 +26,11 @@ class UserItem extends Model
     ];
 
     /**
-     * The table associated with the model.
+     * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
      */
-    protected $table = 'user_items';
+    public $timestamps = true;
 
     /**********************************************************************************************
 

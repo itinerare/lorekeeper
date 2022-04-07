@@ -25,6 +25,7 @@ class SalesCharacter extends Model
         'min_increment' => 'required_if:type,auction',
         'end_point'     => 'exclude_unless:type,auction,xta,ota|max:255',
     ];
+
     /**
      * The attributes that are mass assignable.
      *

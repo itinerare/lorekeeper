@@ -46,6 +46,7 @@ class Sales extends Model implements Feedable
         'title' => 'required|between:3,100',
         'text'  => 'required',
     ];
+
     /**
      * The attributes that are mass assignable.
      *

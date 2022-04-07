@@ -27,6 +27,7 @@ class Shop extends Model
         'description' => 'nullable',
         'image'       => 'mimes:png',
     ];
+
     /**
      * The attributes that are mass assignable.
      *

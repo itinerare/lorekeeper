@@ -14,13 +14,6 @@ class UserProfile extends Model
      *
      * @var string
      */
-    public $primaryKey = 'user_id';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'text', 'parsed_text',
     ];
@@ -28,9 +21,16 @@ class UserProfile extends Model
     /**
      * The table associated with the model.
      *
-     * @var string
+     * @var array
      */
     protected $table = 'user_profiles';
+
+    /**
+     * The primary key of the model.
+     *
+     * @var string
+     */
+    public $primaryKey = 'user_id';
 
     /**********************************************************************************************
 

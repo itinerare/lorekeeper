@@ -109,6 +109,23 @@ class Prompt extends Model
     }
 
     /**
+     * Scope a query to include or exclude staff-only prompts.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Models\User\User                 $user
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeStaffOnly($query, $user)
+    {
+        if ($user && $user->isStaff) {
+            return $query;
+        }
+
+        return $query->where('staff_only', 0);
+    }
+
+    /**
      * Scope a query to sort prompts in alphabetical order.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query

@@ -5,18 +5,18 @@ namespace App\Models;
 class AdminLog extends Model
 {
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+
+    protected $table = 'admin_log';
+    /**
      * The primary key of the model.
      *
      * @var string
      */
     public $primaryKey = 'user_id';
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.
@@ -32,7 +32,7 @@ class AdminLog extends Model
      *
      * @var string
      */
-    protected $table = 'admin_log';
+    public $timestamps = true;
 
     /**********************************************************************************************
 

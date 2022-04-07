@@ -25,6 +25,10 @@ return [
                 'name' => 'Admin Logs',
                 'url'  => 'admin/logs',
             ],
+            [
+                'name' => 'Staff Reward Settings',
+                'url'  => 'admin/staff-reward-settings',
+            ],
         ],
     ],
     'Reports' => [
@@ -131,6 +135,14 @@ return [
                 'name' => 'MYO Approvals',
                 'url'  => 'admin/myo-approvals/pending',
             ],
+            [
+                'name' => 'Adoption Center',
+                'url'  => 'admin/data/adoptions/edit/1',
+            ],
+            [
+                'name' => 'Adopts',
+                'url'  => 'admin/data/stock',
+            ],
         ],
     ],
     'Data' => [
@@ -167,14 +179,6 @@ return [
             [
                 'name' => 'Shops',
                 'url'  => 'admin/data/shops',
-            ],
-            [
-                'name' => 'Adoption Center',
-                'url'  => 'admin/data/adoptions/edit/1',
-            ],
-            [
-                'name' => 'Adopts',
-                'url'  => 'admin/data/stock',
             ],
             [
                 'name' => 'Prompt Categories',

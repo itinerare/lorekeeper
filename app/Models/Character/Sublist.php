@@ -25,6 +25,7 @@ class Sublist extends Model
         'name' => 'required|between:3,25',
         'key'  => 'required|between:3,25|alpha_dash',
     ];
+
     /**
      * The attributes that are mass assignable.
      *

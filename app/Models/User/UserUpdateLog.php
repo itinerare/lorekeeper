@@ -7,18 +7,18 @@ use App\Models\Model;
 class UserUpdateLog extends Model
 {
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'user_update_log';
+
+    /**
      * The primary key of the model.
      *
      * @var string
      */
     public $primaryKey = 'user_id';
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.
@@ -34,7 +34,7 @@ class UserUpdateLog extends Model
      *
      * @var string
      */
-    protected $table = 'user_update_log';
+    public $timestamps = true;
 
     /**********************************************************************************************
 

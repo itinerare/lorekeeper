@@ -57,6 +57,13 @@ class Comment extends Model
     ];
 
     /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
+
+    /**
      * The user who posted the comment.
      */
     public function commenter()
