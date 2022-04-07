@@ -7,6 +7,21 @@ use App\Models\Model;
 class AdoptionLog extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'adoption_id', 'character_id', 'user_id', 'currency_id', 'cost', 'adopt_id', 'quantity',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'adoption_log';
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -23,22 +38,6 @@ class AdoptionLog extends Model
         'adoption_id' => 'required',
         'bank'        => 'required|in:user,character',
     ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'adoption_id', 'character_id', 'user_id', 'currency_id', 'cost', 'adopt_id', 'quantity',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'adoption_log';
 
     /**********************************************************************************************
 

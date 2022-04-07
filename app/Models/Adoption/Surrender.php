@@ -7,6 +7,23 @@ use App\Models\Model;
 class Surrender extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'character_id', 'user_id', 'staff_id', 'notes',
+        'comments', 'staff_comments',
+        'status', 'worth', 'currency_id',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'surrenders';
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -30,23 +47,6 @@ class Surrender extends Model
     public static $updateRules = [
         'character_id' => 'required',
     ];
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'character_id', 'user_id', 'staff_id', 'notes',
-        'comments', 'staff_comments',
-        'status', 'worth', 'currency_id',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'surrenders';
 
     /**********************************************************************************************
 

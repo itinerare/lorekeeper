@@ -6,8 +6,6 @@ use App\Models\Model;
 
 class AdoptionCurrency extends Model
 {
-    public $timestamps = false;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -23,6 +21,7 @@ class AdoptionCurrency extends Model
      * @var string
      */
     protected $table = 'adoption_currency';
+    public $timestamps = false;
 
     /**********************************************************************************************
 

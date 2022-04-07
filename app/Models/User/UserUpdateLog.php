@@ -14,13 +14,6 @@ class UserUpdateLog extends Model
     protected $table = 'user_update_log';
 
     /**
-     * The primary key of the model.
-     *
-     * @var string
-     */
-    public $primaryKey = 'user_id';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -28,6 +21,13 @@ class UserUpdateLog extends Model
     protected $fillable = [
         'staff_id', 'user_id', 'data', 'type',
     ];
+
+    /**
+     * The primary key of the model.
+     *
+     * @var string
+     */
+    public $primaryKey = 'user_id';
 
     /**
      * The table associated with the model.

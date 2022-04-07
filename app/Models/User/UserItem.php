@@ -10,13 +10,6 @@ class UserItem extends Model
     use SoftDeletes;
 
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -24,6 +17,13 @@ class UserItem extends Model
     protected $fillable = [
         'data', 'item_id', 'user_id',
     ];
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
 
     /**
      * Whether the model contains timestamps to be saved and updated.

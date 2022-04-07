@@ -9,14 +9,7 @@ class AdminLog extends Model
      *
      * @var string
      */
-
     protected $table = 'admin_log';
-    /**
-     * The primary key of the model.
-     *
-     * @var string
-     */
-    public $primaryKey = 'user_id';
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +19,12 @@ class AdminLog extends Model
     protected $fillable = [
         'user_id', 'action', 'action_details',
     ];
+    /**
+     * The primary key of the model.
+     *
+     * @var string
+     */
+    public $primaryKey = 'user_id';
 
     /**
      * The table associated with the model.

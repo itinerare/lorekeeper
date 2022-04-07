@@ -7,6 +7,21 @@ use App\Models\Model;
 class Adoption extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'has_image', 'description', 'parsed_description', 'is_active',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'adoptions';
+    /**
      * Validation rules for creation.
      *
      * @var array
@@ -27,21 +42,6 @@ class Adoption extends Model
         'description' => 'nullable',
         'image'       => 'mimes:png',
     ];
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'has_image', 'description', 'parsed_description', 'is_active',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'adoptions';
 
     /**********************************************************************************************
 
