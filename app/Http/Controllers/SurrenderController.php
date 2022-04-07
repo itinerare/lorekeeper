@@ -33,7 +33,7 @@ class SurrenderController extends Controller
         $surrenders = Surrender::where('user_id', Auth::user()->id);
         $type = $request->get('type');
         if(!$type) $type = 'Pending';
-        
+
         $surrenders = $surrenders->where('status', ucfirst($type));
 
         return view('home.surrenders', [
@@ -50,7 +50,9 @@ class SurrenderController extends Controller
      */
     public function getSurrender()
     {
-        $characters = Character::orderBy('id')->get()->where('user_id', Auth::user()->id)->pluck('fullname', 'id');
+        $characters = Character::orderBy('id')->where('user_id', Auth::user()->id)->where(function ($query) {
+            return $query->where('is_sellable', 1)->orWhere('is_tradeable', 1)->orwhere('is_giftable', 1);
+        })->get()->pluck('fullName', 'id');
         $adoption = Adoption::where('id', 1)->where('is_active', 1)->first();
         if(!$adoption) abort(404);
         return view('adoptions.surrender_form', [
@@ -91,13 +93,13 @@ class SurrenderController extends Controller
         $surrender = Surrender::viewable(Auth::user())->where('id', $id)->first();
         if(!$surrender) abort(404);
         $features = $surrender->character->image->features()->get();
-        
-        $totalcost = 0; 
+
+        $totalcost = 0;
         foreach ($features as $traits) {
             $rarity = Rarity::where('id', $traits->rarity_id)->first();
 
             switch ($rarity->name) {
-                
+
                 case 'common':
                     $totalcost += 10;
                 break;
