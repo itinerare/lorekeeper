@@ -161,7 +161,7 @@ class StatusEffect extends Model
     public function displaySeverity($value)
     {
         $ret = '<span class="display-currency">';
-        if(isset($this->data)) {
+        if(isset($this->data) && count($this->data)) {
             foreach($this->data as $severity)
                 $severities[$severity['breakpoint']] = $severity['name'];
             $severity = collect($severities)->filter(function ($severity,$key) use ($value) {
