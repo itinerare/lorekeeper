@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 @endif
-                {{ $drops->speciesItem && $drops->subtypeItem ? '<hr/>' : null }}
+                {!! $drops->speciesItem && $drops->subtypeItem ? '<hr/>' : null !!}
                 @if($drops->subtypeItem)
                     <div class="row">
                         <div class="col-md align-self-center">
