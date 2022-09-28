@@ -179,6 +179,7 @@ return [
         App\Providers\NotificationsProvider::class,
         App\Providers\CommentProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Esemve\Hook\HookServiceProvider::class,
 
     ],
 
@@ -235,6 +236,7 @@ return [
         'Settings'      => App\Facades\Settings::class,
         'Notifications' => App\Facades\Notifications::class,
         'Image'         => Intervention\Image\Facades\Image::class,
+        'Hook'          => Esemve\Hook\Facades\Hook::class,
 
     ],
 
