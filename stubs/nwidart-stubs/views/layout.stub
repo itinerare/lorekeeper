@@ -1,0 +1,19 @@
+@extends('layouts.app')
+
+@section('title')
+    @yield('$LOWER_NAME$-title')
+@endsection
+
+@section('sidebar')
+    @if(View::exists('$LOWER_NAME$::_sidebar'))
+        @include('$LOWER_NAME$::_sidebar')
+    @endif
+@endsection
+
+@section('content')
+    @yield('$LOWER_NAME$-content')
+@endsection
+
+@section('scripts')
+    @parent
+@endsection
