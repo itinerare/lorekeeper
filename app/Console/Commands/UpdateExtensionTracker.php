@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Command;
 
 class UpdateExtensionTracker extends Command {
@@ -38,8 +38,14 @@ class UpdateExtensionTracker extends Command {
         $this->info('****************************');
 
         $extendos = [];
-        foreach (glob('config\lorekeeper\ext-tracker\*.php') as $extension) {
+        foreach (glob('config/lorekeeper/ext-tracker/*.php') as $extension) {
             $extendos[basename($extension, '.php')] = include $extension;
+        }
+
+        foreach (glob('extensions/*/module.json') as $manifest) {
+            $extension = json_decode(file_get_contents($manifest), true);
+            $extendos[$extension['alias']] = $extension;
+            $extendos[$extension['alias']]['creators'] = json_encode($extension['creators']);
         }
 
         $this->line('Adding site extensions...existing entries will be updated.'."\n");

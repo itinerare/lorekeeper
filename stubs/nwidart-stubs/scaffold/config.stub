@@ -6,17 +6,9 @@ return [
     | Extension Configuration
     |--------------------------------------------------------------------------
     |
-    | This file holds any configuration options relating to your extension,
-    | as well as information for the extension tracker. Feel free to add to it
-    | and make sure to update the tracker information appropriately-- but take
-    | care not to remove the default contents!
+    | This file holds any configuration options relating to your extension!
     |
     */
 
     'name' => '$STUDLY_NAME$',
-    'wiki_key' => '$STUDLY_NAME$',
-    'creators' => json_encode([
-        'Author Name' => 'Author URL',
-    ]),
-    'version' => '1.0.0',
 ];

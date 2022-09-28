@@ -7,5 +7,10 @@
     "providers": [
         "$MODULE_NAMESPACE$\\$STUDLY_NAME$\\$PROVIDER_NAMESPACE$\\$STUDLY_NAME$ServiceProvider"
     ],
-    "files": []
+    "files": [],
+    "wiki_key": "$STUDLY_NAME$",
+    "creators": {
+        "Author Name": "Author URL"
+    },
+    "version": "1.0.0"
 }
