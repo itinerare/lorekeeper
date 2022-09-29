@@ -9,6 +9,7 @@ use App\Models\Report\Report;
 use App\Models\Sales\Sales;
 use App\Models\SitePage;
 use App\Models\User\User;
+use Esemve\Hook\Facades\Hook;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -127,6 +128,23 @@ class CommentController extends Controller implements CommentControllerInterface
                 $post = (($type != 'User-User') ? 'your gallery submission\'s staff comments' : 'your gallery submission');
                 $link = (($type != 'User-User') ? $submission->queueUrl.'/#comment-'.$comment->getKey() : $submission->url.'/#comment-'.$comment->getKey());
                 break;
+            default:
+                break;
+        }
+
+        // This takes an array, keyed to the model type and with
+        // 'model' and 'post' values
+        $hookSettings = [];
+        $hookSettings = Hook::get('controllers_comment_model_type', [$hookSettings], function ($hookSettings) {
+            return $hookSettings;
+        });
+        foreach ($hookSettings as $modelName=>$hookSetting) {
+            if ($model_type == $modelName) {
+                $object = $hookSetting['model']::find($comment->commentable_id);
+                $recipient = $object->user;
+                $post = $hookSetting['post'];
+                $link = $object->url.'/#comment-'.$comment->getKey();
+            }
         }
 
         if ($recipient != $sender) {
