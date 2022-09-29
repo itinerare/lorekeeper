@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use DB;
+use Esemve\Hook\Facades\Hook;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class AddSiteSettings extends Command {
     /**
@@ -82,6 +83,14 @@ class AddSiteSettings extends Command {
         $this->addSiteSetting('deactivated_key', 0, 'Optional key to view the deactivated list. Enter "0" to not require one.');
 
         $this->addSiteSetting('comment_dislikes_enabled', 0, '0: Dislikes disabled, 1: Dislikes enabled.');
+
+        $settings = [];
+        $settings = Hook::get('commands_add_site_settings', [$settings], function ($settings) {
+            return $settings;
+        });
+        foreach ($settings as $key=>$setting) {
+            $this->addSiteSetting($key, $setting['value'], $setting['description']);
+        }
 
         $this->line("\nSite settings up to date!");
     }
