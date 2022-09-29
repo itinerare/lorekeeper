@@ -29,6 +29,7 @@ class $CLASS$ extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, '$MIGRATIONS_PATH$'));
         $this->handleHooks();
+        $this->registerCommands();
     }
 
     /**
@@ -116,7 +117,16 @@ class $CLASS$ extends ServiceProvider
     /**
      * Make various changes via hooks.
      */
-    public function handleHooks() {
+    private function handleHooks() {
         //
+    }
+
+    /**
+     * Register any artisan commands.
+     */
+    private function registerCommands() {
+        $this->commands([
+            //
+        ]);
     }
 }
