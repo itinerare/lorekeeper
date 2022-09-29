@@ -3,7 +3,11 @@
 @else
     <div class="text-center mb-3">
         <div class="mb-1"><a href="{{ $stock->item->idUrl }}"><img src="{{ $stock->item->imageUrl }}" alt="{{ $stock->item->name }}" /></a></div>
-        <div><a href="{{ $stock->item->idUrl }}"><strong>{{ $stock->item->name }}</strong></a></div>
+        <div>
+            @hook('shops_stock_item_name', true)
+                <a href="{{ $stock->item->idUrl }}"><strong>{{ $stock->item->name }}</strong></a>
+            @endhook
+        </div>
         <div><strong>Cost: </strong> {!! $stock->currency->display($stock->cost) !!}</div>
         @if ($stock->is_limited_stock)
             <div>Stock: {{ $stock->quantity }}</div>

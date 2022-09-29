@@ -32,6 +32,7 @@
                                 </div>
                                 <div>
                                     <a href="#" class="inventory-stack inventory-stack-name"><strong>{{ $item->name }}</strong></a>
+                                    @include('widgets._loop_hook', ['name' => 'shops_shop_item_name', 'item' => $item])
                                     <div><strong>Cost: </strong> {!! $currencies[$item->pivot->currency_id]->display($item->pivot->cost) !!}</div>
                                     @if ($item->pivot->is_limited_stock)
                                         <div>Stock: {{ $item->pivot->quantity }}</div>

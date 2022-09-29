@@ -3,7 +3,11 @@
 @else
     <div class="text-center">
         <div class="mb-1"><a href="{{ $item->url }}"><img src="{{ $item->imageUrl }}" alt="{{ $item->name }}" /></a></div>
-        <div @if (count($item->tags)) class="mb-1" @endif><a href="{{ $item->url }}">{{ $item->name }}</a></div>
+        <div @if (count($item->tags)) class="mb-1" @endif>
+            @hook('character_inventory_stack_name', true)
+                <a href="{{ $item->idUrl }}">{{ $item->name }}</a>
+            @endhook
+        </div>
     </div>
 
     <h5>Item Variations</h5>
