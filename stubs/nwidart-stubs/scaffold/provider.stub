@@ -120,22 +120,11 @@ class $CLASS$ extends ServiceProvider
      * Make various changes via hooks.
      */
     private function handleHooks() {
-        if(DB::table('site_extensions')->where('key', $this->moduleNameLower)->exists()) {
-            // Multiple listeners can impact the same hook, but only so long as
-            // they have different priorities set. Since broadly extensions should
-            // strive to be mutually compatible where feasible regardless, the index
-            // of the extension in the on-site table is used here so as to provide
-            // a unique number.
-            $priority = DB::table('site_extensions')->get()->search(function ($extension) {
-                return $extension->key == $this->moduleNameLower;
-            });
-        } else {
-            // Failing that, attempt to just get an unused index.
-            // This will cause problems if installing multiple extensions at once
-            // that listen to the same hook(s), but this will self-resolve or can
-            // be manually resolved by running the command to update the tracker.
-            $priority = DB::table('site_extensions')->get()->count() + 1;
-        }
+        // Multiple listeners can impact the same hook, but only so long as
+        // they have different priorities set. Since broadly extensions should
+        // strive to be mutually compatible where feasible regardless, the name
+        // as converted to an integer is used here so as to provide a unique number.
+        $priority = substr(base_convert(md5($this->moduleNameLower), 16, 10), -5);
 
         //
     }
