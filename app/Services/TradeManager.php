@@ -11,6 +11,7 @@ use App\Models\User\User;
 use App\Models\User\UserItem;
 use Config;
 use DB;
+use Esemve\Hook\Facades\Hook;
 use Notifications;
 use Settings;
 
@@ -57,6 +58,14 @@ class TradeManager extends Service {
                 'data'                   => null,
             ]);
 
+            $tradeData = Hook::get('managers_trades_create', [$data], function ($data) {
+                return $data;
+            }, []);
+            foreach ($tradeData as $attribute=>$value) {
+                $trade->$attribute = $value;
+            }
+            $trade->save();
+
             if ($assetData = $this->handleTradeAssets($trade, $data, $user)) {
                 $trade->data = json_encode(['sender' => getDataReadyAssets($assetData['sender'])]);
                 $trade->save();
@@ -100,6 +109,14 @@ class TradeManager extends Service {
             if (!$trade) {
                 throw new \Exception('Invalid trade.');
             }
+
+            $tradeData = Hook::get('managers_trades_create', [$data], function ($data) {
+                return $data;
+            }, []);
+            foreach ($tradeData as $attribute=>$value) {
+                $trade->$attribute = $value;
+            }
+            $trade->save();
 
             if ($assetData = $this->handleTradeAssets($trade, $data, $user)) {
                 $tradeData = $trade->data;

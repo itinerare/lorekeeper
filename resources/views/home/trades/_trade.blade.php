@@ -9,6 +9,7 @@
             <div>{!! nl2br(htmlentities($trade->comments)) !!}</div>
             <hr />
         @endif
+        @hook('home_trades_view_widget')
         <div class="row">
             <div class="col-md-6">
                 <h3 class="card-heading">

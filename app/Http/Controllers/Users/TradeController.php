@@ -11,6 +11,7 @@ use App\Models\User\User;
 use App\Models\User\UserItem;
 use App\Services\TradeManager;
 use Auth;
+use Esemve\Hook\Facades\Hook;
 use Illuminate\Http\Request;
 
 class TradeController extends Controller {
@@ -154,7 +155,12 @@ class TradeController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateTrade(Request $request, TradeManager $service) {
-        if ($trade = $service->createTrade($request->only(['recipient_id', 'comments', 'stack_id', 'stack_quantity', 'currency_id', 'currency_quantity', 'character_id']), Auth::user())) {
+        $fields = ['recipient_id', 'comments', 'stack_id', 'stack_quantity', 'currency_id', 'currency_quantity', 'character_id'];
+        $fields = Hook::get('controllers_trades_post_create', [$fields], function ($fields) {
+            return $fields;
+        });
+
+        if ($trade = $service->createTrade($request->only($fields), Auth::user())) {
             flash('Trade created successfully.')->success();
 
             return redirect()->to($trade->url);

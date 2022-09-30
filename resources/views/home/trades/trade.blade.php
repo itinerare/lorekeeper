@@ -32,6 +32,7 @@
             </div>
             <div class="col-md-10 col-8">{!! format_date($trade->updated_at) !!} ({{ $trade->updated_at->diffForHumans() }})</div>
         </div>
+        @hook('home_trades_view_status')
         <div>
             <div>
                 <h5>Sender's Comments</h5>
@@ -46,6 +47,7 @@
                 </div>
             </div>
         </div>
+        @hook('home_trades_view')
     </div>
     @if ($trade->status == 'Open')
         <div class="alert alert-info">

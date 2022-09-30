@@ -26,6 +26,7 @@
         {!! Form::label('comments', 'Comments (Optional)') !!} {!! add_help('This comment will be displayed on the trade index. You can write a helpful note here, for example to note down the purpose of the trade.') !!}
         {!! Form::textarea('comments', null, ['class' => 'form-control']) !!}
     </div>
+    @hook('home_trades_create')
     @include('widgets._inventory_select', ['user' => Auth::user(), 'inventory' => $inventory, 'categories' => $categories, 'selected' => [], 'page' => $page])
     @include('widgets._my_character_select', ['readOnly' => true, 'categories' => $characterCategories])
     @include('widgets._bank_select', ['owner' => Auth::user(), 'selected' => null, 'isTransferrable' => true])
