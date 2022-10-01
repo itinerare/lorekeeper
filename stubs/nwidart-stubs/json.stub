@@ -12,5 +12,6 @@
     "creators": {
         "Author Name": "Author URL"
     },
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "requires": "3.0.0"
 }
