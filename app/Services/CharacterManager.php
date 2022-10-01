@@ -15,6 +15,7 @@ use App\Models\User\User;
 use Carbon\Carbon;
 use Config;
 use DB;
+use Esemve\Hook\Facades\Hook;
 use Illuminate\Support\Arr;
 use Image;
 use Notifications;
@@ -1707,6 +1708,11 @@ class CharacterManager extends Service {
                 $character->transferrable_at = Carbon::now()->addDays($cooldown);
             }
         }
+
+        $character = Hook::get('managers_character_move_character', [$character], function($character) {
+            return $character;
+        });
+
         $character->save();
 
         // Notify bookmarkers

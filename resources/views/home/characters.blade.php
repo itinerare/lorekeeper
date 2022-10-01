@@ -29,6 +29,8 @@
     {!! Form::hidden('sort', null, ['id' => 'sortableOrder']) !!}
     {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
     {!! Form::close() !!}
+
+    @hook('home_characters_addition')
 @endsection
 @section('scripts')
     <script>
