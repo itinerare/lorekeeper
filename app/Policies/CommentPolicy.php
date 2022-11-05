@@ -9,6 +9,8 @@ class CommentPolicy
 {
     /**
      * Can user create the comment.
+     *
+     * @param mixed $user
      */
     public function create($user) : bool
     {
@@ -17,6 +19,8 @@ class CommentPolicy
 
     /**
      * Can user delete the comment.
+     *
+     * @param mixed $user
      */
     public function delete($user, Comment $comment) : bool
     {
@@ -29,6 +33,8 @@ class CommentPolicy
 
     /**
      * Can user update the comment.
+     *
+     * @param mixed $user
      */
     public function update($user, Comment $comment) : bool
     {
@@ -37,6 +43,8 @@ class CommentPolicy
 
     /**
      * Can user reply to the comment.
+     *
+     * @param mixed $user
      */
     public function reply($user, Comment $comment) : bool
     {

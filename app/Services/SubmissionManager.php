@@ -152,11 +152,11 @@ class SubmissionManager extends Service
                     foreach ($c as $key => $id) {
                         switch ($data['character_rewardable_type'][$ckey][$key]) {
                             case 'Currency': $currencyIds[] = $id;
-                            break;
+                                break;
                             case 'Item': $itemIds[] = $id;
-                            break;
+                                break;
                             case 'LootTable': $tableIds[] = $id;
-                            break;
+                                break;
                         }
                     }
                 } // Expanded character rewards
@@ -396,11 +396,11 @@ class SubmissionManager extends Service
                     foreach ($c as $key => $id) {
                         switch ($data['character_rewardable_type'][$ckey][$key]) {
                             case 'Currency': $currencyIds[] = $id;
-                            break;
+                                break;
                             case 'Item': $itemIds[] = $id;
-                            break;
+                                break;
                             case 'LootTable': $tableIds[] = $id;
-                            break;
+                                break;
                         }
                     }
                 } // Expanded character rewards
