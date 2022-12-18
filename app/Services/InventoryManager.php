@@ -376,7 +376,7 @@ class InventoryManager extends Service
         try {
             foreach($stacks as $key=>$stack) {
                 $quantity = $quantities[$key];
-                if(!$user->hasAlias) throw new \Exception("Your deviantART account must be verified before you can perform this action.");
+                if(!$user->hasAlias) throw new \Exception("You need to have a linked social media account before you can perform this action.");
                 if(!$stack) throw new \Exception("An invalid item was selected.");
                 if($stack->user_id != $user->id && !$user->hasPower('edit_inventories')) throw new \Exception("You do not own one of the selected items.");
                 if($stack->count < $quantity) throw new \Exception("Quantity to donate exceeds item count.");
