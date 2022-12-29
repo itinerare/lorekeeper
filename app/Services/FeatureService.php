@@ -305,7 +305,7 @@ class FeatureService extends Service
                     $altData[$key] = [
                         'id' => $alt ? $alt : null,
                         'parent_id' => $feature->id,
-                        'feature_category_id' => $feature->feature_category_id,
+                        'feature_category_id' => $data['alt']['feature_category_id'][$key],
                         'name' => $data['alt']['name'][$key],
                         'display_mode' => $data['alt']['display_mode'][$key],
                         'rarity_id' => $data['alt']['rarity_id'][$key],
