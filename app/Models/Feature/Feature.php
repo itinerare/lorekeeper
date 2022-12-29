@@ -105,11 +105,27 @@ class Feature extends Model
     }
 
     /**
+     * Get the parent of this feature, if present and visible.
+     */
+    public function parentVisible()
+    {
+        return $this->belongsTo('App\Models\Feature\Feature', 'parent_id')->where('is_visible', 1);
+    }
+
+    /**
      * Get alternate types of this feature.
      */
     public function altTypes()
     {
         return $this->hasMany('App\Models\Feature\Feature', 'parent_id');
+    }
+
+        /**
+     * Get alternate types of this feature, but only those visible.
+     */
+    public function altTypesVisible()
+    {
+        return $this->hasMany('App\Models\Feature\Feature', 'parent_id')->where('is_visible', 1);
     }
 
     /**********************************************************************************************

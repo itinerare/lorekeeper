@@ -7,7 +7,7 @@
         @if($feature->feature_category_id)
             <div><strong>Category:</strong> {!! $feature->category->displayName !!}</div>
         @endif
-        @if($feature->parent_id)
+        @if($feature->parent_id && $feature->parentVisible)
             <div><strong>Parent Trait:</strong> {!! $feature->parent->displayName !!}</div>
         @endif
         @if($feature->species_id)
@@ -16,14 +16,14 @@
         <div class="world-entry-text parsed-text">
             {!! $feature->parsed_description !!}
         </div>
-        @if($feature->altTypes->count())
+        @if($feature->altTypesVisible->count())
             <h5 class="inventory-header">
                 Alternate Types
                 <a class="small collapse-toggle collapsed" href="#alt-{{ $feature->id }}" data-toggle="collapse">Show</a></h3>
             </h5>
             <div class="collapse show" id="alt-{{ $feature->id }}">
                 <ul>
-                    @foreach($feature->altTypes as $altType)
+                    @foreach($feature->altTypesVisible as $altType)
                         <li>
                             {!! $altType->displayName !!} <a href="{{ $altType->searchUrl }}" class="world-entry-search text-muted"><i class="fas fa-search"></i></a>
                             @if(!$altType->display_separately)
