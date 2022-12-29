@@ -223,7 +223,7 @@ class Feature extends Model
             }
         }
 
-        return '<a href="'.($this->parent_id && !$this->display_separately ? $this->parent->url : $this->url).'" class="display-trait">'.(isset($name) ? $name : $this->name).'</a>'.($this->rarity? ' (' . $this->rarity->displayName . ')' : '');
+        return '<a href="'.($this->parent_id && !$this->display_separate ? $this->parent->url : $this->url).'" class="display-trait">'.(isset($name) ? $name : $this->name).'</a>'.($this->rarity? ' (' . $this->rarity->displayName . ')' : '');
     }
 
     /**
