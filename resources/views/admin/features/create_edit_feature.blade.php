@@ -108,14 +108,27 @@
                                 {!! Form::select('alt[rarity_id]['.$altType->id.']', $rarities, $altType->rarity_id, ['class' => 'form-control']) !!}
                             </div>
                         </div>
-                        <div class="form-group">
-                                {!! Form::label('Display Mode') !!} {!! add_help("This controls how this alternate type's name will be displayed around the site. 'Name' refers to this type's name, whereas 'Parent Name' refers to the parent trait's name. Other values refer to this type's settings.") !!}
-                                {!! Form::select('alt[display_mode]['.$altType->id.']', [
-                                        0 => 'Name', 1 => 'Name (Species)',
-                                        2 => 'Name (Subtype)', 3 => 'Parent Name (Name)',
-                                        4 => 'Name Parent Name',
-                                    ], $altType->display_mode, ['class' => 'form-control']) !!}
-                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('Display Mode') !!} {!! add_help("This controls how this alternate type's name will be displayed around the site. 'Name' refers to this type's name, whereas 'Parent Name' refers to the parent trait's name. Other values refer to this type's settings.") !!}
+                        {!! Form::select('alt[display_mode]['.$altType->id.']', [
+                            0 => 'Name', 1 => 'Name (Species)',
+                            2 => 'Name (Subtype)', 3 => 'Parent Name (Name)',
+                            4 => 'Name Parent Name',
+                        ], $altType->display_mode, ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
+                        <div>{!! Form::file('alt[image]['.$altType->id.']') !!}</div>
+                        <div class="text-muted">Recommended size: 200px x 200px</div>
+                        @if($altType->has_image)
+                            <div class="form-check">
+                                {!! Form::checkbox('alt[remove_image]['.$altType->id.']', 1, false, ['class' => 'form-check-input']) !!}
+                                {!! Form::label('alt[remove_image]['.$altType->id.']', 'Remove current image', ['class' => 'form-check-label']) !!}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 {!! Form::label('Trait Category (Optional)') !!}
@@ -134,17 +147,6 @@
                                 {!! Form::select('alt[subtype_id]['.$altType->id.']', $subtypes, $altType->subtype_id, ['class' => 'form-control']) !!}
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
-                        <div>{!! Form::file('alt[image]['.$altType->id.']') !!}</div>
-                        <div class="text-muted">Recommended size: 200px x 200px</div>
-                        @if($altType->has_image)
-                            <div class="form-check">
-                                {!! Form::checkbox('alt[remove_image]['.$altType->id.']', 1, false, ['class' => 'form-check-input']) !!}
-                                {!! Form::label('alt[remove_image]['.$altType->id.']', 'Remove current image', ['class' => 'form-check-label']) !!}
-                            </div>
-                        @endif
                     </div>
                     <div class="form-group">
                         {!! Form::label('Description (Optional)') !!}
@@ -199,14 +201,21 @@
                             {!! Form::select('alt[rarity_id][]', $rarities, $feature->rarity_id, ['class' => 'form-control']) !!}
                         </div>
                     </div>
-                    <div class="form-group">
-                            {!! Form::label('Display Mode') !!} {!! add_help("This controls how this alternate type's name will be displayed around the site. 'Name' refers to this type's name, whereas 'Parent Name' refers to the parent trait's name. Other values refer to this type's settings.") !!}
-                            {!! Form::select('alt[display_mode][]', [
-                                0 => 'Name', 1 => 'Name (Species)',
-                                2 => 'Name (Subtype)', 3 => 'Parent Name (Name)',
-                                4 => 'Name Parent Name',
-                            ], 0, ['class' => 'form-control']) !!}
-                    </div>
+                </div>
+                <div class="form-group">
+                        {!! Form::label('Display Mode') !!} {!! add_help("This controls how this alternate type's name will be displayed around the site. 'Name' refers to this type's name, whereas 'Parent Name' refers to the parent trait's name. Other values refer to this type's settings.") !!}
+                        {!! Form::select('alt[display_mode][]', [
+                            0 => 'Name', 1 => 'Name (Species)',
+                            2 => 'Name (Subtype)', 3 => 'Parent Name (Name)',
+                            4 => 'Name Parent Name',
+                        ], 0, ['class' => 'form-control']) !!}
+                </div>
+                <div class="form-group">
+                    {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
+                    <div>{!! Form::file('alt[image][]') !!}</div>
+                    <div class="text-muted">Recommended size: 200px x 200px</div>
+                </div>
+                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             {!! Form::label('Trait Category (Optional)') !!}
@@ -225,11 +234,6 @@
                             {!! Form::select('alt[subtype_id][]', $subtypes, $feature->subtype_id, ['class' => 'form-control']) !!}
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
-                    <div>{!! Form::file('alt[image][]') !!}</div>
-                    <div class="text-muted">Recommended size: 200px x 200px</div>
                 </div>
             </div>
         </div>
