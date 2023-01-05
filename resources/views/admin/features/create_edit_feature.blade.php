@@ -156,6 +156,10 @@
                         {!! Form::checkbox('alt[display_separate]['.$altType->id.']', 1, $altType->display_separate, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
                         {!! Form::label('alt[display_separate]', 'Display Separately', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If enabled, this trait will be displayed separately from its parent in general trait listings, including species\' visual trait indexes if enabled.') !!}
                     </div>
+                    <div class="form-group">
+                        {!! Form::checkbox('alt[is_visible]['.$altType->id.']', 1, $altType->id ? $altType->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                        {!! Form::label('alt[is_visible]['.$altType->id.']', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the trait will not be visible in the trait list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
+                    </div>
                     @if(isset($altType->display_separate) && $altType->display_separate)
                         <h4>Preview</h4>
                         <hr/>

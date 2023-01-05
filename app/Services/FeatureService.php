@@ -315,6 +315,7 @@ class FeatureService extends Service
                         'display_separate' => $alt ? (isset($data['alt']['display_separate'][$key]) ? 1 : 0) : 1,
                         'image' => isset($data['alt']['image'][$key]) ? $data['alt']['image'][$key] : null,
                         'remove_image' => $alt ? (isset($data['alt']['remove_image'][$key]) ? 1 : 0) : 0,
+                        'is_visible' => $alt ? (isset($data['alt']['is_visible'][$key]) ? 1 : 0) : 0,
                     ];
 
                     // If the ID is already set, modify the existing feature
