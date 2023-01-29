@@ -116,7 +116,7 @@ class SubmissionController extends Controller
      */
     public function getCharacterInfo($slug)
     {
-        $character = Character::visible()->where('slug', $slug)->first();
+        $character = Character::visible()->where('slug', $slug)->where('is_disabled', 0)->first();
 
         return view('home._character', [
             'character' => $character,

@@ -15,7 +15,7 @@
 
 @if($character->user_id == Auth::user()->id)
     <h3>Transfer Character</h3>
-    @if(!$character->is_sellable && !$character->is_tradeable && !$character->is_giftable)
+    @if((!$character->is_sellable && !$character->is_tradeable && !$character->is_giftable) || $character->is_disabled)
         <p>This character cannot be transferred.</p>
     @elseif($character->transferrable_at && $character->transferrable_at->isFuture())
         <p>This character is on transfer cooldown until <strong>{!! format_date($character->transferrable_at) !!}</strong> ({{ $character->transferrable_at->diffForHumans() }}). It cannot be transferred until then.</p>

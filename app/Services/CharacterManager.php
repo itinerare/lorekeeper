@@ -188,7 +188,7 @@ class CharacterManager extends Service
             $characterData = Arr::only($data, [
                 'character_category_id', 'rarity_id', 'user_id',
                 'number', 'slug', 'description',
-                'sale_value', 'transferrable_at', 'is_visible'
+                'sale_value', 'transferrable_at', 'is_visible', 'is_disabled'
             ]);
 
             $characterData['name'] = ($isMyo && isset($data['name'])) ? $data['name'] : null;
@@ -198,6 +198,7 @@ class CharacterManager extends Service
             $characterData['is_giftable'] = isset($data['is_giftable']);
             $characterData['is_visible'] = isset($data['is_visible']);
             $characterData['sale_value'] = isset($data['sale_value']) ? $data['sale_value'] : 0;
+            $characterData['is_disabled'] = isset($data['is_disabled']);
             $characterData['is_gift_art_allowed'] = 0;
             $characterData['is_gift_writing_allowed'] = 0;
             $characterData['is_trading'] = 0;
@@ -1225,14 +1226,15 @@ class CharacterManager extends Service
         DB::beginTransaction();
 
         try {
-            $old = ['is_visible' => $character->is_visible];
+            $old = ['is_visible' => $character->is_visible, 'is_disabled' => $character->is_disabled];
 
             $character->is_visible = isset($data['is_visible']);
+            $character->is_disabled = isset($data['is_disabled']);
             $character->save();
 
             // Add a log for the character
             // This logs all the updates made to the character
-            $this->createLog($user->id, null, null, null, $character->id, 'Character Visibility Updated', '', 'character', true, $old, ['is_visible' => $character->is_visible]);
+            $this->createLog($user->id, null, null, null, $character->id, 'Character Settings Updated', '', 'character', true, $old, ['is_visible' => $character->is_visible]);
 
             return $this->commitReturn(true);
         } catch(\Exception $e) {
@@ -1365,6 +1367,7 @@ class CharacterManager extends Service
 
         try {
             if($user->id != $character->user_id) throw new \Exception("You do not own this character.");
+            if($character->is_disabled) throw new \Exception('This character is disabled and may not be transferred.');
             if(!$character->is_sellable && !$character->is_tradeable && !$character->is_giftable) throw new \Exception("This character is not transferrable.");
             if($character->transferrable_at && $character->transferrable_at->isFuture()) throw new \Exception("This character is still on transfer cooldown and cannot be transferred.");
             if(CharacterTransfer::active()->where('character_id', $character->id)->exists()) throw new \Exception("This character is in an active transfer.");
@@ -1752,7 +1755,7 @@ is_object($sender) ? $sender->id : null,
         try {
             if($character->user_id != $user->id) throw new \Exception("You do not own this character.");
             if(CharacterDesignUpdate::where('character_id', $character->id)->active()->exists()) throw new \Exception("This ".($character->is_myo_slot ? 'MYO slot' : 'character')." already has an existing request. Please update that one, or delete it before creating a new one.");
-            if(!$character->isAvailable) throw new \Exception("This ".($character->is_myo_slot ? 'MYO slot' : 'character')." is currently in an open trade or transfer. Please cancel the trade or transfer before creating a design update.");
+            if(!$character->isAvailable) throw new \Exception("This ".($character->is_myo_slot ? 'MYO slot' : 'character')." is currently unavailable. ".($character->is_disabled ? "" : "Please cancel the trade or transfer before creating a design update."));
 
             $data = [
                 'user_id' => $user->id,

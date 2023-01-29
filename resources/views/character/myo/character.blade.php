@@ -48,6 +48,10 @@
                         {!! Form::checkbox('is_visible', 1, $character->is_visible, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
                         {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Turn this off to hide the character. Only mods with the Manage Masterlist power (that\'s you!) can view it - the owner will also not be able to see the character\'s page.') !!}
                     </div>
+                    <div class="form-group">
+                        {!! Form::checkbox('is_disabled', 1, $character->is_disabled, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                        {!! Form::label('is_disabled', 'Is Disabled', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Turn this on to disable the character, preventing it from being transferred or attached to submissions. Note that this does not prevent design updates from being submitted for the character.') !!}
+                    </div>
                     <div class="text-right">
                         {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
                     </div>

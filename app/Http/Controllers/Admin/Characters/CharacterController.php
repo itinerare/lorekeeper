@@ -110,7 +110,7 @@ class CharacterController extends Controller
         $data = $request->only([
             'user_id', 'owner_url', 'character_category_id', 'number', 'slug',
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
-            'sale_value', 'transferrable_at', 'use_cropper',
+            'sale_value', 'transferrable_at', 'is_disabled', 'use_cropper',
             'x0', 'x1', 'y0', 'y1',
             'designer_id', 'designer_url',
             'artist_id', 'artist_url',
@@ -140,7 +140,7 @@ class CharacterController extends Controller
         $data = $request->only([
             'user_id', 'owner_url', 'name',
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
-            'sale_value', 'transferrable_at', 'use_cropper',
+            'sale_value', 'transferrable_at', 'is_disabled', 'use_cropper',
             'x0', 'x1', 'y0', 'y1',
             'designer_id', 'designer_url',
             'artist_id', 'artist_url',
@@ -346,7 +346,7 @@ class CharacterController extends Controller
     public function postCharacterSettings(Request $request, CharacterManager $service, $slug)
     {
         $data = $request->only([
-            'is_visible'
+            'is_visible', 'is_disabled'
         ]);
         $this->character = Character::where('slug', $slug)->first();
         if(!$this->character) abort(404);
@@ -371,7 +371,7 @@ class CharacterController extends Controller
     public function postMyoSettings(Request $request, CharacterManager $service, $id)
     {
         $data = $request->only([
-            'is_visible'
+            'is_visible', 'is_disabled'
         ]);
         $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
         if(!$this->character) abort(404);

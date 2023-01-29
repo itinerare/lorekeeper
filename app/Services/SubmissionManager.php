@@ -161,6 +161,8 @@ class SubmissionManager extends Service
             // Attach characters
             foreach($characters as $c)
             {
+                if($c->is_disabled) throw new \Exception('One or more of the selected characters is disabled and may not be attached to submissions.');
+
                 // Users might not pass in clean arrays (may contain redundant data) so we need to clean that up
                 $assets = $this->processRewards($data + ['character_id' => $c->id, 'currencies' => $currencies, 'items' => $items, 'tables' => $tables], true);
 

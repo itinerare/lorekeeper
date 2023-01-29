@@ -135,6 +135,8 @@ class GalleryManager extends Service
 
             // Attach any characters to the submission
             foreach($characters as $character) {
+                if($character->is_disabled) throw new \Exception('One or more of the selected characters is disabled and may not be attached to gallery submissions.');
+
                 GalleryCharacter::create([
                     'character_id' => $character->id,
                     'gallery_submission_id' => $submission->id,
