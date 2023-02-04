@@ -1,6 +1,8 @@
-<div class="alert alert-danger text-center">
-    This character is disabled, and may not be transferred or used in on-site activities.
-</div>
+@if($character->is_disabled)
+    <div class="alert alert-danger text-center">
+        This character is disabled, and may not be transferred or used in on-site activities.
+    </div>
+@endif
 <div class="character-masterlist-categories">
     @if(!$character->is_myo_slot)
         {!! $character->category->displayName !!} ・ {!! $character->image->species->displayName !!} ・ {!! $character->image->rarity->displayName !!}
