@@ -57,9 +57,9 @@
                     <div class="form-group" id="titleOptions">
                         {!! Form::label('Extra Info/Custom Title (Optional)') !!} {!! add_help('If \'custom title\' is selected, this will be displayed as the title. If a preexisting title is selected, it will be displayed in addition to it.'.(Settings::get('character_title_display') ? ' The short version is only used in the case of a custom title.' : '')) !!}
                         <div class="d-flex">
-                            {!! Form::text('title_data[full]', isset($request->title_data['full']) ? $request->title_data['full'] : ($request->character->image->title_data['full'] ? $request->character->image->title_data['full']: null), ['class' => 'form-control mr-2', 'placeholder' => 'Full Title']) !!}
+                            {!! Form::text('title_data[full]', isset($request->title_data['full']) ? $request->title_data['full'] : (isset($request->character->image->title_data['full']) ? $request->character->image->title_data['full']: null), ['class' => 'form-control mr-2', 'placeholder' => 'Full Title']) !!}
                             @if(Settings::get('character_title_display'))
-                                {!! Form::text('title_data[short]', isset($request->title_data['short']) ? $request->title_data['short'] : ($request->character->image->title_data['short'] ? $request->character->image->title_data['short']: null), ['class' => 'form-control mr-2', 'placeholder' => 'Short Title (Optional)']) !!}
+                                {!! Form::text('title_data[short]', isset($request->title_data['short']) ? $request->title_data['short'] : (isset($request->character->image->title_data['short']) ? $request->character->image->title_data['short']: null), ['class' => 'form-control mr-2', 'placeholder' => 'Short Title (Optional)']) !!}
                             @endif
                         </div>
                     </div>
