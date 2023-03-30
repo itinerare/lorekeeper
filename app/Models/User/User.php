@@ -322,10 +322,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDisplayAliasAttribute()
     {
-        if (!config('lorekeeper.settings.require_alias') && !$this->attributes['has_alias']) return '(No Alias)';
+        if (!config('lorekeeper.settings.require_alias') && (!$this->attributes['has_alias'] || !$this->aliases()->visible()->count())) return '(No Alias)';
         if (!$this->hasAlias) return '(Unverified)';
-        if($this->primaryAlias) return $this->primaryAlias->displayAlias;
-        elseif ($this->aliases->count()) return $this->aliases()->visible()->first()->displayAlias;
+        if ($this->primaryAlias) return $this->primaryAlias->displayAlias;
+        elseif ($this->aliases()->visible()->count()) return $this->aliases()->visible()->first()->displayAlias;
     }
 
     /**
