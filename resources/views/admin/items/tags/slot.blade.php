@@ -62,6 +62,11 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('Secondary Subtype (Optional)') !!} {!! add_help('This will lock the slot into a particular second subtype. Leave it blank if you would like to give the user more choices, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.') !!}
+    {!! Form::select('subtype_id_2', $subtypes, $tag->getData()['subtype_id_2'], ['class' => 'form-control', 'id' => 'subtype_id_2']) !!}
+</div>
+
+<div class="form-group">
     {!! Form::label('Character Rarity') !!} {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!}
     {!! Form::select('rarity_id', $rarities, $tag->getData()['rarity_id'], ['class' => 'form-control']) !!}
 </div>

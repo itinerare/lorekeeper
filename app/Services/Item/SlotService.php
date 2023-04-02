@@ -54,6 +54,7 @@ class SlotService extends Service
         $characterData['name'] = isset($tag->data['name']) ? $tag->data['name'] : null;
         $characterData['species_id'] = isset($tag->data['species_id']) && $tag->data['species_id'] ? $tag->data['species_id'] : null;
         $characterData['subtype_id'] = isset($tag->data['subtype_id']) && $tag->data['subtype_id'] ? $tag->data['subtype_id'] : null;
+        $characterData['subtype_id_2'] = isset($tag->data['subtype_id_2']) && $tag->data['subtype_id_2'] ? $tag->data['subtype_id_2'] : null;
         $characterData['rarity_id'] = isset($tag->data['rarity_id']) && $tag->data['rarity_id'] ? $tag->data['rarity_id'] : null;
         $characterData['description'] = isset($tag->data['description']) && $tag->data['description'] ? $tag->data['description'] : null;
         $characterData['parsed_description'] = parse($characterData['description']);
@@ -80,6 +81,7 @@ class SlotService extends Service
         $characterData['name'] = isset($data['name']) ? $data['name'] : null;
         $characterData['species_id'] = isset($data['species_id']) && $data['species_id'] ? $data['species_id'] : null;
         $characterData['subtype_id'] = isset($data['subtype_id']) && $data['subtype_id'] ? $data['subtype_id'] : null;
+        $characterData['subtype_id_2'] = isset($data['subtype_id_2']) && $data['subtype_id_2'] ? $data['subtype_id_2'] : null;
         $characterData['rarity_id'] = isset($data['rarity_id']) && $data['rarity_id'] ? $data['rarity_id'] : null;
         $characterData['description'] = isset($data['description']) && $data['description'] ? $data['description'] : null;
         $characterData['parsed_description'] = parse($characterData['description']);
