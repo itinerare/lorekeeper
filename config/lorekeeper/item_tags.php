@@ -28,6 +28,6 @@ return [
     'donateable' => [
         'name' => 'Donateable',
         'text_color' => '#ffffff',
-        'background_color' => '#56639E'
+        'background_color' => '#9e5663'
     ],
 ];
