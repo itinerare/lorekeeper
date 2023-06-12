@@ -1,7 +1,4 @@
 <div class="row world-entry">
-@if(Auth::check())
-                @include('widgets._wishlist_add', ['item' => $currency, 'small' => true])
-            @endif
     @if($currency->has_image)
         <div class="col-md-3 world-entry-image"><a href="{{ $currency->currencyImageUrl }}" data-lightbox="entry" data-title="{{ $currency->name }}"><img src="{{ $currency->currencyImageUrl }}" class="world-entry-image" alt="{{ $currency->name }}" /></a></div>
     @endif
