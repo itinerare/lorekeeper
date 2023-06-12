@@ -13,7 +13,7 @@ class WishlistItem extends Model
      * @var array
      */
     protected $fillable = [
-        'wishlist_id', 'user_id', 'item_id', 'count'
+        'wishlist_id', 'user_id', 'item_id', 'count', 'item_type'
     ];
 
     /**
@@ -61,11 +61,12 @@ class WishlistItem extends Model
     }
 
     /**
-     * Get the corresponding item.
+     * Get the item being stocked.
      */
-    public function item()
+    public function item() 
     {
-        return $this->belongsTo('App\Models\Item\Item');
+        $model = getAssetModelString(strtolower($this->item_type));
+        return $this->belongsTo($model);
     }
 
 }

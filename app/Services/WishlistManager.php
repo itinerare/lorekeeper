@@ -84,7 +84,7 @@ class WishlistManager extends Service
      * @param  \App\Models\User\User         $user
      * @return bool
      */
-    public function createWishlistItem($wishlist, $item, $user)
+    public function createWishlistItem($wishlist, $item, $user, $type)
     {
         DB::beginTransaction();
 
@@ -98,6 +98,7 @@ class WishlistManager extends Service
                 'wishlist_id' => $wishlist ? $wishlist->id : 0,
                 'user_id' => $wishlist ? null : $user->id,
                 'item_id' => $item->id,
+                'item_type' => $type,
                 'count' => 1
             ]);
 
@@ -126,7 +127,7 @@ class WishlistManager extends Service
                 if($wishlist->user_id != $user->id) throw new \Exception('This wishlist does not belong to you.');
 
             // Find wishlist item
-            $wishlistItem = WishlistItem::where('item_id', $item->id)->where('wishlist_id', $wishlist ? $wishlist->id : $wishlist);
+            $wishlistItem = WishlistItem::where('item_id', $item->id)->where('wishlist_id', $wishlist ? $wishlist->id : $wishlist)->where('item_type', $data['item_type']);
             if(!$wishlist)
                 $wishlistItem = $wishlistItem->where('user_id', $user->id);
             $wishlistItem = $wishlistItem->first();
@@ -177,9 +178,8 @@ class WishlistManager extends Service
                 if(!$source) throw new \Exception('Invalid origin wishlist.');
                 if($source->user_id != $user->id) throw new \Exception('The origin wishlist does not belong to you.');
             }
-
             // Find source wishlist item
-            $sourceItem = WishlistItem::where('item_id', $item->id)->where('wishlist_id', isset($source) ? $source->id : 0);
+            $sourceItem = WishlistItem::where('item_id', $item->id)->where('wishlist_id', isset($source) ? $source->id : 0)->where('item_type', $data['item_type']);
             if(!isset($source))
                 $sourceItem = $sourceItem->where('user_id', $user->id);
             $sourceItem = $sourceItem->first();
@@ -188,7 +188,7 @@ class WishlistManager extends Service
             if(!$sourceItem) throw new \Exception('Invalid wishlist item.');
 
             // Check if there's an existing wishlist item at the destination
-            $wishlistItem = WishlistItem::where('item_id', $item->id)->where('wishlist_id', $wishlist ? $wishlist->id : $wishlist);
+            $wishlistItem = WishlistItem::where('item_id', $item->id)->where('wishlist_id', $wishlist ? $wishlist->id : $wishlist)->where('item_type', $data['item_type']);
             if(!$wishlist)
                 $wishlistItem = $wishlistItem->where('user_id', $user->id);
             $wishlistItem = $wishlistItem->first();
@@ -206,7 +206,8 @@ class WishlistManager extends Service
                     'wishlist_id' => $wishlist ? $wishlist->id : 0,
                     'user_id' => $wishlist ? null : $user->id,
                     'item_id' => $item->id,
-                    'count' => $sourceItem->count
+                    'count' => $sourceItem->count,
+                    'item_type' => $sourceItem->item_type
                 ]);
             }
 
