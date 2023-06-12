@@ -325,6 +325,7 @@ class ItemService extends Service
             DB::table('items_log')->where('item_id', $item->id)->delete();
             DB::table('user_items')->where('item_id', $item->id)->delete();
             DB::table('character_items')->where('item_id', $item->id)->delete();
+            DB::table('user_wishlist_items')->where('item_id', $item->id)->delete();
             $item->tags()->delete();
             if($item->has_image) $this->deleteImage($item->imagePath, $item->imageFileName);
             $item->delete();

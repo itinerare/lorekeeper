@@ -180,13 +180,21 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany('App\Models\Gallery\GalleryFavorite')->where('user_id', $this->id);
     }
-    
+
     /**
      * Get all of the user's character bookmarks.
      */
-    public function bookmarks() 
+    public function bookmarks()
     {
         return $this->hasMany('App\Models\Character\CharacterBookmark')->where('user_id', $this->id);
+    }
+
+    /**
+     * Get all of the user's wishlists.
+     */
+    public function wishlists()
+    {
+        return $this->hasMany('App\Models\User\Wishlist')->where('user_id', $this->id);
     }
 
     /**********************************************************************************************
@@ -376,7 +384,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getcheckBirthdayAttribute()
     {
-        $bday = $this->birthday; 
+        $bday = $this->birthday;
         if(!$bday || $bday->diffInYears(carbon::now()) < 13) return false;
         else return true;
     }

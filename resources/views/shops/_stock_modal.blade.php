@@ -3,7 +3,12 @@
 @else
     <div class="text-center mb-3">
         <div class="mb-1"><a href="{{ $stock->item->idUrl }}"><img src="{{ $stock->item->imageUrl }}" alt="{{ $stock->item->name }}" /></a></div>
-        <div><a href="{{ $stock->item->idUrl }}"><strong>{{ $stock->item->name }}</strong></a></div>
+        <div>
+            <a href="{{ $stock->item->idUrl }}"><strong>{{ $stock->item->name }}</strong></a>
+            @if(Auth::check())
+                @include('widgets._wishlist_add', ['item' => $stock->item, 'small' => true])
+            @endif
+        </div>
         <div><strong>Cost: </strong> {!! $stock->currency->display($stock->cost) !!}</div>
         @if($stock->is_limited_stock) <div>Stock: {{ $stock->quantity }}</div> @endif
         @if($stock->purchase_limit) <div class="text-danger">Max {{ $stock->purchase_limit }} per user</div> @endif
