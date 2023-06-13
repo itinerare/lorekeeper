@@ -104,12 +104,13 @@ class Wishlist extends Model
      * @param  \App\Models\User\User  $user
      * @return int
      */
-    public function itemCount($id, $user)
+    public function itemCount($id, $user, $type)
     {
         if(!$this->id) $wishlist = 0;
         else $wishlist = $this->id;
 
-        $item = WishlistItem::where('item_id', $id)->where('wishlist_id', $wishlist);
+        $item = WishlistItem::where('item_id', $id)->where('wishlist_id', $wishlist)->where('item_type', $type);
+       
         if(!$wishlist) $item = $item->where('user_id', $user->id);
         $item = $item->first();
 

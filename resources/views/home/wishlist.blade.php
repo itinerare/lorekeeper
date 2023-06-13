@@ -51,10 +51,11 @@
         </div>
         @foreach($items as $item)
             <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
-                <div class="col-5 col-md-4"> @if(isset($item->item->image_url)) <img class="small-icon" src="{{ $item->item->image_url }}" alt="{{ $item->item->name }}"> @endif{!! $item->item->displayName !!} </div>
+            <div class="col-5 col-md-4"> @if(isset($item->item->imageUrl)) <img class="small-icon" src="{{ $item->item->imageUrl }}" alt="{{ $item->item->name }}"> @endif{!! $item->item->displayName !!} </div>
                 <div class="col-4 col-md-3"> {{ $item->item->category ? $item->item->category->name : '' }} </div>
                 <div class="col-3 col-md text-right">
                     {!! Form::open(['url' => ($wishlist ? 'wishlists/'.$wishlist->id.'/update/'.$item->item->id : 'wishlists/default/update/'.$item->item->id)]) !!}
+                    <input type="hidden" name="item_type" value="{{$item->item_type}}" />
                         <div class="input-group mb-3">
                             {!! Form::number('count', $item->count, ['class' => 'form-control', 'aria-describedby' => 'editButton-'.$item->id]) !!}
                             <div class="input-group-append">
@@ -69,11 +70,13 @@
                         <div class="dropdown-menu" aria-labelledby="move-{{ $item->item->id }}">
                             @if($wishlist)
                                 {!! Form::open(['url' => 'wishlists/move/'.$item->item->id, 'id' => 'wishlistForm-0-'.$item->item->id]) !!}
+
+                                <input type="hidden" name="item_type" value="{{$item->item_type}}" />
                                     {!! Form::hidden('source_id', $wishlist ? $wishlist->id : 0) !!}
                                     <a class="dropdown-item" href="#" onclick="document.getElementById('wishlistForm-0-{{ $item->item->id }}').submit();">
                                         Default
-                                        @if((new App\Models\User\Wishlist)->itemCount($item->id, Auth::user()))
-                                                - {{ (new App\Models\User\Wishlist)->itemCount($item->item->id, Auth::user()) }} In Wishlist
+                                        @if((new App\Models\User\Wishlist)->itemCount($item->id, Auth::user(), $item->item_type))
+                                                - {{ (new App\Models\User\Wishlist)->itemCount($item->item->id, Auth::user(), $item->item_type) }} In Wishlist
                                         @endif
                                     </a>
                                 {!! Form::close() !!}
@@ -81,11 +84,13 @@
                             @foreach(Auth::user()->wishlists as $targetWishlist)
                                 @if(!$wishlist || ($targetWishlist->id != $wishlist->id))
                                     {!! Form::open(['url' => 'wishlists/'.$targetWishlist->id.'/move/'.$item->item->id, 'id' => 'wishlistForm-'.$targetWishlist->id.'-'.$item->item->id]) !!}
+
+                                    <input type="hidden" name="item_type" value="{{$item->item_type}}" />
                                         {!! Form::hidden('source_id', $wishlist ? $wishlist->id : 0) !!}
                                         <a class="dropdown-item" href="#" onclick="document.getElementById('wishlistForm-{{ $targetWishlist->id }}-{{ $item->item->id }}').submit();">
                                             {{ $targetWishlist->name }}
-                                            @if($targetWishlist->itemCount($item->item->id, Auth::user()))
-                                                - {{ $targetWishlist->itemCount($item->item->id, Auth::user()) }} In Wishlist
+                                            @if($targetWishlist->itemCount($item->item->id, Auth::user(), $item->item_type))
+                                                - {{ $targetWishlist->itemCount($item->item->id, Auth::user(), $item->item_type) }} In Wishlist
                                             @endif
                                         </a>
                                     {!! Form::close() !!}

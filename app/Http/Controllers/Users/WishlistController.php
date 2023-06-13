@@ -68,7 +68,7 @@ class WishlistController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getWishlist($id = null, Request $request)
+    public function getWishlist( Request $request,$id = null)
     {
         if($id) {
             $wishlist = Wishlist::where('id', $id)->where('user_id', Auth::user()->id)->first();
@@ -175,28 +175,30 @@ class WishlistController extends Controller
     public function postCreateEditWishlistItem(Request $request, WishlistManager $service, $wishlistId, $itemId = null)
     {
         $data = $request->only([
-            'count'
+            'count', 'item_type'
         ]);
+        //check model
+        $model = getAssetModelString(strtolower($data['item_type']));
 
         if(!$itemId && $wishlistId) {
             $itemId = $wishlistId;
             $wishlist = 0;
 
-            $count = (new Wishlist)->itemCount($itemId, Auth::user());
+            $count = (new Wishlist)->itemCount($itemId, Auth::user(), $data['item_type']);
         }
         else {
             $wishlist = Wishlist::where('id', $wishlistId)->where('user_id', Auth::user()->id)->first();
             if(!$wishlist) abort(404);
 
-            $count = $wishlist->itemCount($itemId, Auth::user());
+            $count = $wishlist->itemCount($itemId, Auth::user(), $data['item_type']);
         }
 
         if($count) $request->validate(WishlistItem::$updateRules);
 
-        if($count && $service->updateWishlistItem($wishlist, Item::find($itemId), $data, Auth::user())) {
+        if($count && $service->updateWishlistItem($wishlist, $model::find($itemId), $data, Auth::user(), $data['item_type'])) {
             flash('Wishlist item updated successfully.')->success();
         }
-        else if (!$count && $service->createWishlistItem($wishlist, Item::find($itemId), Auth::user())) {
+        else if (!$count && $service->createWishlistItem($wishlist, $model::find($itemId), Auth::user(), $data['item_type'])) {
             flash('Wishlist item added successfully.')->success();
             return redirect()->back();
         }
@@ -218,23 +220,25 @@ class WishlistController extends Controller
     public function postMoveWishlistItem(Request $request, WishlistManager $service, $wishlistId, $itemId = null)
     {
         $data = $request->only([
-            'source_id'
+            'source_id', 'item_type'
         ]);
+
+        $model = getAssetModelString(strtolower($data['item_type']));
 
         if(!$itemId && $wishlistId) {
             $itemId = $wishlistId;
             $wishlist = 0;
 
-            $count = (new Wishlist)->itemCount($itemId, Auth::user());
+            $count = (new Wishlist)->itemCount($itemId, Auth::user(), $data['item_type']);
         }
         else {
             $wishlist = Wishlist::where('id', $wishlistId)->where('user_id', Auth::user()->id)->first();
             if(!$wishlist) abort(404);
 
-            $count = $wishlist->itemCount($itemId, Auth::user());
+            $count = $wishlist->itemCount($itemId, Auth::user(), $data['item_type']);
         }
 
-        if ($service->moveWishlistItem($wishlist, Item::find($itemId), $data, Auth::user())) {
+        if ($service->moveWishlistItem($wishlist, $model::find($itemId), $data, Auth::user())) {
             flash('Wishlist item moved successfully.')->success();
             return redirect()->back();
         }
