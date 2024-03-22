@@ -93,7 +93,7 @@
                         </div>
                     </li>
                 @endif
-                @if($item->canDonate)
+                @if(isset($item->category) && $item->canDonate)
                     <li class="list-group-item">
                         <a class="card-title h5 collapse-title" data-toggle="collapse" href="#donateForm">@if($stack->first()->user_id != $user->id) [ADMIN] @endif Donate Item</a>
                         <div id="donateForm" class="collapse">
