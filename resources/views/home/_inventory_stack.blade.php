@@ -2,7 +2,9 @@
     <div class="text-center">Invalid stack selected.</div>
 @else
     <div class="text-center">
-        <div class="mb-1"><a href="{{ $item->url }}"><img src="{{ $item->imageUrl }}" /></a></div>
+        @if($item->has_image)
+            <div class="mb-1"><a href="{{ $item->url }}"><img src="{{ $item->imageUrl }}" alt="{{ $item->name }}"/></a></div>
+        @endif
         <div @if(count($item->tags)) class="mb-1" @endif><a href="{{ $item->idUrl }}">{{ $item->name }}</a></div>
         @if(count($item->tags))
             <div>
@@ -91,7 +93,7 @@
                         </div>
                     </li>
                 @endif
-                @if($item->canDonate)
+                @if(isset($item->category) && $item->canDonate)
                     <li class="list-group-item">
                         <a class="card-title h5 collapse-title" data-toggle="collapse" href="#donateForm">@if($stack->first()->user_id != $user->id) [ADMIN] @endif Donate Item</a>
                         <div id="donateForm" class="collapse">
