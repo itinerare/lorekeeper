@@ -180,11 +180,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany('App\Models\Gallery\GalleryFavorite')->where('user_id', $this->id);
     }
-    
+
     /**
      * Get all of the user's character bookmarks.
      */
-    public function bookmarks() 
+    public function bookmarks()
     {
         return $this->hasMany('App\Models\Character\CharacterBookmark')->where('user_id', $this->id);
     }
@@ -376,10 +376,32 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getcheckBirthdayAttribute()
     {
-        $bday = $this->birthday; 
+        $bday = $this->birthday;
         if(!$bday || $bday->diffInYears(carbon::now()) < 13) return false;
         else return true;
     }
+
+    /**
+     * Check if user can collect from the donation shop.
+     *
+     * @return int
+     */
+    public function getDonationShopCooldownAttribute()
+    {
+        // Fetch log for most recent collection
+        $log = ItemLog::where('recipient_id', $this->id)->where('log_type', 'Collected from Donation Shop')->orderBy('id', 'DESC')->first();
+        // If there is no log, by default, the cooldown is null
+        if(!$log) return null;
+
+        $expiryTime = $log->created_at->addMinutes(Config::get('lorekeeper.settings.donation_shop.cooldown'));
+        // If the cooldown would already be up, it is null
+        if($expiryTime <= Carbon::now()) return null;
+        // Otherwise, calculate the remaining time
+        return $expiryTime;
+
+        return null;
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS

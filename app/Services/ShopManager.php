@@ -4,10 +4,13 @@ use App\Services\Service;
 
 use DB;
 use Config;
+use Carbon\Carbon;
 
 use App\Models\Character\Character;
 use App\Models\Shop\Shop;
 use App\Models\Shop\ShopStock;
+use App\Models\Shop\UserItemDonation;
+use App\Models\Item\ItemLog;
 use App\Models\Shop\ShopLog;
 
 class ShopManager extends Service
@@ -145,5 +148,75 @@ class ShopManager extends Service
             if($shopStock->quantity < $limit) $limit = $shopStock->quantity;
         }
         return $limit;
+    }
+
+    /**
+     * Collects an item from the donation shop.
+     *
+     * @param  array                 $data
+     * @param  \App\Models\User\User $user
+     * @return bool|App\Models\Shop\Shop
+     */
+    public function collectDonation($data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Check that the stock exists and belongs to the shop
+            $stock = UserItemDonation::where('id', $data['stock_id'])->first();
+            if(!$stock) throw new \Exception("Invalid item selected.");
+
+            // Check that the user hasn't collected from the shop too recently
+            if($user->donationShopCooldown) throw new \Exception("You've collected an item too recently. Please try again later.");
+
+            // Check if the item has a quantity, and if it does, check there is enough stock remaining
+            if($stock->stock == 0) throw new \Exception("This item is out of stock.");
+
+            // Decrease the quantity
+            $stock->stock -= 1;
+            $stock->save();
+
+            // Give the user the item
+            if(!(new InventoryManager)->creditItem(null, $user, 'Collected from Donation Shop', [
+                'data' => isset($stock->stack->data['data']) ? $stock->stack->data['data'] : null,
+                'notes' => isset($stock->stack->data['notes']) ? $stock->stack->data['notes'] : null,
+            ], $stock->item, 1)) throw new \Exception("Failed to collect item.");
+
+            return $this->commitReturn($stock);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Clears out expired donations from the shop, if relevant.
+     *
+     * @return bool
+     */
+    public function cleanDonations()
+    {
+        $count = UserItemDonation::expired()->count();
+        if($count) {
+            DB::beginTransaction();
+
+            try {
+                // Fetch the logs for all expired items.
+                // This is necessary because the quantity is needed
+                $expiredLogs = ItemLog::where('log_type', 'Donated by User')->where('created_at', '<', Carbon::now()->subMonths(Config::get('lorekeeper.settings.donation_shop.expiry')));
+
+                // Process through expired items and remove the expired quantitie(s)
+                foreach(UserItemDonation::expired()->get() as $expired) {
+                    $quantityExpired = $expiredLogs->where('stack_id', $expired->stack_id)->sum('quantity');
+                    $expired->update(['stock', ($expired->stock -= $quantityExpired > 0 ? $expired->stock -= $quantityExpired : 0)]);
+                    unset($quantityExpired);
+                }
+
+                return $this->commitReturn(true);
+            } catch(\Exception $e) {
+                $this->setError('error', $e->getMessage());
+            }
+            return $this->rollbackReturn(false);
+        }
     }
 }
