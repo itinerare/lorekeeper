@@ -162,20 +162,24 @@
                 <div class="alert alert-secondary">
                     {{ '@' . $user->name }}
                 </div>
-                In a comment:
-                <div class="alert alert-secondary">
-                    [{{ $user->name }}]({{ $user->url }})
-                </div>
+                @if (!config('lorekeeper.settings.wysiwyg_comments'))
+                    In a comment:
+                    <div class="alert alert-secondary">
+                        [{{ $user->name }}]({{ $user->url }})
+                    </div>
+                @endif
                 <hr>
                 <div class="my-2"><strong>For Names and Avatars:</strong></div>
                 In the rich text editor:
                 <div class="alert alert-secondary">
                     {{ '%' . $user->name }}
                 </div>
-                In a comment:
-                <div class="alert alert-secondary">
-                    [![{{ $user->name }}'s Avatar]({{ $user->avatarUrl }})]({{ $user->url }}) [{{ $user->name }}]({{ $user->url }})
-                </div>
+                @if (!config('lorekeeper.settings.wysiwyg_comments'))
+                    In a comment:
+                    <div class="alert alert-secondary">
+                        [![{{ $user->name }}'s Avatar]({{ $user->avatarUrl }})]({{ $user->url }}) [{{ $user->name }}]({{ $user->url }})
+                    </div>
+                @endif
             </div>
             @if (Auth::check() && Auth::user()->isStaff)
                 <div class="card-footer">

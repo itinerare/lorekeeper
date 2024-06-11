@@ -177,10 +177,12 @@
                     <div class="alert alert-secondary">
                         [character={{ $character->slug }}]
                     </div>
-                    In a comment:
-                    <div class="alert alert-secondary">
-                        [{{ $character->fullName }}]({{ $character->url }})
-                    </div>
+                    @if (!config('lorekeeper.settings.wysiwyg_comments'))
+                        In a comment:
+                        <div class="alert alert-secondary">
+                            [{{ $character->fullName }}]({{ $character->url }})
+                        </div>
+                    @endif
                     <hr>
                     <div class="my-2">
                         <strong>For Thumbnails:</strong>
@@ -189,10 +191,12 @@
                     <div class="alert alert-secondary">
                         [charthumb={{ $character->slug }}]
                     </div>
-                    In a comment:
-                    <div class="alert alert-secondary">
-                        [![Thumbnail of {{ $character->fullName }}]({{ $character->image->thumbnailUrl }})]({{ $character->url }})
-                    </div>
+                    @if (!config('lorekeeper.settings.wysiwyg_comments'))
+                        In a comment:
+                        <div class="alert alert-secondary">
+                            [![Thumbnail of {{ $character->fullName }}]({{ $character->image->thumbnailUrl }})]({{ $character->url }})
+                        </div>
+                    @endif
                 </div>
             @endif
 
