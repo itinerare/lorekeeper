@@ -1,5 +1,5 @@
-<div class="card mt-3">
-    <div class="card-body">
+<div class="{{ isset($compact) && !$compact ? 'card' : '' }} mt-3">
+    <div class="{{ isset($compact) && !$compact ? 'card-body' : '' }}">
         {!! Form::open(['url' => 'comments/make/' . base64_encode(urlencode(get_class($model))) . '/' . $model->getKey()]) !!}
         <input type="hidden" name="type" value="{{ isset($type) ? $type : null }}" />
         <div class="form-group">

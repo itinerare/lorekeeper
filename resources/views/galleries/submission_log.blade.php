@@ -15,7 +15,7 @@
     @include('galleries._queue_submission', ['key' => 0])
 
     <div class="row">
-        <div class="col-md">
+        <div class="col col-md">
             @if (Settings::get('gallery_submissions_reward_currency') && $submission->gallery->currency_enabled)
                 <div class="card mb-4">
                     <div class="card-header">
@@ -183,7 +183,7 @@
             </div>
         </div>
         @if (Auth::user()->hasPower('manage_submissions') && $submission->collaboratorApproved)
-            <div class="col-md-5">
+            <div class="col-12 col-md-5">
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5>[Admin] Vote Info</h5>
