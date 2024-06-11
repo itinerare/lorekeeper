@@ -69,7 +69,7 @@
 
 @auth
     @include('comments._form', [
-        'compact' => (isset($type) && $type == 'Staff-Staff') && config('lorekeeper.settings.wysiwyg_comments') ? true : false,
+        'compact' => isset($type) && $type == 'Staff-Staff' && config('lorekeeper.settings.wysiwyg_comments') ? true : false,
     ])
 @else
     <div class="card mt-3">
