@@ -23,8 +23,8 @@
             {{-- Likes Section --}}
             <a href="#" data-toggle="modal" data-target="#show-likes-{{ $comment->id }}">
                 <button href="#" data-toggle="tooltip" title="Click to View" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1 btn-faded">
-                    {{ $comment->likes()->where('is_like', 1)->count() -$comment->likes()->where('is_like', 0)->count() }}
-                    {{ $comment->likes()->where('is_like', 1)->count() -$comment->likes()->where('is_like', 0)->count() !=1? 'Likes': 'Like' }}
+                    {{ $comment->likes()->where('is_like', 1)->count() - $comment->likes()->where('is_like', 0)->count() }}
+                    {{ $comment->likes()->where('is_like', 1)->count() - $comment->likes()->where('is_like', 0)->count() != 1 ? 'Likes' : 'Like' }}
                 </button>
             </a>
             {!! Form::open(['url' => 'comments/' . $comment->id . '/like/1', 'class' => 'd-inline-block']) !!}
@@ -98,7 +98,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         {!! Form::label('message', 'Enter your message here:') !!}
-                        {!! Form::textarea('message', null, ['class' => 'form-control ' . config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : '', 'rows' => 3, config('lorekeeper.settings.wysiwyg_comments') ? '' : 'required']) !!}
+                        {!! Form::textarea('message', null, ['class' => 'form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''), 'rows' => 3, config('lorekeeper.settings.wysiwyg_comments') ? '' : 'required']) !!}
                         <small class="form-text text-muted"><a target="_blank" href="https://help.github.com/articles/basic-writing-and-formatting-syntax">Markdown</a> cheatsheet.</small>
                     </div>
                 </div>
