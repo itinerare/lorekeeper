@@ -157,7 +157,11 @@ class DesignUpdateManager extends Service {
                     $imageData['use_cropper'] = isset($data['use_cropper']);
                 }
                 if (!$isAdmin && isset($data['image'])) {
-                    $imageData['extension'] = (config('lorekeeper.settings.masterlist_image_format') ? config('lorekeeper.settings.masterlist_image_format') : ($data['extension'] ?? $data['image']->getClientOriginalExtension()));
+                    if (config('lorekeeper.settings.store_masterlist_fullsizes')) {
+                        $imageData['extension'] = config('lorekeeper.settings.masterlist_fullsizes_format') ?? ($data['extension'] ?? $data['image']->getClientOriginalExtension());
+                    } else {
+                        $imageData['extension'] = config('lorekeeper.settings.masterlist_image_format') ?? ($data['extension'] ?? $data['image']->getClientOriginalExtension());
+                    }
                     $imageData['has_image'] = true;
                 }
                 $request->update($imageData);
