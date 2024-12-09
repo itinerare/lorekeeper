@@ -33,28 +33,36 @@
     @endif
 
     <div class="text-right mb-3"><a href="#" class="btn btn-outline-primary" id="uploadButton"><i class="fas fa-plus"></i> Upload File</a></div>
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Files</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="mb-4 logs-table">
+        <div class="logs-table-header">
+            <div class="row">
+                <div class="col-6 col-md-7">
+                    <div class="logs-table-cell">Files</div>
+                </div>
+                <div class="col-6 col-md-5">
+                    <div class="logs-table-cell"></div>
+                </div>
+            </div>
+        </div>
+        <div class="logs-table-body">
             @foreach ($files as $file)
-                <tr>
-                    <td>
-                        <a href="{{ asset('files/' . ($folder ? $folder . '/' : '') . $file) }}">{{ $file }}</a>
-                    </td>
-                    <td class="text-right">
-                        <a href="#" class="btn btn-outline-primary btn-sm move-file" data-name="{{ $file }}" data-folder="{{ $folder }}">Move</a>
-                        <a href="#" class="btn btn-outline-primary btn-sm rename-file" data-name="{{ $file }}" data-folder="{{ $folder }}">Rename</a>
-                        <a href="#" class="btn btn-outline-danger btn-sm delete-file" data-name="{{ $file }}" data-folder="{{ $folder }}">Delete</a>
-                    </td>
-                </tr>
+                <div class="logs-table-row">
+                    <div class="row flex-wrap">
+                        <div class="col-6 col-md-7">
+                            <div class="logs-table-cell"><a href="{{ asset('files/' . ($folder ? $folder . '/' : '') . $file) }}">{{ $file }}</a></div>
+                        </div>
+                        <div class="col-6 col-md-5">
+                            <div class="logs-table-cell text-right">
+                                <a href="#" class="btn btn-outline-primary btn-sm move-file" data-name="{{ $file }}" data-folder="{{ $folder }}">Move</a>
+                                <a href="#" class="btn btn-outline-primary btn-sm rename-file" data-name="{{ $file }}" data-folder="{{ $folder }}">Rename</a>
+                                <a href="#" class="btn btn-outline-danger btn-sm delete-file" data-name="{{ $file }}" data-folder="{{ $folder }}">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endforeach
-        </tbody>
-    </table>
+        </div>
+    </div>
 
     @if ($folder && !count($files))
         <div class="modal fade" id="editFolderModal" tabindex="-1" role="dialog">
@@ -170,7 +178,10 @@
                     <p>Select a file to upload. (Maximum size {{ min(ini_get('upload_max_filesize'), ini_get('post_max_size')) }}B.)</p>
                     <div id="fileList">
                         <div class="d-flex mb-2">
-                            {!! Form::file('files[]', ['class' => 'form-control']) !!}
+                            <div class="custom-file">
+                                {!! Form::label('files[]', 'No file selected.', ['class' => 'custom-file-label']) !!}
+                                {!! Form::file('files[]', ['class' => 'custom-file-input']) !!}
+                            </div>
                         </div>
                     </div>
                     <div class="text-right">
@@ -181,8 +192,9 @@
                         Add File
                     </div>
                     {!! Form::close() !!}
-                    <div class="file-row hide mb-2">
-                        {!! Form::file('files[]', ['class' => 'form-control']) !!}
+                    <div class="file-row custom-file hide mb-2">
+                        {!! Form::label('files[]', 'No file selected.', ['class' => 'custom-file-label']) !!}
+                        {!! Form::file('files[]', ['class' => 'custom-file-input']) !!}
                     </div>
                 </div>
             </div>
@@ -205,6 +217,7 @@
                 $('#fileList').append($clone);
                 $clone.removeClass('hide file-row');
                 $clone.addClass('d-flex');
+                bsCustomFileInput.init();
             }
 
             /////////
