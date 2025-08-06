@@ -37,7 +37,7 @@ class UserItemDonation extends Model
      */
     public function stack()
     {
-        return $this->belongsTo('App\Models\User\UserItem');
+        return $this->belongsTo('App\Models\User\UserItem')->withTrashed();
     }
 
     /**
